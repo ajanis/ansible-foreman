@@ -4,14 +4,16 @@
 #- include_tasks: install-redhat.yml
 #  when: ansible_os_family == "RedHat"
 
-- name: enable foreman service
-  service:
+- name: Start the foreman service
+  systemd:
     name: foreman
+    state: started
     enabled: yes
 
-- name: enable foreman-proxy service
-  service:
+- name: Start the foreman-proxy service
+  systemd:
     name: foreman-proxy
+    state: restarted
     enabled: yes
 
 #- name: Capture foreman version information
