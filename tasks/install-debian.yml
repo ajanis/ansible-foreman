@@ -1,0 +1,44 @@
+---
+- name: Install any necessary dependencies [Debian/Ubuntu]
+  apt: 
+    name: "{{ foreman_dependency_pkgs }}" 
+    state: present 
+    update_cache: yes 
+    cache_valid_time: 3600
+    
+#- name: Install python-pip [Debian/Ubuntu]
+#  apt: 
+#    name: "{{ python_pip_pkg }}" 
+#    state: present 
+#    update_cache: yes 
+#    cache_valid_time: 3600
+#  when: foreman_install_python_client
+
+- name: Import Foreman GPG signing key [Debian/Ubuntu]
+  apt_key:
+    url: "{{ foreman_gpg_key_url }}"
+    state: present
+
+- name: Add Foreman repository [Debian/Ubuntu]
+  apt_repository:
+    repo: "deb {{ foreman_repo_url }} {{ ansible_distribution_release }} {{ foreman_install_version }}"
+    state: present
+
+- name: Add Foreman Plugins repository [Debian/Ubuntu]
+  apt_repository:
+    repo: "deb {{ foreman_repo_url }} plugins {{ foreman_install_version }}"
+    state: present
+
+- name: Install foreman packages [Debian/Ubuntu]
+  apt: 
+    name: "{{ foreman_pkgs }}"
+    state: latest
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Install foreman proxy packages [Debian/Ubuntu]
+  apt: 
+    name: "{{ foreman_proxy_pkgs }}"
+    state: latest
+    update_cache: yes
+    cache_valid_time: 3600

@@ -1,0 +1,54 @@
+- name: include os specific vars
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution | lower }}{{ ansible_distribution_major_version }}.yml"
+    - "{{ ansible_os_family | lower }}.yml"
+  tags:
+    - always
+
+- include_tasks:
+    file: install.yml
+    apply:
+      tags:
+        - foreman
+        - install
+        - configure
+  tags: [foreman, install, configure]
+
+- include_tasks:
+    file: configure.yml
+    apply:
+      tags:
+        - foreman
+        - configure
+  tags: [foreman, configure]
+
+- name: Start the foreman service
+  systemd:
+    name: foreman
+    state: restarted
+    enabled: yes
+  register: foreman_started
+  when: foreman_start_service
+  tags: [foreman, configure]
+
+- name: Verify foreman HTTP service is listening
+  wait_for:
+    host: "{{ foreman_interface | default(\"localhost\", true) }}"
+    port: "{{ foreman_port }}"
+    delay: 30
+  when: foreman_started.changed and foreman_start_service
+  ignore_errors: yes
+  register: foreman_start_attempt
+  tags: [foreman, configure]
+
+#- name: Get foreman journald logs if service does not appear to be up
+#  shell: journalctl _SYSTEMD_INVOCATION_ID=`systemctl show -p InvocationID --value foreman.service`
+#  register: foreman_journal
+#  when: foreman_start_attempt.failed is defined and foreman_start_attempt.failed == True
+#  tags: [foreman, configure]
+#
+#- fail:
+#    msg: "{{ foreman_journal.stdout_lines }}"
+#  when: foreman_start_attempt.failed is defined and foreman_start_attempt.failed == True
+#  tags: [foreman, configure]

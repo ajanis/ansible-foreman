@@ -1,0 +1,48 @@
+foreman_gpg_key_url: https://deb.theforeman.org/pubkey.gpg
+foreman_repo_url: http://deb.theforeman.org/ 
+foreman_install_version: 1.22
+
+python_pip_pkg: python-pip
+foreman_python_pkgs: []
+
+foreman_dependency_pkgs:
+  - ca-certificates
+  - python-httplib2
+  - python-apt
+  - curl
+  - apt-transport-https
+  - wget
+
+foreman_pkgs:
+  - foreman
+  - foreman-sqlite3
+  - foreman-libvirt
+  - foreman-console
+  - foreman-debug
+  - foreman-journald
+  - foreman-cli
+  - ruby-foreman
+  - ruby-hammer-cli
+  - ruby-hammer-cli-foreman
+  - ruby-foreman-ansible-core
+  - ruby-foreman-ansible
+  - ruby-hammer-cli-foreman-ansible
+  - ruby-foreman-templates
+  - ruby-foreman-tasks
+  - ruby-foreman-remote-execution
+  - ruby-foreman-remote-execution-core
+  - ruby-foreman-setup
+  - ruby-foreman-discovery
+  - ruby-foreman-bootdisk
+  - ruby-foreman-dhcp-browser
+
+foreman_proxy_pkgs:
+  - foreman-proxy
+  - foreman-proxy-journald
+
+
+foreman_proxy_extra_repos_pkg: []
+
+foreman_proxy_dhcp_config_dir: /etc/dhcp
+foreman_proxy_dhcp_config: /etc/dhcp/dhcpd.conf
+foreman_proxy_dhcp_leases: /var/lib/dhcp/dhcpd.leases

@@ -1,0 +1,25 @@
+- include_tasks: install-debian.yml
+  when: ansible_os_family == "Debian"
+
+#- include_tasks: install-redhat.yml
+#  when: ansible_os_family == "RedHat"
+
+- name: enable foreman service
+  service:
+    name: foreman
+    enabled: yes
+
+- name: enable foreman-proxy service
+  service:
+    name: foreman-proxy
+    enabled: yes
+
+#- name: Capture foreman version information
+#  command: foreman-client -v
+#  register: foreman_runtime_version_raw
+#
+#- name: Capture foreman version, branch, and commit
+#  set_fact:
+#    foreman_runtime_version: "{{ foreman_runtime_version_raw.stdout.split()[1].replace('v','') }}"
+#    foreman_runtime_branch: "{{ foreman_runtime_version_raw.stdout.split()[3] }}"
+#    foreman_runtime_commit: "{{ foreman_runtime_version_raw.stdout.split()[4] }}"
