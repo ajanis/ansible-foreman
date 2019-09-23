@@ -16,12 +16,13 @@
     state: restarted
     enabled: yes
 
-#- name: Capture foreman version information
-#  command: foreman-client -v
-#  register: foreman_runtime_version_raw
-#
-#- name: Capture foreman version, branch, and commit
-#  set_fact:
-#    foreman_runtime_version: "{{ foreman_runtime_version_raw.stdout.split()[1].replace('v','') }}"
-#    foreman_runtime_branch: "{{ foreman_runtime_version_raw.stdout.split()[3] }}"
-#    foreman_runtime_commit: "{{ foreman_runtime_version_raw.stdout.split()[4] }}"
+- name: Capture foreman version information
+  command: foreman version
+  register: foreman_capture_version
+
+- name: Capture foreman version, branch, and commit
+  set_fact:
+    foreman_version: "{{ foreman_capture_version.stdout }}"
+
+- debug:
+    msg: "Foreman Installed Version is: {{ foreman_version }}"
