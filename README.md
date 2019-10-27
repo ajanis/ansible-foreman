@@ -77,6 +77,8 @@ nginx_vhosts:
       - name: 50x.html
         docroot: "/usr/share/nginx/html"
 
+nginx_vhosts_ssl: []
+
 isc_dhcp_server_subnet:
   - netaddress: 192.168.121.0
     netmask: 255.255.255.0
