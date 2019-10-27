@@ -18,13 +18,13 @@ foreman_proxy_bind_host: "{{ ansible_default_ipv4.address }}"
 
 foreman_proxy_foreman_url: "http://127.0.0.1"
 
-foreman_proxy_dhcp: true
+foreman_proxy_dhcp: True
 foreman_proxy_dhcp_protocol: http
 foreman_proxy_dhcp_server: 127.0.0.1
 foreman_proxy_dhcp_subnets: "[]"
 foreman_proxy_dhcp_omapi_port: 7911
 
-foreman_proxy_tftp: true
+foreman_proxy_tftp: True
 foreman_proxy_tftp_protocol: http
 foreman_proxy_tftp_dir: /srv/tftp
 foreman_proxy_tftp_pxe_dir:
