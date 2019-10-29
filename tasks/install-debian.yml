@@ -27,6 +27,8 @@
     state: latest
     update_cache: yes
     cache_valid_time: 3600
+  register: foreman_installed
+  notify: capture_foreman_version
 
 - name: Install foreman proxy packages [Debian/Ubuntu]
   apt: 
@@ -34,3 +36,10 @@
     state: latest
     update_cache: yes
     cache_valid_time: 3600
+
+- name: template /etc/default/foreman
+  template:
+    src: etc/default/foreman.j2
+    dest: "/etc/default/foreman"
+    backup: no
+  notify: restart foreman
