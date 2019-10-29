@@ -8,3 +8,17 @@
   service:
     name: foreman
     state: restarted
+
+- name: capture_foreman_version
+  command: foreman version
+  register: foreman_version_results
+  notify: set_foreman_version
+
+- name: set_foreman_version
+  set_fact:
+    foreman_version: "{{ foreman_version_results.stdout }}"
+  notify: display_foreman_version
+
+- name: display_foreman_version
+  debug:
+    msg: "Foreman Installed Version is: {{ foreman_version }}"
