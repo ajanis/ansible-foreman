@@ -13,16 +13,5 @@
 - name: Start the foreman-proxy service
   systemd:
     name: foreman-proxy
-    state: restarted
+    state: started
     enabled: yes
-
-- name: Capture foreman version information
-  command: foreman version
-  register: foreman_capture_version
-
-- name: Capture foreman version, branch, and commit
-  set_fact:
-    foreman_version: "{{ foreman_capture_version.stdout }}"
-
-- debug:
-    msg: "Foreman Installed Version is: {{ foreman_version }}"
