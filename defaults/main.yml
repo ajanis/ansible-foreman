@@ -1,5 +1,4 @@
 foreman_start_service: True
-foreman_proxy_port: 8000
 foreman_config_dir: /etc/foreman
 foreman_admin_password: "{{ vault_foreman_admin_password }}"
 www_domain: "{{ ansible_domain }}"
