@@ -1,5 +1,5 @@
 # Start foreman on boot?
-{% if foreman_start_service is defined and foreman_start_service %}
+{% if foreman_enable_service is defined and foreman_enable_service %}
 START=yes
 {% else %}
 START=no
@@ -17,7 +17,7 @@ FOREMAN_IFACE={{ foreman_interface | default('0.0.0.0') }}
 FOREMAN_PORT={{ foreman_port | default('3000') }}
 
 # the user which runs the web interface
-FOREMAN_USER={{ foreman_user | default('foreman') }}
+FOREMAN_USER={{ foreman_admin_user | default('foreman') }}
 
 # the rails environment in which foreman runs
 FOREMAN_ENV={{ foreman_env | default('production') }}
