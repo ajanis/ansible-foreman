@@ -1,5 +1,19 @@
-Ansible-Foreman
-=========
+# Ansible-Foreman
+
+<!-- MarkdownTOC -->
+
+- Requirements
+- Role Variables
+  - defaults/main.yml
+  - vars/debian.yml
+  - vars/redhat.yml
+- Dependencies
+- Example Group Variables for Supporting Roles
+- Example Playbook
+- License
+- Author Information
+
+<!-- /MarkdownTOC -->
 
 Set up a Foreman Server as part of the Foreman build server Project
 
@@ -7,8 +21,7 @@ This role is part of a project that will configure a Foreman build environment w
 
 Database backends can also be deployed in docker containers for ease of maintenance.
 
-Requirements
-------------
+## Requirements
 
 Foreman configuration is handled by [Foreman-Ansible-Modules](https://github.com/theforeman/foreman-ansible-modules) to configure the Foreman server.
 
@@ -16,8 +29,7 @@ The initial configuration of the foreman smart-proxy is handled using the forema
 
 Several supporting services (such as Nginx, MySQL, PostgreSQL) can be deployed in containers which would require the [ansible-docker](https://github.com/ajanis/ansible-docker.git) role
 
-Role Variables
---------------
+## Role Variables
 
 ### defaults/main.yml
 ```
@@ -195,16 +207,14 @@ foreman_proxy_dhcp_config: /etc/dhcp/dhcpd.conf
 foreman_proxy_dhcp_leases: /var/lib/dhcp/dhcpd.leases
 ```
 
-Dependencies
-------------
+## Dependencies
 
 Additonal variables are required for configuring supporting services:  nginx, isc-dhcp server, tftp server, sqlite3, mariadb/mysql, postgresql, any services deployed utilizing the ansible-docker role.
 
 These variables may be set in your group_vars
 
 
-Example Group Variables for Supporting Roles
-----------
+## Example Group Variables for Supporting Roles
 ```
 # Foreman
 www_domain: foreman.example.com
@@ -275,8 +285,7 @@ docker_containers:
 
 ```
 
-Example Playbook
-----------------
+## Example Playbook
 ```
 - name: "Deploy Foreman Server"
   hosts: foreman
@@ -314,12 +323,10 @@ Example Playbook
         - smartproxy
 ```
 
-License
--------
+## License
 
 MIT
 
-Author Information
-------------------
+## Author Information
 
 Created by Alan Janis
