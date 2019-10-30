@@ -1,27 +1,28 @@
-foreman_start_service: True
-foreman_config_dir: /etc/foreman
-foreman_admin_password: "{{ vault_foreman_admin_password }}"
+---
 www_domain: "{{ ansible_domain }}"
+
+foreman_enable_service: True
 foreman_hostname: "{{ ansible_hostname }}"
 foreman_interface: 0.0.0.0
 foreman_port: 3000
-foreman_user: foreman
+foreman_config_dir: /etc/foreman
+foreman_admin_user: foreman
+foreman_admin_password: "{{ vault_foreman_admin_password | default('password') }}"
 foreman_env: production
 
+foreman_proxy_enable_service: True
 foreman_proxy_config_dir: /etc/foreman-proxy
 foreman_proxy_user: foreman-proxy
 foreman_proxy_group: foreman-proxy
-foreman_proxy_port: 8000
 foreman_proxy_protocol: http
 foreman_proxy_bind_host: "{{ ansible_default_ipv4.address }}"
-
-foreman_proxy_foreman_url: "http://127.0.0.1"
+foreman_proxy_port: 8000
 
 foreman_proxy_dhcp: True
 foreman_proxy_dhcp_protocol: http
 foreman_proxy_dhcp_server: 127.0.0.1
-foreman_proxy_dhcp_subnets: "[]"
 foreman_proxy_dhcp_omapi_port: 7911
+foreman_proxy_dhcp_subnets: []
 
 foreman_proxy_tftp: True
 foreman_proxy_tftp_protocol: http
@@ -29,3 +30,15 @@ foreman_proxy_tftp_dir: /srv/tftp
 foreman_proxy_tftp_pxe_dir:
   - boot
   - pxelinux.cfg
+
+foreman_db_adapter: postgresql
+foreman_db_host: localhost
+foreman_db_name: foreman
+foreman_db_username: foreman
+foreman_db_password: "{{ vault_foreman_db_password | default('password') }}"
+foreman_db_timeout: 5000
+foreman_db_pool: 5
+foreman_db_sqlite_dir: /var/lib/foreman/db
+
+foreman_yml_template: foreman_config.yml.j2
+foreman_perform_rake_tasks: False
