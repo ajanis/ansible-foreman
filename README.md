@@ -2,12 +2,12 @@
 
 <!-- MarkdownTOC -->
 
+- Dependencies
 - Requirements
 - Role Variables
   - defaults/main.yml
   - vars/debian.yml
   - vars/redhat.yml
-- Dependencies
 - Example Group Variables for Supporting Roles
 - Example Playbook
 - License
@@ -15,19 +15,21 @@
 
 <!-- /MarkdownTOC -->
 
-Set up a Foreman Server as part of the Foreman build server Project
 
-This role is part of a project that will configure a Foreman build environment with optional TFTP and DHCP smart proxies, and an NGINX webserver for serving static content and acting as a reverse-proxy to Foreman.
+**This role is part of the [ITC Automated Build Pods Project][]**
 
-Database backends can also be deployed in docker containers for ease of maintenance.
+Deploy and configure the Foreman server with smart-proxy managed TFTP and DHCP services.  
+
+## Dependencies
+
+The role itself has no dependencies and can be used to install a basic foreman server.  However it is intended to be used as part of the [ITC Automated Build Pods Project][] which requires additional Ansible roles and configurations.
 
 ## Requirements
 
-Foreman configuration is handled by [Foreman-Ansible-Modules](https://github.com/theforeman/foreman-ansible-modules) to configure the Foreman server.
-
-The initial configuration of the foreman smart-proxy is handled using the foreman-yml project
-
-Several supporting services (such as Nginx, MySQL, PostgreSQL) can be deployed in containers which would require the [ansible-docker](https://github.com/ajanis/ansible-docker.git) role
+ * The initial configuration of the Foreman Smart-Proxy is handled using [foreman-yml][].  This role supports configuration of DHCP, deployed via [Ansible ISC DHCP Server Role][] and TFTP, deployed via [Ansible TFTP Role][].
+ * Extended configuration of the Foreman server is handled via [Ansible Foreman Modules][] and should be handled via ```group_vars```
+ * If you wish to use Postgres or MySQL for the Foreman Database backend, you can deploy it in a container using this [Ansible Docker Role][].  The default database is Postgres
+ * Proxied requests to the Foreman server and API are handled by NGINX, which is deployed using this [Ansible NGINX Role][].
 
 ## Role Variables
 
@@ -207,12 +209,6 @@ foreman_proxy_dhcp_config: /etc/dhcp/dhcpd.conf
 foreman_proxy_dhcp_leases: /var/lib/dhcp/dhcpd.leases
 ```
 
-## Dependencies
-
-Additonal variables are required for configuring supporting services:  nginx, isc-dhcp server, tftp server, sqlite3, mariadb/mysql, postgresql, any services deployed utilizing the ansible-docker role.
-
-These variables may be set in your group_vars
-
 
 ## Example Group Variables for Supporting Roles
 ```
@@ -330,3 +326,11 @@ MIT
 ## Author Information
 
 Created by Alan Janis
+
+[Ansible Foreman Modules]: https://github.com/theforeman/foreman-ansible-modules
+[Ansible Docker Role]: https://github.com/ajanis/ansible-docker.git
+[foreman-yml]: https://pypi.org/project/foreman-yml
+[ansible tftp role]:  https://github.com/ajanis/ansible-tftp.git
+[ansible nginx role]:  https://github.com/ajanis/ansible-nginx.git
+[itc automated build pods project]:  https://github.com/ajanis/itc-build-pods.git
+[ansible isc dhcp server role]:  https://github.com/ajanis/ansible-isc-dhcp-server.git
