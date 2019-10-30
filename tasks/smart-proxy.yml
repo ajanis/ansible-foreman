@@ -1,0 +1,55 @@
+---
+- name: Install python requirements for initial configuration
+  pip:
+    name: "{{ foreman_python_pkgs }}"
+    state: present
+
+- name: foreman-rake build apipie cache (be patient)
+  block:
+    - name: '/usr/sbin/foreman-rake apipie:cache --trace'
+      command: /usr/sbin/foreman-rake apipie:cache --trace
+      args:
+        creates: "{{ foreman_config_dir }}/foreman_apipie_configured"
+      register: apipie_cache_results
+    - name: write lockfile on success
+      file:
+        state: touch
+        modification_time: preserve
+        access_time: preserve
+        dest: "{{ foreman_config_dir }}/foreman_apipie_configured"
+  always:
+    - name: writing foreman-rake apipie:cache output to /var/log/foreman/apipie_cache.log
+      copy:
+        dest: /var/log/foreman/apipie_cache.log
+        content: "{{ apipie_cache_results.stdout }}"
+  rescue:
+    - fail:
+        msg: "{{ apipie_cache_results.stderr }}"
+
+- name: copy foreman-yml template for initial foreman smart-proxy config 
+  template:
+    src: "smart-proxy/foreman_config.j2"
+    dest: "/tmp/foreman_config.yml"
+
+- name: configure foreman smart-proxy via foreman-yml
+  block:
+    - name: 'foreman-yml /tmp/foreman_config.yml'
+      command: foreman-yml /tmp/foreman_config.yml
+      args:
+        creates: "{{ foreman_config_dir }}/foreman_smartproxy_configured"
+      register: foreman_yml_results
+      failed_when: "foreman_yml_results.stdout | regex_search('(WARNING|ERROR)', multiline=True, ignorecase=True)"
+    - name: write lockfile on success
+      file:
+        state: touch
+        modification_time: preserve
+        access_time: preserve
+        dest: "{{ foreman_config_dir }}/foreman_smartproxy_configured"
+  always:
+    - name: writing foreman-yml output to /var/log/foreman/foreman-yml.log
+      copy:
+        dest: /var/log/foreman/foreman-yml.log
+        content: "{{ foreman_yml_results.stdout }}"
+  rescue:
+    - fail:
+        msg: "{{ foreman_yml_results.stdout | regex_search('^.*(WARNING|ERROR).*$', multiline=True, ignorecase=True) }}"
