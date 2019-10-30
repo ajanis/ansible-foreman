@@ -1,0 +1,60 @@
+foreman_install_version: 1.22
+
+foreman_db_sqlite_adapter_pkg: foreman-sqlite
+foreman_db_mysql_adapter_pkg: foreman-mysql2
+foreman_db_pgsql_adapter_pkg: foreman-postgresql
+foreman_db_socket: /var/lib/mysql/mysql.sock 
+
+python_pip_pkg: python-pip
+
+foreman_dependency_pkgs:
+  - ca-certificates
+  - python-httplib2
+  - python-setuptools
+  - curl
+  - wget
+  - gcc
+  - python-devel
+  - python-setuptools
+
+foreman_python_pkgs:
+  - apypie
+  - foreman-yaml
+  - requests
+  - foreman-yml
+  - foreman
+  - PyYAML
+
+foreman_pkgs:
+  - foreman
+  - foreman-sqlite3
+  - foreman-libvirt
+  - foreman-console
+  - foreman-debug
+  - foreman-journald
+  - foreman-cli
+  - ruby-foreman
+  - ruby-hammer-cli
+  - ruby-hammer-cli-foreman
+  - ruby-foreman-ansible-core
+  - ruby-foreman-ansible
+  - ruby-hammer-cli-foreman-ansible
+  - ruby-foreman-templates
+  - ruby-foreman-tasks
+  - ruby-foreman-remote-execution
+  - ruby-foreman-remote-execution-core
+  - ruby-foreman-setup
+  - ruby-foreman-discovery
+  - ruby-foreman-bootdisk
+  - ruby-foreman-dhcp-browser
+
+foreman_proxy_pkgs:
+  - foreman-proxy
+  - foreman-proxy-journald
+
+
+foreman_proxy_extra_repos_pkg: []
+
+foreman_proxy_dhcp_config_dir: /etc/dhcp
+foreman_proxy_dhcp_config: /etc/dhcp/dhcpd.conf
+foreman_proxy_dhcp_leases: /var/lib/dhcp/dhcpd.leases
