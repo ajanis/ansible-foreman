@@ -1,0 +1,9 @@
+foreman:
+  auth:
+    url: http://{{ foreman_interface }}:{{ foreman_port }}
+    user: {{ foreman_admin_user }}
+    pass: {{ foreman_admin_password }}
+
+  smart-proxy:
+    - name: smartproxy
+      url: {{ foreman_proxy_protocol }}://{{ ansible_default_ipv4.address }}:{{ foreman_proxy_port }}
