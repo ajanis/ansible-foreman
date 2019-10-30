@@ -1,17 +1,23 @@
 - include_tasks: install-debian.yml
   when: ansible_os_family == "Debian"
 
-#- include_tasks: install-redhat.yml
-#  when: ansible_os_family == "RedHat"
+- include_tasks: install-redhat.yml
+  when: ansible_os_family == "RedHat"
 
-- name: Start the foreman service
-  systemd:
-    name: foreman
-    state: started
-    enabled: yes
+- name: install foreman sqlite database adapter
+  package:
+    name: "{{ foreman_db_sqlite_adapter_pkg }}"
+    state: present
+  when: foreman_db_adapter == "sqlite3"
 
-- name: Start the foreman-proxy service
-  systemd:
-    name: foreman-proxy
-    state: started
-    enabled: yes
+- name: install foreman mysql database adapter
+  package:
+    name: "{{ foreman_db_mysql_adapter_pkg }}"
+    state: present
+  when: foreman_db_adapter == "mysql"
+
+- name: install foreman postgresql database adapter
+  package:
+    name: "{{ foreman_db_pgsql_adapter_pkg }}"
+    state: present
+  when: foreman_db_adapter == "postgresql"
