@@ -22,3 +22,8 @@
 - name: display_foreman_version
   debug:
     msg: "Foreman Installed Version is: {{ foreman_version }}"
+
+- name: set foreman admin password
+  command: "foreman-rake permissions:reset username={{ foreman_admin_user }} password={{ foreman_admin_password }}"
+  when: foreman_pw_updated is changed or foreman_perform_rake_tasks
+  no_log: True
