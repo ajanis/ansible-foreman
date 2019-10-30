@@ -1,0 +1,38 @@
+---
+#- name: domain
+#  foreman_domain:
+#    name: "example.org"
+#    description: "Example Domain"
+#    locations:
+#      - "Default Location"
+#    organizations:
+#      - "Default Organization"
+#    server_url: "http://10.0.10.19"
+#    username: "admin"
+#    password: "changeme123"
+#    state: present
+#
+#
+#- name: My subnet
+#  foreman_subnet:
+#    name: "My subnet"
+#    network: "192.168.121.0"
+#    mask: "255.255.255.0"
+#    gateway: "192.168.121.1"
+#    from_ip: "192.168.121.10"
+#    to_ip: "192.168.121.100"
+#    boot_mode: "Static"
+#    dhcp_proxy: "10.0.10.19"
+#    tftp_proxy: "10.0.10.19"
+#    vlanid: 30
+#    mtu: 9000
+#    domains:
+#    - "example.org"
+#    organizations:
+#    - "Default Organization"
+#    locations:
+#    - "Default Location"
+#    server_url: "http://10.0.10.19"
+#    username: "admin"
+#    password: "changeme123"
+#    state: present
