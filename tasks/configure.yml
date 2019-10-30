@@ -1,12 +1,4 @@
 ---
-- name: Generate foreman database config from template
-  template:
-    src: etc/foreman/database.yml.j2
-    dest: "{{ foreman_config_dir }}/database.yml"
-    mode: 0755
-    backup: yes
-  notify: restart foreman
-  register: db_config
 
 - name: Generate foreman settings config from template
   template:
@@ -17,17 +9,38 @@
   notify: restart foreman
   register: settings_config
 
+- name: Generate foreman database config from template
+  template:
+    src: etc/foreman/database.yml.j2
+    dest: "{{ foreman_config_dir }}/database.yml"
+    mode: 0755
+    backup: yes
+  notify: restart foreman
+  register: db_config
+
 - name: Perform initial database setup (migrate)
   command: foreman-rake db:migrate
   register: migrate_results
   notify: restart foreman
-  when: db_config is changed
+  when: db_config is changed or foreman_perform_rake_tasks
+  ignore_errors: yes
+
+- fail:
+    msg: "{{ migrate_results.stdout_lines }}"
+  when: migrate_results.failed is defined and migrate_results.failed == True
+
 
 - name: perform initial database setup (seed)
   command: foreman-rake db:seed
   register: seed_results
   notify: restart foreman
-  when: settings_config is changed
+  when: settings_config is changed or foreman_perform_rake_tasks
+  ignore_errors: yes
+
+- fail:
+    msg: "{{ seed_results.stdout_lines }}"
+  when: seed_results.failed is defined and seed_results.failed == True
+
 
 - name: Check for foreman admin password change
   copy:
@@ -36,8 +49,8 @@
   register: foreman_pw_updated
 
 - name: set foreman admin password
-  command: "foreman-rake permissions:reset username=admin password={{ foreman_admin_password }}"
-  when: foreman_pw_updated is changed
+  command: "foreman-rake permissions:reset username={{ foreman_admin_user }} password={{ foreman_admin_password }}"
+  when: foreman_pw_updated is changed or foreman_perform_rake_tasks
   no_log: True
 
 - name: template foreman-proxy settings.yml
