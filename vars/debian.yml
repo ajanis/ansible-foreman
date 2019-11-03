@@ -31,22 +31,20 @@ foreman_pkgs:
   - ruby-foreman
   - ruby-hammer-cli
   - ruby-hammer-cli-foreman
-  - ruby-foreman-ansible-core
   - ruby-foreman-ansible
   - ruby-hammer-cli-foreman-ansible
   - ruby-foreman-templates
   - ruby-foreman-tasks
   - ruby-foreman-remote-execution
-  - ruby-foreman-remote-execution-core
   - ruby-foreman-setup
   - ruby-foreman-discovery
   - ruby-foreman-bootdisk
   - ruby-foreman-dhcp-browser
-
 foreman_proxy_pkgs:
   - foreman-proxy
   - foreman-proxy-journald
-
+  - ruby-smart-proxy-ansible
+  - ruby-smart-proxy-remote-execution-ssh
 
 foreman_proxy_extra_repos_pkg: []
 
