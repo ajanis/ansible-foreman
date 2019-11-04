@@ -1,5 +1,4 @@
-foreman_install_version: 1.22
-
+---
 foreman_db_sqlite_adapter_pkg: foreman-sqlite
 foreman_db_mysql_adapter_pkg: foreman-mysql2
 foreman_db_pgsql_adapter_pkg: foreman-postgresql
