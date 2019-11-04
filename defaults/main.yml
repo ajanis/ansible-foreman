@@ -17,6 +17,7 @@ foreman_proxy_group: foreman-proxy
 foreman_proxy_protocol: http
 foreman_proxy_bind_host: "{{ ansible_default_ipv4.address }}"
 foreman_proxy_port: 8000
+foreman_proxy_foreman_url: http://127.0.0.1
 
 foreman_proxy_dhcp: True
 foreman_proxy_dhcp_protocol: http
