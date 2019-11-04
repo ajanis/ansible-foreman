@@ -9,7 +9,6 @@ python_pip_pkg: python-pip
 foreman_dependency_pkgs:
   - ca-certificates
   - python-httplib2
-  - python-setuptools
   - curl
   - wget
   - gcc
@@ -18,7 +17,6 @@ foreman_dependency_pkgs:
 
 foreman_python_pkgs:
   - apypie
-  - foreman-yaml
   - requests
   - foreman-yml
   - foreman
