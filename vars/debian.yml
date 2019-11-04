@@ -5,17 +5,16 @@ foreman_repo_url: http://deb.theforeman.org/
 python_pip_pkg: python-pip
 foreman_python_pkgs:
   - apypie
-  - foreman-yaml
   - requests
   - foreman-yml
   - foreman
   - PyYAML
+  - setuptools
 
 foreman_dependency_pkgs:
   - ca-certificates
   - python-httplib2
   - python-apt
-  - python-setuptools
   - curl
   - apt-transport-https
   - wget
