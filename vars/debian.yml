@@ -40,11 +40,12 @@ foreman_pkgs:
   - ruby-foreman-discovery
   - ruby-foreman-bootdisk
   - ruby-foreman-dhcp-browser
+
 foreman_proxy_pkgs:
   - foreman-proxy
   - foreman-proxy-journald
-  - ruby-smart-proxy-ansible
-  - ruby-smart-proxy-remote-execution-ssh
+  #- ruby-smart-proxy-ansible
+  #- ruby-smart-proxy-remote-execution-ssh
 
 foreman_proxy_extra_repos_pkg: []
 
