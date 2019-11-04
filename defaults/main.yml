@@ -1,6 +1,7 @@
 ---
 www_domain: "{{ ansible_domain }}"
 
+foreman_install_version: 1.23
 foreman_enable_service: True
 foreman_hostname: "{{ ansible_hostname }}"
 foreman_interface: 0.0.0.0
