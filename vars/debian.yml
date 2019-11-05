@@ -21,7 +21,6 @@ foreman_dependency_pkgs:
 
 foreman_pkgs:
   - foreman
-  - foreman-sqlite3
   - foreman-libvirt
   - foreman-console
   - foreman-debug
