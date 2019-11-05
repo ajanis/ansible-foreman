@@ -95,10 +95,10 @@
         - smartproxy
   tags: [foreman, configure, smartproxy]
 
-#- include_tasks:
-#    file: awx.yml
-#    apply:
-#      tags:
-#        - awx
-#  tags:
-#    - awx
+- include_tasks:
+    file: awx.yml
+    apply:
+      tags:
+        - awx
+  tags:
+    - awx
