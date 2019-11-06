@@ -34,7 +34,7 @@ The role itself has no dependencies and can be used to install a basic foreman s
 ## Role Variables
 
 ### defaults/main.yml
-```
+```yaml
 www_domain: "{{ ansible_domain }}"
 
 foreman_enable_service: True
@@ -81,7 +81,7 @@ foreman_perform_rake_tasks: False
 ```
 
 ### vars/debian.yml
-```
+```yaml
 foreman_gpg_key_url: https://deb.theforeman.org/pubkey.gpg
 foreman_repo_url: http://deb.theforeman.org/ 
 foreman_install_version: 1.22
@@ -146,7 +146,7 @@ foreman_db_socket: /var/run/mysqld/mysqld.sock
 ```
 
 ### vars/redhat.yml
-```
+```yaml
 foreman_install_version: 1.22
 
 foreman_db_sqlite_adapter_pkg: foreman-sqlite
@@ -211,7 +211,7 @@ foreman_proxy_dhcp_leases: /var/lib/dhcp/dhcpd.leases
 
 
 ## Example Group Variables for Supporting Roles
-```
+```yaml
 # Foreman
 www_domain: foreman.example.com
 foreman_hostname: foreman
@@ -282,7 +282,7 @@ docker_containers:
 ```
 
 ## Example Playbook
-```
+```yaml
 - name: "Deploy Foreman Server"
   hosts: foreman
   become: True
@@ -303,7 +303,7 @@ docker_containers:
       when: foreman_proxy_tftp
 
     - include_role:
-        name: nginx      
+        name: nginx
 
     - include_role:
         name: docker
