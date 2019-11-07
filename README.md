@@ -18,7 +18,7 @@
 
 **This role is part of the [ITC Automated Build Pods Project][]**
 
-Deploy and configure the Foreman server with smart-proxy managed TFTP and DHCP services.  
+Deploy and configure the Foreman server with smart-proxy managed TFTP and DHCP services.
 
 ## Dependencies
 
