@@ -79,6 +79,15 @@
   notify:
     - restart foreman-proxy
 
+- name: template foreman-proxy httpboot.yml
+  template:
+    src: etc/foreman-proxy/httpboot.yml.j2
+    dest: "{{ foreman_proxy_config_dir }}/settings.d/httpboot.yml"
+    backup: yes
+  when: foreman_proxy_httpboot
+  notify:
+    - restart foreman-proxy
+
 - name: fix dhcp config directory permissions
   file:
     path: "{{ foreman_proxy_dhcp_config_dir }}"
