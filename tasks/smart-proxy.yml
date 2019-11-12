@@ -26,7 +26,7 @@
     - fail:
         msg: "{{ apipie_cache_results.stderr }}"
 
-- name: copy foreman-yml template for initial foreman smart-proxy config 
+- name: copy foreman-yml template for initial foreman smart-proxy config
   template:
     src: "smart-proxy/foreman_config.j2"
     dest: "/tmp/foreman_config.yml"

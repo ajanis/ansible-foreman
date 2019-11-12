@@ -1,3 +1,4 @@
+---
 foreman:
   auth:
     url: http://{{ foreman_interface }}:{{ foreman_port }}
@@ -5,5 +6,51 @@ foreman:
     pass: {{ foreman_admin_password }}
 
   smart-proxy:
-    - name: smartproxy
+    - name: smart-proxy
       url: {{ foreman_proxy_protocol }}://{{ ansible_default_ipv4.address }}:{{ foreman_proxy_port }}
+
+#  cleanup-architecture:
+#    - name: i386
+#
+#  cleanup-compute-profile:
+#    - name: 1-Small
+#    - name: 2-Medium
+#    - name: 3-Large
+#
+#  setting:
+#    - name: safemode_render
+#      value: false
+#
+#  architecture:
+#    - name: x86_64
+#
+#  domain:
+#    - name: home.prettybaked.com
+#      fullname:
+#      dns-proxy:
+#      parameters:
+#
+#  subnet:
+#    - name: lab
+#      network: 10.0.10.0
+#      mask: 255.255.255.0
+#      gateway: 10.0.10.1
+#      dns-primary: 10.0.10.1
+#      dns-secondary:
+#      ipam: DHCP
+#      from: 10.0.10.240
+#      to: 10.0.10.250
+#      vlanid:
+#      domain:
+#        - name: home.prettybaked.com
+#      dhcp-proxy: foreman.home.prettybaked.com
+#      tftp-proxy: foreman.home.prettybaked.com
+#      dns-proxy:
+#      boot-mode: DHCP
+#
+#  model:
+#    - name: Virtual Machine
+#      info:
+#      vendor-class:
+#      hardware-model:
+#
