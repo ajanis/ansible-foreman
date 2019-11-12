@@ -108,9 +108,9 @@
 
 - name: ensure correct permissions for tftp pxe directories
   file:
-    path: "{{ foreman_proxy_tftp_dir }}/{{ item }}"
+    path: "{{ foreman_proxy_tftp_dir }}"
     owner: "{{ foreman_proxy_user }}"
     group: "{{ foreman_proxy_group }}"
+    recurse: yes
     state: directory
   when: foreman_proxy_tftp
-  with_items: "{{ foreman_proxy_tftp_pxe_dir }}"
