@@ -2,6 +2,7 @@
 www_domain: "{{ ansible_domain }}"
 
 foreman_install_version: 1.23
+foreman_plugins_version: 1.23
 foreman_enable_service: True
 foreman_hostname: "{{ ansible_hostname }}"
 foreman_interface: 0.0.0.0
@@ -25,7 +26,7 @@ foreman_proxy_dhcp_protocol: http
 foreman_proxy_dhcp_server: 127.0.0.1
 foreman_proxy_dhcp_omapi_port: 7911
 foreman_proxy_dhcp_subnets: []
-
+foreman_proxy_httpboot: True
 foreman_proxy_tftp: True
 foreman_proxy_tftp_protocol: http
 foreman_proxy_tftp_dir: /srv/tftp
