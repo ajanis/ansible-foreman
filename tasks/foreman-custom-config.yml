@@ -1,6 +1,6 @@
 ---
 - name: "Default Organization"
-  foreman_organization:
+  theforeman.foreman.foreman_organization:
     server_url: "http://{{ foreman_proxy_bind_host }}"
     username: "{{ foreman_admin_user }}"
     password: "{{ foreman_admin_password }}"
@@ -8,7 +8,7 @@
     state: present
 
 - name: "Default Location"
-  foreman_location:
+  theforeman.foreman.foreman_location:
     server_url: "http://{{ foreman_proxy_bind_host }}"
     username: "{{ foreman_admin_user }}"
     password: "{{ foreman_admin_password }}"
@@ -18,7 +18,7 @@
     state: present
 
 - name: "Create Domain"
-  foreman_domain:
+  theforeman.foreman.foreman_domain:
     name: "{{ www_domain }}"
     description: "{{ www_domain }}"
     locations:
@@ -31,7 +31,7 @@
     state: present
 
 - name: Create Subnets
-  foreman_subnet:
+  theforeman.foreman.foreman_subnet:
     name: "{{ item.name }}"
     network: "{{ item.network }}"
     mask: "{{ item.mask }}"
@@ -60,7 +60,7 @@
 
 
 - name: Update Foreman Settings
-  foreman_setting:
+  theforeman.foreman.foreman_setting:
     server_url: "http://{{ foreman_proxy_bind_host }}"
     username: "{{ foreman_admin_user }}"
     password: "{{ foreman_admin_password }}"
@@ -69,7 +69,7 @@
   loop: "{{ foreman_default_settings }}"
 
 - name: Configure Additional Foreman Settings
-  foreman_setting:
+  theforeman.foreman.foreman_setting:
     server_url: "http://{{ foreman_proxy_bind_host }}"
     username: "{{ foreman_admin_user }}"
     password: "{{ foreman_admin_password }}"
@@ -78,7 +78,7 @@
   loop: "{{ foreman_extra_settings }}"
 
 - name: "Create OS Install Mediums"
-  foreman_installation_medium:
+  theforeman.foreman.foreman_installation_medium:
     name: "{{ item.name }}"
     locations:
       - "Default Location"
@@ -94,7 +94,7 @@
 
 
 - name: "Create Operating Systems"
-  foreman_operatingsystem:
+  theforeman.foreman.foreman_operatingsystem:
     name: "{{ item.name }}"
     description: "{{ item.description }}"
     release_name: "{{ item.release_name }}"
@@ -114,7 +114,7 @@
   loop: "{{ foreman_operatingsystems }}"
 
 - name: "Create Template Associations"
-  foreman_os_default_template:
+  theforeman.foreman.foreman_os_default_template:
     operatingsystem: "{{ item.operatingsystem }}"
     template_kind: "{{ item.template_kind }}"
     provisioning_template: "{{ item.provisioning_template }}"
@@ -125,7 +125,7 @@
   loop: "{{ foreman_os_default_templates }}"
 
 - name: "Create Hostgroups"
-  foreman_hostgroup:
+  theforeman.foreman.foreman_hostgroup:
     name: "{{ item.name }}"
     description: "{{ item.description }}"
     architecture: "{{ item.architecture }}"
@@ -145,7 +145,7 @@
   loop: "{{ foreman_hostgroups }}"
 
 - name: "Update global parameters"
-  foreman_global_parameter:
+  theforeman.foreman.foreman_global_parameter:
     name: "{{ item.name }}"
     value: "{{ item.value }}"
     server_url: "http://{{ foreman_proxy_bind_host }}"
@@ -155,7 +155,7 @@
   loop: "{{ foreman_global_parameters }}"
 
 - name: "Update provisioning templates"
-  foreman_provisioning_template:
+  theforeman.foreman.foreman_provisioning_template:
     template: '{{ lookup("file", item.src) }}'
     locked: no
     locations:
