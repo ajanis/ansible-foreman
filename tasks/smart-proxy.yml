@@ -1,8 +1,10 @@
 ---
+
 - name: Install python requirements for initial configuration
   pip:
     name: "{{ foreman_python_pkgs }}"
     state: present
+    executable: pip2
 
 - name: foreman-rake build apipie cache (be patient)
   block:
@@ -38,7 +40,7 @@
       args:
         creates: "{{ foreman_config_dir }}/foreman_smartproxy_configured"
       register: foreman_yml_results
-      failed_when: "foreman_yml_results.stdout | regex_search('(WARNING|ERROR)', multiline=True, ignorecase=True)"
+      failed_when: "foreman_yml_results.stdout | regex_search('(WARNING|ERROR)', multiline=True, ignorecase=True) or foreman_yml_results.rc != 0"
     - name: write lockfile on success
       file:
         state: touch
@@ -46,10 +48,29 @@
         access_time: preserve
         dest: "{{ foreman_config_dir }}/foreman_smartproxy_configured"
   always:
-    - name: writing foreman-yml output to /var/log/foreman/foreman-yml.log
-      copy:
-        dest: /var/log/foreman/foreman-yml.log
-        content: "{{ foreman_yml_results.stdout }}"
+    - name: writing foreman-yml output to /var/log/foreman/foreman-yml-config.log
+      blockinfile:
+        dest: /var/log/foreman/foreman-yml-config.log
+        insertafter: EOF
+        create: yes
+        state: present
+        marker: "{{ ansible_date_time.iso8601 }}"
+        content: |
+          {% if foreman_yml_results.stderr is defined and foreman_yml_results.stderr != None %}
+          {{ foreman_yml_results.stderr }}
+          {% endif %}
+          {% if foreman_yml_results.stdout is defined and foreman_yml_results.stdout != None %}
+          {{ foreman_yml_results.stdout }}
+          {% endif %}
   rescue:
     - fail:
-        msg: "{{ foreman_yml_results.stdout | regex_search('^.*(WARNING|ERROR).*$', multiline=True, ignorecase=True) }}"
+        msg: |
+          {% if foreman_yml_results.msg is defined and foreman_yml_results.msg != None %}
+          Message: {{ foreman_yml_results.msg }}
+          {% endif %}
+          {% if foreman_yml_results.stderr is defined and foreman_yml_results.stderr != None %}
+          STDERR: {{ foreman_yml_results.stderr }}
+          {% endif %}
+          {% if foreman_yml_results.stdout is defined and foreman_yml_results.stdout != None %}
+          STDOUT: {{ foreman_yml_results.stdout | regex_search('^.*(WARNING|ERROR).*$', multiline=True, ignorecase=True) }}
+          {% endif %}
