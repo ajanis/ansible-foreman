@@ -58,7 +58,20 @@ foreman_proxy_dhcp: True
 foreman_proxy_dhcp_protocol: http
 foreman_proxy_dhcp_server: 127.0.0.1
 foreman_proxy_dhcp_omapi_port: 7911
-foreman_proxy_dhcp_subnets: []
+
+foreman_proxy_dhcp_subnets:
+  - name: "10.0.10.0/24"
+    network: "10.0.10.0"
+    mask: "255.255.255.0"
+    gateway: "10.0.10.1"
+    from_ip: "10.0.10.240"
+    to_ip: "10.0.10.250"
+    vlanid:
+    mtu: 9000
+    domains:
+    - "{{ www_domain }}"
+    dns_primary: 10.0.10.1
+    dns_secondary:
 
 foreman_proxy_tftp: True
 foreman_proxy_tftp_protocol: http
@@ -225,9 +238,25 @@ foreman_db_password: "{{ vault_foreman_db_password }}"
 foreman_admin_user: foreman
 foreman_admin_password: "{{ vault_foreman_admin_password }}"
 foreman_env: production
+```
+**NOTE:** If ```foreman_proxy_dhcp_subnets``` is defined, it will be used by the isc-dhcp-server role to configure dhcpd.conf, so you **do not** need to define your DHCP subnets again as ```isc_dhcp_server_subnets```
+
+```yaml
+# isc_dhcp_server_subnets:
 
 foreman_proxy_dhcp_subnets:
-  - 10.0.10.0/255.255.255.0
+  - name: "10.0.10.0/24"
+    network: "10.0.10.0"
+    mask: "255.255.255.0"
+    gateway: "10.0.10.1"
+    from_ip: "10.0.10.240"
+    to_ip: "10.0.10.250"
+    vlanid:
+    mtu: 9000
+    domains:
+    - "{{ www_domain }}"
+    dns_primary: 10.0.10.1
+    dns_secondary:
 
 # NGINX
 nginx_backends:
@@ -249,17 +278,6 @@ nginx_vhosts:
         docroot: "/usr/share/nginx/html"
 
 nginx_vhosts_ssl: []
-
-# ISC-DHCP-SERVER
-isc_dhcp_server_subnet:
-  - netaddress: 10.0.10.0
-    netmask: 255.255.255.0
-    gateway: 10.0.10.1
-    domain: "{{ www_domain | default(ansible_domain) }}"
-    domain_search: "{{ www_domain | default(ansible_domain) }}"
-    dns: 10.0.10.1
-    range: 10.0.10.100 10.0.10.200
-    vlanid: 0
 
 # DOCKER
 docker_containers:
@@ -284,30 +302,72 @@ docker_containers:
 ## Example Playbook
 ```yaml
 - name: "Deploy Foreman Server"
-  hosts: foreman
-  become: True
+  hosts: all
   remote_user: root
   tasks:
 
+    - setup:
     - include_role:
         name: common
+      tags:
+        - common
 
     - include_role:
         name: isc_dhcp_server
         public: yes
+        apply:
+          tags:
+            - dhcp
       when: foreman_proxy_dhcp
+      tags:
+        - dhcp
 
     - include_role:
         name: tftp
         public: yes
+        apply:
+          tags:
+            - tftp
       when: foreman_proxy_tftp
+      tags:
+        - tftp
 
     - include_role:
         name: nginx
+        public: yes
+        apply:
+          tags:
+            - nginx
+      tags:
+        - nginx
+
+    - include_role:
+        name: awx
+        public: yes
+        apply:
+          tags:
+            - awx
+      tags:
+        - awx
 
     - include_role:
         name: docker
         public: yes
+        apply:
+          tags:
+            - docker
+      tags:
+        - docker
+
+    - include_role:
+        name: awx
+        tasks_from: update_ca.yml
+        public: yes
+        apply:
+          tags:
+            - awx
+      tags:
+        - awx
 
     - include_role:
         name: foreman
@@ -317,6 +377,24 @@ docker_containers:
         - configure
         - foreman
         - smartproxy
+
+    - include_role:
+        name: foreman
+        public: yes
+        tasks_from: customize_config.yml
+        apply:
+          tags:
+            - customize
+      tags:
+        - customize
+
+    - include_role:
+        name: foreman
+        public: yes
+        tasks_from: host-build.yml
+      tags:
+        - hostcreate
+        - hostcleanup
 ```
 
 ## License
