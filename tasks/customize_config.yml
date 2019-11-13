@@ -154,3 +154,18 @@
     state: present_with_defaults
   loop: "{{ foreman_global_parameters }}"
 
+- name: "Update provisioning templates"
+  foreman_provisioning_template:
+    template: '{{ lookup("file", item.src) }}'
+    operatingsystems: "Ubuntu 18.04"
+    locked: no
+    locations:
+      - "Default Location"
+    organizations:
+      - "Default Organization"
+    server_url: "http://{{ foreman_proxy_bind_host }}"
+    username: "{{ foreman_admin_user }}"
+    password: "{{ foreman_admin_password }}"
+    state: present
+  with_filetree: 'files/provisioning'
+  when: item.state == 'file'
