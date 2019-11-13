@@ -123,7 +123,9 @@
     src: http://downloads.theforeman.org/discovery/releases/latest/fdi-image-latest.tar
     dest: "{{ foreman_proxy_tftp_dir }}/boot"
     remote_src: yes
-    #creates: "{{ foreman_proxy_tftp_dir }}/boot/fdi-image"
+    owner: "{{ foreman_proxy_user }}"
+    group: "{{ foreman_proxy_group }}"
+    creates: "{{ foreman_proxy_tftp_dir }}/boot/fdi-image"
 
 - name: ensure correct permissions for tftp pxe directories
   file:
