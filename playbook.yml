@@ -84,9 +84,8 @@
     - include_role:
         name: ansible-project
         public: yes
-        apply:
-          tags:
-            - project
       tags:
         - never
         - project
+        - projectimport
+        - projectclone
