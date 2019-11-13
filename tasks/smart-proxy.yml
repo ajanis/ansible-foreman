@@ -62,6 +62,7 @@
           {% if foreman_yml_results.stdout is defined and foreman_yml_results.stdout != None %}
           {{ foreman_yml_results.stdout }}
           {% endif %}
+      changed_when: False
   rescue:
     - fail:
         msg: |
