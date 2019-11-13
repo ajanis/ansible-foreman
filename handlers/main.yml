@@ -27,3 +27,7 @@
   command: "foreman-rake permissions:reset username={{ foreman_admin_user }} password={{ foreman_admin_password }}"
   when: foreman_pw_updated is changed or foreman_perform_rake_tasks
   no_log: True
+
+- name: rebuild pxe default configs
+  command: hammer template build-pxe-default
+  notify: restart foreman-proxy
