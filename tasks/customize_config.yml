@@ -157,7 +157,6 @@
 - name: "Update provisioning templates"
   foreman_provisioning_template:
     template: '{{ lookup("file", item.src) }}'
-    operatingsystems: "Ubuntu 18.04"
     locked: no
     locations:
       - "Default Location"
@@ -169,3 +168,4 @@
     state: present
   with_filetree: 'files/provisioning'
   when: item.state == 'file'
+  notify: rebuild pxe default configs
