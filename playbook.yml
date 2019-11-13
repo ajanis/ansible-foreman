@@ -70,7 +70,7 @@
     - include_role:
         name: foreman
         public: yes
-        tasks_from: foreman-host-build.yml
+        tasks_from: foreman-host-create.yml
       tags:
         - never
         - hostcreate
@@ -81,3 +81,12 @@
       tags:
         - never
         - hostcleanup
+    - include_role:
+        name: ansible-project
+        public: yes
+        apply:
+          tags:
+            - project
+      tags:
+        - never
+        - project
