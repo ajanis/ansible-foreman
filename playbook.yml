@@ -1,0 +1,83 @@
+---
+- name: "Deploy Foreman Server"
+  hosts: all
+  remote_user: root
+  tasks:
+    - include_role:
+        name: common
+      tags:
+        - common
+    - include_role:
+        name: isc_dhcp_server
+        public: yes
+        apply:
+          tags:
+            - dhcp
+      when: foreman_proxy_dhcp
+      tags:
+        - dhcp
+    - include_role:
+        name: tftp
+        public: yes
+        apply:
+          tags:
+            - tftp
+      when: foreman_proxy_tftp
+      tags:
+        - tftp
+    - include_role:
+        name: nginx
+        public: yes
+        apply:
+          tags:
+            - nginx
+      tags:
+        - nginx
+    - include_role:
+        name: awx
+        public: yes
+        apply:
+          tags:
+            - awx
+      tags:
+        - awx
+    - include_role:
+        name: docker
+        public: yes
+        apply:
+          tags:
+            - docker
+      tags:
+        - docker
+    - include_role:
+        name: awx
+        tasks_from: update_ca.yml
+        public: yes
+        apply:
+          tags:
+            - awx
+      tags:
+        - awx
+    - include_role:
+        name: foreman
+        public: yes
+      tags:
+        - install
+        - configure
+        - foreman
+        - smartproxy
+        - customize
+    - include_role:
+        name: foreman
+        public: yes
+        tasks_from: foreman-host-build.yml
+      tags:
+        - never
+        - hostcreate
+    - include_role:
+        name: foreman
+        public: yes
+        tasks_from: foreman-host-cleanup.yml
+      tags:
+        - never
+        - hostcleanup
