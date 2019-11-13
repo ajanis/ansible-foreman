@@ -1,0 +1,29 @@
+#jinja2: trim_blocks: True, lstrip_blocks: True
+---
+foreman:
+  auth:
+    url: http://{{ foreman_interface }}:{{ foreman_port }}
+    user: {{ foreman_admin_user }}
+    pass: {{ foreman_admin_password }}
+  host:
+{% for host in foreman_hosts %}
+    - name: {{ host.name }}
+      domain: {{ host.domain }}
+      architecture: {{ host.architecture }}
+      hostgroup: {{ host.hostgroup }}
+      os: {{ host.operatingsystem }}
+      media: {{ host.media }}
+      partition: {{ host.ptable }}
+{% if host.model is defined and host.model != None %}
+      model: {{ host.model }}
+{% endif %}
+      mac: {{ host.mac_address }}
+{% if host.root_pass is defined and host.root_pass != None %}
+      root-pass: {{ host.root_pass }}
+{% endif %}
+{% if host.parameters is defined and host.parameters != None %}
+      parameters: {{ host.parameters }}
+{% endif %}
+      organization: Default Organization
+      location: Default Location
+{% endfor %}

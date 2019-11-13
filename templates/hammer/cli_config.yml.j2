@@ -1,0 +1,6 @@
+---
+# {{ ansible_managed }}
+:foreman:
+ :host: 'http://{{ foreman_proxy_bind_host }}'
+ :username: '{{ foreman_admin_user }}'
+ :password: '{{ foreman_admin_password }}'
