@@ -1,0 +1,17 @@
+---
+
+- name: Create hosts via hammer cli
+  command: hammer -r host create --name {{ item.name }} --mac {{ item.mac_address }} --hostgroup {{ item.hostgroup }} --location 'Default Location' --organization 'Default Organization' --managed 0 --build 0
+  loop: "{{ foreman_hosts }}"
+  register: foreman_hosts_created
+  failed_when:
+    - foreman_hosts_created.rc != 65
+    - foreman_hosts_created.rc != 0
+  tags:
+    - hostcreate
+
+- name: Enable Host Builds via hammer cli
+  command: hammer -r host update --name {{ item.name }}.{{ item.domain }} --managed 1 --build 1
+  loop: "{{ foreman_hosts }}"
+  tags:
+    - hostcreate

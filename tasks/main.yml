@@ -93,3 +93,12 @@
         - configure
         - smartproxy
   tags: [foreman, configure, smartproxy]
+
+- include_tasks:
+    file: foreman-custom-config.yml
+    apply:
+      tags:
+        - foreman
+        - configure
+        - customize
+  tags: [foreman, configure, customize]

@@ -1,0 +1,12 @@
+---
+- name: Get list of all hosts via hammer cli
+  command: hammer -r --no-headers host list --fields id
+  register: foreman_hosts_created
+  tags:
+    - hostcleanup
+
+- name: Delete hosts via hammer cli
+  command: hammer -r host delete --id {{ item }}
+  loop: "{{ foreman_hosts_created.stdout_lines | list }}"
+  tags:
+    - hostcleanup
