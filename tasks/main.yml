@@ -83,7 +83,6 @@
   when: foreman_proxy_start_attempt.failed is defined and foreman_proxy_start_attempt.failed == True
   tags: [foreman, configure]
 
-
 - meta: flush_handlers
 
 - include_tasks:
@@ -94,11 +93,3 @@
         - configure
         - smartproxy
   tags: [foreman, configure, smartproxy]
-
-#- include_tasks:
-#    file: awx.yml
-#    apply:
-#      tags:
-#        - awx
-#  tags:
-#    - awx
