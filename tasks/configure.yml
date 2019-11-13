@@ -118,6 +118,13 @@
   notify:
     - restart foreman-proxy
 
+- name: Download foreman auto-discovery image
+  unarchive:
+    src: http://downloads.theforeman.org/discovery/releases/latest/fdi-image-latest.tar
+    dest: "{{ foreman_proxy_tftp_dir }}/boot"
+    remote_src: yes
+    #creates: "{{ foreman_proxy_tftp_dir }}/boot/fdi-image"
+
 - name: ensure correct permissions for tftp pxe directories
   file:
     path: "{{ foreman_proxy_tftp_dir }}"
