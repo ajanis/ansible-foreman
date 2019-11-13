@@ -2,7 +2,7 @@
 foreman_db_sqlite_adapter_pkg: foreman-sqlite
 foreman_db_mysql_adapter_pkg: foreman-mysql2
 foreman_db_pgsql_adapter_pkg: foreman-postgresql
-foreman_db_socket: /var/lib/mysql/mysql.sock 
+foreman_db_socket: /var/lib/mysql/mysql.sock
 
 python_pip_pkg: python-pip
 
@@ -32,14 +32,12 @@ foreman_pkgs:
   - ruby-foreman
   - ruby-hammer-cli
   - ruby-hammer-cli-foreman
-  - ruby-foreman-ansible-core
-  - ruby-foreman-ansible
-  - ruby-hammer-cli-foreman-ansible
+  - ruby-hammer-cli-foreman-discovery
+  - ruby-hammer-cli-foreman-remote-execution
+  - ruby-powerbar
   - ruby-foreman-templates
   - ruby-foreman-tasks
   - ruby-foreman-remote-execution
-  - ruby-foreman-remote-execution-core
-  - ruby-foreman-setup
   - ruby-foreman-discovery
   - ruby-foreman-bootdisk
   - ruby-foreman-dhcp-browser
@@ -47,6 +45,8 @@ foreman_pkgs:
 foreman_proxy_pkgs:
   - foreman-proxy
   - foreman-proxy-journald
+  - ruby-smart-proxy-discovery
+  #- ruby-smart-proxy-remote-execution-ssh
 
 
 foreman_proxy_extra_repos_pkg: []

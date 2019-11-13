@@ -1,6 +1,6 @@
 ---
 foreman_gpg_key_url: https://deb.theforeman.org/pubkey.gpg
-foreman_repo_url: http://deb.theforeman.org/ 
+foreman_repo_url: http://deb.theforeman.org/
 
 python_pip_pkg: python-pip
 foreman_python_pkgs:
@@ -31,6 +31,7 @@ foreman_pkgs:
   - ruby-hammer-cli-foreman
   - ruby-hammer-cli-foreman-discovery
   - ruby-hammer-cli-foreman-remote-execution
+  - ruby-powerbar
   - ruby-foreman-templates
   - ruby-foreman-tasks
   - ruby-foreman-remote-execution
