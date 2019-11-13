@@ -9,6 +9,18 @@
   notify: restart foreman
   register: settings_config
 
+- name: Ensure .hammer directory exists
+  file:
+    state: directory
+    path: /root/.hammer
+    mode: 750
+
+- name: Generate hammer-cli authentication file
+  template:
+    src: hammer/cli_config.yml.j2
+    dest: /root/.hammer/cli_config.yml
+    mode: 644
+
 - name: Generate foreman database config from template
   template:
     src: etc/foreman/database.yml.j2
