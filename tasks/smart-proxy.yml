@@ -15,12 +15,29 @@
         dest: "{{ foreman_config_dir }}/foreman_apipie_configured"
   always:
     - name: writing foreman-rake apipie:cache output to /var/log/foreman/apipie_cache.log
-      copy:
+      blockinfile:
         dest: /var/log/foreman/apipie_cache.log
-        content: "{{ apipie_cache_results.stdout }}"
+        insertafter: EOF
+        create: yes
+        state: present
+        marker: "{{ ansible_date_time.iso8601 }}"
+        content: |
+          {% if apipie_cache_results.stderr is defined and apipie_cache_results.stderr != None %}
+          {{ apipie_cache_results.stderr }}
+          {% endif %}
+          {% if apipie_cache_results.stdout is defined and apipie_cache_results.stdout != None %}
+          {{ apipie_cache_results.stdout }}
+          {% endif %}
+      changed_when: False
   rescue:
     - fail:
-        msg: "{{ apipie_cache_results.stderr }}"
+        mag: |
+          {% if apipie_cache_results.stderr is defined and apipie_cache_results.stderr != None %}
+          {{ apipie_cache_results.stderr }}
+          {% endif %}
+          {% if apipie_cache_results.stdout is defined and apipie_cache_results.stdout != None %}
+          {{ apipie_cache_results.stdout }}
+          {% endif %}
 
 - name: copy foreman-yml template for initial foreman smart-proxy config
   template:
