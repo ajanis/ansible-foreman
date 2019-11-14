@@ -7,6 +7,6 @@ snippet: true
 #!/bin/sh
 
 echo "Calling Ansible AWX/Tower provisioning callback..."
-wget --post-data "host_config_key=<%= host_param('ansible_host_config_key') %>" <%= host_param('ansible_tower_fqdn') %>/api/v2/job_templates/<%= host_param('ansible_job_template_id') %>/callback/ -O /dev/null -q
+/usr/bin/curl --data "host_config_key=<%= host_param('ansible_host_config_key') %>" <%= host_param('ansible_tower_fqdn') %>/api/v2/job_templates/<%= host_param('ansible_job_template_id') %>/callback/
 echo "DONE"
 <%#-%>
