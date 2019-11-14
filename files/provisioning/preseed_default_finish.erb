@@ -58,5 +58,13 @@ oses:
 <%= snippet 'preseed_networking_setup' %>
 sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin yes/g' /etc/ssh/sshd_config
 <%= snippet 'efibootmgr_netboot' %>
-<%= snippet 'built' %>
 
+<% if host_param_true?('cockpit_enabled') %>
+<%= snippet 'cockpit_setup' %>
+<% end -%>
+
+<% if host_param_true?('ansible_tower_provisioning') %>
+<%= snippet 'ansible_provisioning_callback_ubuntu' %>
+<% end -%>
+
+<%= snippet 'built' %>
