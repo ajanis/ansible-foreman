@@ -2,13 +2,24 @@
 foreman_gpg_key_url: https://deb.theforeman.org/pubkey.gpg
 foreman_repo_url: http://deb.theforeman.org/
 
-python_pip_pkg: python-pip
-foreman_python_pkgs:
+python_pip_pkg:
+  - python-pip
+  - python3-pip
+
+foreman_python2_pkgs:
   - apypie
   - requests
   - foreman-yml
   - foreman
   - PyYAML
+  - setuptools
+
+foreman_python3_pkgs:
+  - apypie
+  - requests
+  - foreman
+  - PyYAML
+  - setuptools
 
 foreman_dependency_pkgs:
   - ca-certificates
@@ -16,8 +27,6 @@ foreman_dependency_pkgs:
   - python3-httplib2
   - python-apt
   - python3-apt
-  - python-setuptools
-  - python3-setuptools
   - curl
   - apt-transport-https
   - wget

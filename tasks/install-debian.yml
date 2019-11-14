@@ -37,6 +37,18 @@
     update_cache: yes
     cache_valid_time: 3600
 
+- name: Install foreman python2 requirements
+  pip:
+    name: "{{ foreman_python2_pkgs }}"
+    state: present
+    executable: pip2
+
+- name: Install foreman python3 requirements
+  pip:
+    name: "{{ foreman_python3_pkgs }}"
+    state: present
+    executable: pip3
+
 - name: template /etc/default/foreman
   template:
     src: etc/default/foreman.j2
