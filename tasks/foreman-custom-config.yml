@@ -169,3 +169,19 @@
   with_filetree: 'files/provisioning'
   when: item.state == 'file'
   notify: rebuild pxe default configs
+
+- name: "Update provisioning templates"
+  theforeman.foreman.foreman_provisioning_template:
+    template: '{{ lookup("file", item.src) }}'
+    locked: yes
+    locations:
+      - "Default Location"
+    organizations:
+      - "Default Organization"
+    server_url: "http://{{ foreman_proxy_bind_host }}"
+    username: "{{ foreman_admin_user }}"
+    password: "{{ foreman_admin_password }}"
+    state: present
+  with_filetree: 'files/provisioning'
+  when: item.state == 'file'
+  notify: rebuild pxe default configs
