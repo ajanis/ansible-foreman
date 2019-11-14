@@ -1,11 +1,5 @@
 ---
 
-- name: Install python requirements for initial configuration
-  pip:
-    name: "{{ foreman_python_pkgs }}"
-    state: present
-    executable: pip2
-
 - name: foreman-rake build apipie cache (be patient)
   block:
     - name: '/usr/sbin/foreman-rake apipie:cache --trace'
