@@ -30,6 +30,8 @@ foreman_dependency_pkgs:
   - curl
   - apt-transport-https
   - wget
+  - syslinux-utils
+  - isolinux
 
 foreman_pkgs:
   - foreman
@@ -43,8 +45,11 @@ foreman_pkgs:
   - ruby-hammer-cli-foreman
   - ruby-hammer-cli-foreman-discovery
   - ruby-hammer-cli-foreman-remote-execution
+  - ruby-hammer-cli-foreman-bootdisk
+  - ruby-hammer-cli-foreman-ansible
   - ruby-powerbar
   - ruby-foreman-templates
+  - ruby-foreman-cockpit
   - ruby-foreman-tasks
   - ruby-foreman-remote-execution
   - ruby-foreman-discovery
