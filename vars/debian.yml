@@ -9,12 +9,15 @@ foreman_python_pkgs:
   - foreman-yml
   - foreman
   - PyYAML
-  - setuptools
 
 foreman_dependency_pkgs:
   - ca-certificates
   - python-httplib2
+  - python3-httplib2
   - python-apt
+  - python3-apt
+  - python-setuptools
+  - python3-setuptools
   - curl
   - apt-transport-https
   - wget
