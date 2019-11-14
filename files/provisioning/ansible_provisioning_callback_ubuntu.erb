@@ -7,6 +7,8 @@ snippet: true
 <% if host_param_true?('ansible_tower_provisioning') -%>
 <%= save_to_file('/etc/systemd/system/ansible-callback.service',
                  snippet('ansible_tower_callback_service_ubuntu')) %>
+
 # Runs during first boot, removes itself
-systemctl enable ansible-callback
+/bin/systemctl enable ansible-callback
 <% end -%>
+<%#-%>

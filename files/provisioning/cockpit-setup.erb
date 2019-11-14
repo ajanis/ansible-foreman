@@ -1,0 +1,20 @@
+<%#
+kind: snippet
+name: cockpit_setup
+model: ProvisioningTemplate
+description: this snippet will configure Cockpit
+snippet: true
+%>
+
+<% if @host.operatingsystem.family == 'Debian' -%>
+apt-get update
+apt-get -y install cockpit
+<% elsif @host.operatingsystem.family == 'Redhat' -%>
+yum -t -y install cockpit
+<% end -%>
+
+
+<% if @host.operatingsystem.family == 'Redhat' -%>
+sudo systemctl enable --now cockpit.socket
+<% end -%>
+<%#%>
