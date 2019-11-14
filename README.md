@@ -47,6 +47,7 @@ foreman_config_dir: /etc/foreman
 foreman_admin_user: foreman
 foreman_admin_password: "{{ vault_foreman_admin_password | default('password') }}"
 foreman_env: production
+foreman_runas_user: foreman
 
 foreman_proxy_enable_service: True
 foreman_proxy_config_dir: /etc/foreman-proxy
@@ -113,8 +114,11 @@ foreman_global_parameters: []
 foreman_gpg_key_url: https://deb.theforeman.org/pubkey.gpg
 foreman_repo_url: http://deb.theforeman.org/
 
-python_pip_pkg: python-pip
-foreman_python_pkgs:
+python_pip_pkg:
+  - python-pip
+  - python3-pip
+
+foreman_python2_pkgs:
   - apypie
   - requests
   - foreman-yml
@@ -122,13 +126,24 @@ foreman_python_pkgs:
   - PyYAML
   - setuptools
 
+foreman_python3_pkgs:
+  - apypie
+  - requests
+  - foreman
+  - PyYAML
+  - setuptools
+
 foreman_dependency_pkgs:
   - ca-certificates
   - python-httplib2
+  - python3-httplib2
   - python-apt
+  - python3-apt
   - curl
   - apt-transport-https
   - wget
+  - syslinux-utils
+  - isolinux
 
 foreman_pkgs:
   - foreman
@@ -142,8 +157,11 @@ foreman_pkgs:
   - ruby-hammer-cli-foreman
   - ruby-hammer-cli-foreman-discovery
   - ruby-hammer-cli-foreman-remote-execution
+  - ruby-hammer-cli-foreman-bootdisk
+  - ruby-hammer-cli-foreman-ansible
   - ruby-powerbar
   - ruby-foreman-templates
+  - ruby-foreman-cockpit
   - ruby-foreman-tasks
   - ruby-foreman-remote-execution
   - ruby-foreman-discovery
@@ -167,7 +185,6 @@ foreman_db_mysql_adapter_pkg: foreman-mysql2
 foreman_db_pgsql_adapter_pkg: foreman-postgresql
 
 foreman_db_socket: /var/run/mysqld/mysqld.sock
-
 ```
 
 ### vars/redhat.yml
@@ -219,8 +236,6 @@ foreman_proxy_pkgs:
   - foreman-proxy
   - foreman-proxy-journald
   - ruby-smart-proxy-discovery
-  #- ruby-smart-proxy-remote-execution-ssh
-
 
 foreman_proxy_extra_repos_pkg: []
 
@@ -231,7 +246,6 @@ foreman_proxy_dhcp_leases: /var/lib/dhcp/dhcpd.leases
 foreman_db_sqlite_adapter_pkg: foreman-sqlite3
 foreman_db_mysql_adapter_pkg: foreman-mysql2
 foreman_db_pgsql_adapter_pkg: foreman-postgresql
-
 ```
 
 
@@ -240,7 +254,7 @@ foreman_db_pgsql_adapter_pkg: foreman-postgresql
 timezone: "America/Denver"
 
 shared_storage: False
-www_domain: home.prettybaked.com
+www_domain: lab.wwt.local
 
 foreman_install_version: 1.24
 foreman_plugins_version: 1.24
@@ -253,13 +267,30 @@ foreman_proxy_dhcp: True
 foreman_db_name: foreman
 foreman_db_username: foreman
 foreman_db_password: "{{ vault_foreman_db_password }}"
-foreman_admin_user: foreman
+foreman_admin_user: admin
 foreman_admin_password: "{{ vault_foreman_admin_password }}"
 foreman_env: production
 
 foreman_extra_settings:
   - name: "root_pass"
     value: "{{ vault_foreman_admin_password }}"
+
+foreman_global_parameters:
+  - name: remote_execution_ssh_keys
+    value: "{{ vault_ssh_pubkey }}"
+  - name: ansible_host_config_key
+    value: "16a4a143-0f6e-49b6-8051-fe135b6fdffa"
+  - name: "ansible_job_template_id"
+    value: 11
+    parameter_type: integer
+  - name: ansible_tower_fqdn
+    value: "{{ awx_web_url }}"
+  - name: cockpit_enabled
+    parameter_type: boolean
+    value: True
+  - name: ansible_tower_provisioning
+    parameter_type: boolean
+    value: True
 
 foreman_proxy_dhcp_subnets:
   - name: "10.0.10.0/24"
@@ -290,6 +321,7 @@ foreman_operatingsystems:
       - "Preseed default"
       - "Preseed default PXELinux"
       - "Preseed default finish"
+      - "Preseed default user data"
     ptables:
       - "Preseed default"
     architectures:
@@ -322,38 +354,6 @@ foreman_hostgroups:
     ptable: "Preseed default"
     domain: "{{ www_domain }}"
     subnet: "10.0.10.0/24"
-
-foreman_hosts:
-  - name: devbuild02
-    domain: "{{ www_domain }}"
-    architecture: "x86_64"
-    hostgroup: "kvm"
-    subnet: "10.0.10.0/24"
-    ip: 10.0.10.241
-    operatingsystem: "Ubuntu 18.04"
-    media: "Ubuntu mirror"
-    ptable: "Preseed default"
-    mac_address: "52:54:00:7a:d0:c4"
-  - name: devbuild05
-    domain: "{{ www_domain }}"
-    architecture: "x86_64"
-    hostgroup: "kvm"
-    operatingsystem: "Ubuntu 18.04"
-    media: "Ubuntu mirror"
-    ptable: "Preseed default"
-    mac_address: "52:54:00:5b:ce:84"
-    subnet: "10.0.10.0/24"
-    ip: 10.0.10.243
-  - name: devbuild06
-    domain: "{{ www_domain }}"
-    architecture: "x86_64"
-    hostgroup: "kvm"
-    operatingsystem: "Ubuntu 18.04"
-    media: "Ubuntu mirror"
-    ptable: "Preseed default"
-    mac_address: "52:54:00:dd:fa:3a"
-    subnet: "10.0.10.0/24"
-    ip: 10.0.10.244
 
 nginx_backends:
   - service: foreman
@@ -419,11 +419,11 @@ docker_containers:
       - name: docker_awx
         aliases: postgres
     volumes:
-      - "{{ postgres_data_dir }}/10/data/:/var/lib/postgresql/data/pgdata:Z"
+      - "{{ awx_postgres_data_dir }}/10/data/:/var/lib/postgresql/data/pgdata:Z"
     env:
-      POSTGRES_USER: "{{ pg_username }}"
-      POSTGRES_PASSWORD: "{{ pg_password }}"
-      POSTGRES_DB: "{{ pg_database }}"
+      POSTGRES_USER: "{{ awx_pg_username }}"
+      POSTGRES_PASSWORD: "{{ awx_pg_password }}"
+      POSTGRES_DB: "{{ awx_pg_database }}"
       PGDATA: "/var/lib/postgresql/data/pgdata"
       http_proxy: "{{ http_proxy | default('') }}"
       https_proxy: "{{ https_proxy | default('') }}"
@@ -431,7 +431,7 @@ docker_containers:
 
   awx_rabbitmq:
     description: AWX RabbitMQ Service
-    image: "{{ rabbitmq_image }}"
+    image: "{{ awx_rabbitmq_image }}"
     volumes:
       - '/etc/localtime:/etc/localtime:ro'
     networks:
@@ -439,21 +439,21 @@ docker_containers:
         aliases: rabbitmq
     hostname: rabbitmq
     env:
-      RABBITMQ_DEFAULT_VHOST: "{{ rabbitmq_default_vhost }}"
-      RABBITMQ_DEFAULT_USER: "{{ rabbitmq_user }}"
-      RABBITMQ_DEFAULT_PASS: "{{ rabbitmq_password | quote }}"
-      RABBITMQ_ERLANG_COOKIE: "{{ rabbitmq_erlang_cookie }}"
+      RABBITMQ_DEFAULT_VHOST: "{{ awx_rabbitmq_default_vhost }}"
+      RABBITMQ_DEFAULT_USER: "{{ awx_rabbitmq_user }}"
+      RABBITMQ_DEFAULT_PASS: "{{ awx_rabbitmq_password | quote }}"
+      RABBITMQ_ERLANG_COOKIE: "{{ awx_rabbitmq_erlang_cookie }}"
       http_proxy: "{{ http_proxy | default('') }}"
       https_proxy: "{{ https_proxy | default('') }}"
       no_proxy: "{{ no_proxy | default('') }}"
 
   awx_memcached:
     description: AWX Memcached Service
-    image: "{{ memcached_image }}:{{ memcached_version }}"
-    hostname: "{{ memcached_host }}"
+    image: "{{ awx_memcached_image }}:{{ awx_memcached_version }}"
+    hostname: "{{ awx_memcached_host }}"
     networks:
       - name: docker_awx
-        aliases: "{{ memcached_host }}"
+        aliases: "{{ awx_memcached_host }}"
     volumes:
       - '/etc/localtime:/etc/localtime:ro'
     env:
@@ -463,7 +463,7 @@ docker_containers:
 
   awx:
     description: AWX Service
-    image: "{{ dockerhub_base }}/awx_task:{{ dockerhub_version }}"
+    image: "{{ awx_dockerhub_base }}/awx_task:{{ awx_dockerhub_version }}"
     hostname: "{{ awx_task_hostname }}"
     depends_on:
       - docker-awx_memcached.service
@@ -479,10 +479,10 @@ docker_containers:
           - awxweb:web
     user: root
     volumes:
-      - "{{ docker_compose_dir }}/SECRET_KEY:/etc/tower/SECRET_KEY"
-      - "{{ docker_compose_dir }}/environment.sh:/etc/tower/conf.d/environment.sh"
-      - "{{ docker_compose_dir }}/credentials.py:/etc/tower/conf.d/credentials.py"
-      - "{{ project_data_dir }}:/var/lib/awx/projects:rw"
+      - "{{ awx_docker_compose_dir }}/SECRET_KEY:/etc/tower/SECRET_KEY"
+      - "{{ awx_docker_compose_dir }}/environment.sh:/etc/tower/conf.d/environment.sh"
+      - "{{ awx_docker_compose_dir }}/credentials.py:/etc/tower/conf.d/credentials.py"
+      - "{{ awx_project_data_dir }}:/var/lib/awx/projects:rw"
     env:
       http_proxy: "{{ http_proxy | default('') }}"
       https_proxy: "{{ https_proxy | default('') }}"
@@ -490,13 +490,13 @@ docker_containers:
 
   awxweb:
     description: AWX Web Application
-    image: "{{ dockerhub_base }}/awx_web:{{ dockerhub_version }}"
+    image: "{{ awx_dockerhub_base }}/awx_web:{{ awx_dockerhub_version }}"
     depends_on:
       - docker-awx_memcached.service
       - docker-awx_rabbitmq.service
       - docker-awx_postgres.service
     ports:
-      - "{{ host_port }}:8052"
+      - "{{ awx_host_port }}:8052"
     networks:
       - name: docker_awx
         aliases:
@@ -508,72 +508,71 @@ docker_containers:
     hostname: "{{ awx_web_hostname }}"
     user: root
     volumes:
-      - "{{ docker_compose_dir }}/SECRET_KEY:/etc/tower/SECRET_KEY"
-      - "{{ docker_compose_dir }}/environment.sh:/etc/tower/conf.d/environment.sh"
-      - "{{ docker_compose_dir }}/credentials.py:/etc/tower/conf.d/credentials.py"
-      - "{{ docker_compose_dir }}/nginx.conf:/etc/nginx/nginx.conf:ro"
-      - "{{ project_data_dir }}:/var/lib/awx/projects:rw"
+      - "{{ awx_docker_compose_dir }}/SECRET_KEY:/etc/tower/SECRET_KEY"
+      - "{{ awx_docker_compose_dir }}/environment.sh:/etc/tower/conf.d/environment.sh"
+      - "{{ awx_docker_compose_dir }}/credentials.py:/etc/tower/conf.d/credentials.py"
+      - "{{ awx_docker_compose_dir }}/nginx.conf:/etc/nginx/nginx.conf:ro"
+      - "{{ awx_project_data_dir }}:/var/lib/awx/projects:rw"
     env:
       http_proxy: "{{ http_proxy | default('') }}"
       https_proxy: "{{ https_proxy | default('') }}"
       no_proxy: "{{ no_proxy | default('') }}"
 
-rabbitmq_version: "3.7.4"
-rabbitmq_image: "ansible/awx_rabbitmq:{{rabbitmq_version}}"
-rabbitmq_default_vhost: "awx"
-rabbitmq_erlang_cookie: "{{ vault_rabbitmq_erlang_cookie }}"
-rabbitmq_host: "rabbitmq"
-rabbitmq_port: "5672"
-rabbitmq_user: "guest"
-rabbitmq_password: "{{ vault_rabbitmq_password }}"
+awx_host_port: 8080
+awx_web_url: "http://{{ ansible_default_ipv4.address }}:{{ awx_host_port }}"
+awx_project_data_dir: /var/lib/awx
 
-postgresql_version: "10"
-postgresql_image: "postgres:{{postgresql_version}}"
+awx_rabbitmq_erlang_cookie: "{{ vault_rabbitmq_erlang_cookie }}"
+awx_rabbitmq_password: "{{ vault_rabbitmq_password }}"
 
+awx_pg_password: "{{ vault_pg_password }}"
+awx_pg_admin_password: "{{ vault_pg_admin_password }}"
 
-memcached_image: "memcached"
-memcached_version: "alpine"
-memcached_host: "memcached"
-memcached_port: "11211"
+awx_secret_key: "{{ vault_secret_key }}"
 
-dockerhub_base: ansible
-dockerhub_version: 9.0.0
-create_preload_data: True
-
-project_data_dir: /var/lib/awx
-postgres_data_dir: /var/lib/pgawx
-host_port: 8080
-
-docker_compose_dir: /var/lib/awxcompose
-pg_username: awx
-pg_password: "{{ vault_pg_password }}"
-pg_admin_password: "{{ vault_pg_admin_password }}"
-pg_database: awx
-pg_port: 5432
-
-secret_key: "{{ vault_secret_key }}"
-admin_user: admin
-admin_password: "{{ vault_awx_admin_password }}"
-
-awx_web_hostname: awxweb
-awx_task_hostname: awx
+awx_admin_user: admin
+awx_admin_password: "{{ vault_awx_admin_password }}"
 
 
 sshd_permit_root_login: 'yes'
 
 ssh_users:
   ajanis:
-    password: "{{vault_ajanis_pw}}"
+    password: "{{ vault_ajanis_pw }}"
     cn: "Alan Janis"
     givenname: "Alan"
     sn: "Janis"
-    mail: "alan.janis@gmail.com"
+    mail: "alan.janis@wwt.com"
     shell: /bin/zsh
     gecos: ajanis
     uid: 1043
     gid: 1042
-    pubkey: "{{ vault_id_rsa_pubkey }}"
+    pubkey: "{{ vault_ssh_pubkey }}"
     state: present
+  wwt:
+    password: "{{ vault_wwt_pw }}"
+    cn: "WWT Admin"
+    givenname: "WWT"
+    sn: "Admin"
+    mail: "wwt@lab.wwt.local"
+    shell: /bin/bash
+    gecos: wwt
+    uid: 1044
+    gid: 1042
+    pubkey: "{{ vault_ssh_pubkey }}"
+    state: present
+ssh_groups:
+  admin:
+    description: Administrators Group
+    gid: 1042
+    members:
+      - ajanis
+  users:
+    description: SSH Users Group
+    gid: 2002
+    members:
+      - ajanis
+      - wwt
 ```
 
 **NOTE:** If ```foreman_proxy_dhcp_subnets``` is defined, it will be used by the isc-dhcp-server role to configure dhcpd.conf, so you **do not** need to define your DHCP subnets again as ```isc_dhcp_server_subnets```
@@ -581,11 +580,19 @@ ssh_users:
 ## Example Playbook
 ```yaml
 - name: "Deploy Foreman Server"
-  hosts: all
+  hosts: buildhost
   remote_user: root
+  vars_files:
+    - vault.yml
   tasks:
 
-    - setup:
+    - name: Wait for server to come online
+      wait_for_connection:
+        delay: 60
+        sleep: 10
+        connect_timeout: 5
+        timeout: 900
+
     - include_role:
         name: common
       tags:
@@ -640,7 +647,7 @@ ssh_users:
 
     - include_role:
         name: awx
-        tasks_from: update_ca.yml
+        tasks_from: container-tasks.yml
         public: yes
         apply:
           tags:
@@ -656,24 +663,16 @@ ssh_users:
         - configure
         - foreman
         - smartproxy
-
-    - include_role:
-        name: foreman
-        public: yes
-        tasks_from: customize_config.yml
-        apply:
-          tags:
-            - customize
-      tags:
         - customize
 
     - include_role:
-        name: foreman
+        name: ansible-project
         public: yes
-        tasks_from: host-build.yml
       tags:
-        - hostcreate
-        - hostcleanup
+        - never
+        - project
+        - projectimport
+        - projectclone
 ```
 
 ## License
