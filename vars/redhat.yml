@@ -4,6 +4,12 @@ foreman_db_mysql_adapter_pkg: foreman-mysql2
 foreman_db_pgsql_adapter_pkg: foreman-postgresql
 foreman_db_socket: /var/lib/mysql/mysql.sock
 
+foreman_nginx_passenger_root: /usr/lib/ruby/1.8/phusion_passenger/locations.ini
+foreman_nginx_passenger_ruby: /usr/bin/tfm-ruby
+foreman_nginx_passenger_registry: /var/run/passenger-instreg
+foreman_nginx_passenger_app_root: /usr/share/foreman/public
+
+
 python_pip_pkg: python-pip
 
 foreman_dependency_pkgs:
@@ -14,6 +20,7 @@ foreman_dependency_pkgs:
   - gcc
   - python-devel
   - python-setuptools
+  - passenger
 
 foreman_python_pkgs:
   - apypie

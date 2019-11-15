@@ -2,6 +2,11 @@
 foreman_gpg_key_url: https://deb.theforeman.org/pubkey.gpg
 foreman_repo_url: http://deb.theforeman.org/
 
+foreman_nginx_passenger_root: /usr/lib/ruby/vendor_ruby/phusion_passenger/locations.ini
+foreman_nginx_passenger_ruby: /usr/bin/foreman-ruby
+foreman_nginx_passenger_registry: /tmp
+foreman_nginx_passenger_app_root: /usr/share/foreman/public
+
 python_pip_pkg:
   - python-pip
   - python3-pip
@@ -32,6 +37,7 @@ foreman_dependency_pkgs:
   - wget
   - syslinux-utils
   - isolinux
+  - passenger
 
 foreman_pkgs:
   - foreman
