@@ -1,0 +1,23 @@
+---
+- name: include os specific vars
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution | lower }}{{ ansible_distribution_major_version }}.yml"
+    - "{{ ansible_os_family | lower }}.yml"
+
+- name: configure upstream nginx apt key
+  apt_key:
+    keyserver: "{{ foreman_nginx_passenger_upstream_repo_keyserver }}"
+    id: "{{ foreman_nginx_passenger_upstream_repo_key }}"
+
+- name: Add Phusion Passenger repository [Debian/Ubuntu]
+  apt_repository:
+    repo: "deb {{ foreman_nginx_passenger_repo_url }} {{ ansible_distribution_release }} main"
+    state: present
+
+- name: Install Passenger packages [Debian/Ubuntu]
+  apt:
+    name: "{{ foreman_nginx_passenger_pkgs }}"
+    state: latest
+    update_cache: yes
+    cache_valid_time: 3600
