@@ -6,7 +6,7 @@
 
 - name: restart foreman
   service:
-    name: nginx
+    name: foreman
     state: restarted
 
 - name: restart nginx
