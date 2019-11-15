@@ -25,8 +25,8 @@
 
 - name: Start the foreman service
   systemd:
-    name: foreman
-    state: started
+    name: nginx
+    state: restarted
     enabled: yes
   register: foreman_started
   when: foreman_enable_service
@@ -35,7 +35,7 @@
 - name: Verify foreman HTTP service is listening
   wait_for:
     host: "{{ foreman_interface | default(\"localhost\", true) }}"
-    port: "{{ foreman_port }}"
+    port: "80"
     delay: 5
   when: foreman_started.changed and foreman_enable_service
   ignore_errors: yes
@@ -56,7 +56,7 @@
 - name: Start the foreman-proxy service
   systemd:
     name: foreman-proxy
-    state: started
+    state: restarted
     enabled: yes
   register: foreman_proxy_started
   when: foreman_proxy_enable_service
