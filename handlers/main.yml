@@ -6,7 +6,12 @@
 
 - name: restart foreman
   service:
-    name: foreman
+    name: nginx
+    state: restarted
+
+- name: restart nginx
+  service:
+    name: nginx
     state: restarted
 
 - name: capture_foreman_version
