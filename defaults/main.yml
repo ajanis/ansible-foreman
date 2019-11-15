@@ -12,6 +12,7 @@ foreman_admin_user: foreman
 foreman_admin_password: "{{ vault_foreman_admin_password | default('password') }}"
 foreman_env: production
 foreman_runas_user: foreman
+foreman_runas_group: foreman
 
 foreman_proxy_enable_service: True
 foreman_proxy_config_dir: /etc/foreman-proxy
