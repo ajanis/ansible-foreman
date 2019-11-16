@@ -170,7 +170,7 @@
   when: item.state == 'file'
   notify: rebuild pxe default configs
 
-- name: "Update provisioning templates"
+- name: "Lock provisioning templates"
   theforeman.foreman.foreman_provisioning_template:
     template: '{{ lookup("file", item.src) }}'
     locked: yes
@@ -185,3 +185,18 @@
   with_filetree: 'files/provisioning'
   when: item.state == 'file'
   notify: rebuild pxe default configs
+
+- name: Create compute resources
+  foreman_compute_resource:
+    name: "{{ item.name }}"
+    provider: "{{ item.provider }}"
+    provider_params: "{{ item.provider_params }}"
+    locations:
+      - "Default Location"
+    organizations:
+      - "Default Organization"
+    server_url: "http://{{ foreman_proxy_bind_host }}"
+    username: "{{ foreman_admin_user }}"
+    password: "{{ foreman_admin_password }}"
+    state: present
+  loop: "{{ foreman_compute_resources }}"
