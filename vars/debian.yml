@@ -65,6 +65,9 @@ foreman_pkgs:
   - ruby-foreman-discovery
   - ruby-foreman-bootdisk
   - ruby-foreman-dhcp-browser
+  - ruby-foreman-tasks-core
+  - ruby-foreman-remote-execution-core
+  - ruby-foreman-ansible-core
 
 foreman_proxy_pkgs:
   - foreman-proxy
