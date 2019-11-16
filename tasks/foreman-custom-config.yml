@@ -187,7 +187,7 @@
   notify: rebuild pxe default configs
 
 - name: Create compute resources
-  foreman_compute_resource:
+  theforeman.foreman.foreman_compute_resource:
     name: "{{ item.name }}"
     provider: "{{ item.provider }}"
     provider_params: "{{ item.provider_params }}"
