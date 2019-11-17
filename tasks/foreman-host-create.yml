@@ -1,8 +1,18 @@
 ---
-- name: Create hosts via hammer cli
+- name: Query foreman hosts
+  command: hammer -r host list
+  register: hostlist
+
+- debug:
+    msg: "{{ hostlist }}"
+
+- name: "Create hosts via hammer cli"
   command: >
-    hammer -r host create --name {{ item.value.name }} --hostgroup {{ item.value.hostgroup }} --location 'Default Location' --organization 'Default Organization'  
-    --interface '{
+    hammer -r host 
+    {% if item.value.name not in hostlist.stdout %}
+    create --name {{ item.value.name }} --hostgroup {{ item.value.hostgroup }} --build '1'
+    --location 'Default Location' --organization 'Default Organization' 
+    --interface '{ 
     {% if item.value.provider is defined and item.value.provider == "kvm" %}
     "compute_bridge": "br{{ item.value.vlan_id | default('0') | regex_replace('10', '0') }}", 
     "compute_model": "virtio", 
@@ -12,19 +22,47 @@
     "ip": "{{ item.value.ip }}", 
     {% endif %}
     "identifier": "eth0" 
-    }'
+    }' 
     {% if item.value.provider is defined and item.value.provider == "kvm" %}
-    --compute-attributes '{
+    --compute-attributes '{ 
     "cpus": {{ item.value.cpu_cores }}, 
     "memory": {{ item.value.memory | regex_replace('^([0-9]+)G', '\\1 G') | human_to_bytes }}, 
-    "start": "1"
-    }'
+    "start": "0"
+    }' 
     {% endif %}
     {% if item.value.provider is defined and item.value.provider == "kvm" %}
-    --volume '{
+    --volume '{ 
     "capacity": "{{ item.value.disk_size | regex_replace('^([0-9]+)G', '\\1 G') | human_to_bytes // 1073741824 }}G", 
-    "format_type": "qcow2"
-    }'
+    "format_type": "qcow2" 
+    }' 
+    {% endif %}
+    {% else %}
+    update --name {{ item.value.name }}.{{ www_domain }} --build '1'
     {% endif %}
   loop: "{{ foreman_hosts | dict2items }}"
   register: foreman_hosts_created
+
+- name: Get host power status
+  shell: |
+    hammer -r host status --name {{ item.value.name }}.{{ www_domain }} | grep -i power | awk '{print $2}'
+  register: powerstatus
+  loop: "{{ foreman_hosts | dict2items }}"
+  when: item.key in hostlist.stdout
+
+- debug:
+    msg: "{{ powerstatus }}"
+
+- debug:
+    msg: "{{ powerstatus.results }}"
+
+- name: Host Power-On
+  command: >
+    hammer -r host
+    {% if item.stdout == "off" %}
+    start
+    {% else %}
+    reset
+    {% endif %}
+    --name {{ item.item.value.name }}.{{ www_domain }}
+  loop: "{{ powerstatus.results }}"
+  when: item.item.key in hostlist.stdout
