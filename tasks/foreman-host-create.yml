@@ -23,7 +23,7 @@
   command: >
     hammer -r host create --name devbuild03 --hostgroup arthur --location 'Default Location' --organization 'Default Organization'  
     --interface '{
-    {% if host.is_virtual %}
+    {% if host.provider is defined and host.provider == "kvm" %}
     {% if host.vlan_id is defined %}
     "compute_bridge": "br{{ host.vlan_id | default('0') }}", 
     {% endif %}
@@ -36,7 +36,7 @@
     "identifier": "eth0", 
     "name": "eth0"
     }'
-    {% if host.is_virtual %}
+    {% if host.provider is defined and host.provider == "kvm" %}
     {% if host.compute_attributes is defined %}
     --compute-attributes '{
     "cpus": {{ host.cpu_cores }}, 
@@ -45,7 +45,7 @@
     }'
     {% endif %}
     {% endif %}
-    {% if host.is_virtual %}
+    {% if host.provider is defined and host.provider == "kvm" %}
     {% if host.volume_attributes is defined %}
     --volume '{
     "capacity": "{{ host.disk_size | human_to_bytes }}B", 
