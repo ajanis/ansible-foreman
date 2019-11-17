@@ -17,7 +17,7 @@
     - hostcreate
 
 - name: Enable Host Builds via hammer cli
-  command: hammer -r host reboot --name {{ item.name }}.{{ www_domain }}
+  command: hammer -r host start --name {{ item.name }}.{{ www_domain }}
   loop: "{{ foreman_hosts }}"
   tags:
     - hostcreate
