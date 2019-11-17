@@ -21,13 +21,37 @@
 
 - name: Create hosts via hammer cli
   command: >
-    hammer -r host create --name {{ host.name }} --hostgroup {{ host.hostgroup }} --location 'Default Location' --organization 'Default Organization' 
-    --interface {{ host.interface_attributes | to_json | quote }} 
-    {% if host.compute_attributes is defined %}
-    --compute-attributes {{ host.compute_attributes | to_json | quote }} 
+    hammer -r host create --name devbuild03 --hostgroup arthur --location 'Default Location' --organization 'Default Organization'  
+    --interface '{
+    {% if host.is_virtual %}
+    {% if host.vlan_id is defined %}
+    "compute_bridge": "br{{ host.vlan_id | default('0') }}", 
     {% endif %}
+    "compute_model": "virtio", 
+    "compute_type": "bridge", 
+    {% endif %}
+    {% if host.ip is defined %}
+    "ip": "{{ host.ip }}", 
+    {% endif %}
+    "identifier": "eth0", 
+    "name": "eth0"
+    }'
+    {% if host.is_virtual %}
+    {% if host.compute_attributes is defined %}
+    --compute-attributes '{
+    "cpus": {{ host.cpu_cores }}, 
+    "memory": {{ host.memory | human_to_bytes }}, 
+    "start": 1
+    }'
+    {% endif %}
+    {% endif %}
+    {% if host.is_virtual %}
     {% if host.volume_attributes is defined %}
-    --volume {{ host.volume_attributes | to_json | quote }} 
+    --volume '{
+    "capacity": "{{ host.disk_size | human_to_bytes }}B", 
+    "format_type": "qcow2"
+    }'
+    {% endif %}
     {% endif %}
   register: foreman_hosts_created
   failed_when:
