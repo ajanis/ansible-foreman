@@ -39,6 +39,7 @@
   theforeman.foreman.foreman_global_parameter:
     name: "{{ item.name }}"
     value: "{{ item.value }}"
+    parameter-type: "{{ item.parameter_type }}"
     server_url: "http://{{ foreman_proxy_bind_host }}"
     username: "{{ foreman_admin_user }}"
     password: "{{ foreman_admin_password }}"
