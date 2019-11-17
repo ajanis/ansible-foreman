@@ -104,3 +104,39 @@
         - configure
         - customize
   tags: [foreman, configure, customize]
+
+- include_tasks:
+    file: foreman-custom-network.yml
+    apply:
+      tags:
+        - foreman
+        - configure
+        - customizenetwork
+  tags: [foreman, configure, customizenetwork]
+
+- include_tasks:
+    file: foreman-custom-os.yml
+    apply:
+      tags:
+        - foreman
+        - configure
+        - customizeos
+  tags: [foreman, configure, customizeos]
+
+- include_tasks:
+    file: foreman-custom-groups.yml
+    apply:
+      tags:
+        - foreman
+        - configure
+        - customizegroups
+  tags: [foreman, configure, customizegroups]
+
+- include_tasks:
+    file: foreman-custom-templates.yml
+    apply:
+      tags:
+        - foreman
+        - configure
+        - customizetemplates
+  tags: [foreman, configure, customizetemplates]
