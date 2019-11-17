@@ -1,0 +1,41 @@
+---
+- name: "Create Domain"
+  theforeman.foreman.foreman_domain:
+    name: "{{ www_domain }}"
+    description: "{{ www_domain }}"
+    locations:
+      - "Default Location"
+    organizations:
+      - "Default Organization"
+    server_url: "http://{{ foreman_proxy_bind_host }}"
+    username: "{{ foreman_admin_user }}"
+    password: "{{ foreman_admin_password }}"
+    state: present
+
+- name: Create Subnets
+  theforeman.foreman.foreman_subnet:
+    name: "{{ item.name }}"
+    network: "{{ item.network }}"
+    mask: "{{ item.mask }}"
+    gateway: "{{ item.gateway }}"
+    from_ip: "{{ item.from_ip }}"
+    to_ip: "{{ item.to_ip }}"
+    dns_primary: "{{ item.dns_primary | default(omit) }}"
+    dns_secondary: "{{ item.dns_secondary | default(omit) }}"
+    boot_mode: "DHCP"
+    dhcp_proxy: "smart-proxy"
+    tftp_proxy: "smart-proxy"
+    discovery_proxy: "smart-proxy"
+    httpboot_proxy: "smart-proxy"
+    vlanid: "{{ item.vlanid | default(omit) }}"
+    mtu: "{{ item.mtu | default(omit) }}"
+    domains: "{{ item.domains | default(www_domain) }}"
+    organizations:
+    - "Default Organization"
+    locations:
+    - "Default Location"
+    server_url: "http://{{ foreman_proxy_bind_host }}"
+    username: "{{ foreman_admin_user }}"
+    password: "{{ foreman_admin_password }}"
+    state: present
+  loop: "{{ foreman_proxy_dhcp_subnets }}"

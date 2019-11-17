@@ -1,0 +1,47 @@
+---
+- name: "Create OS Install Mediums"
+  theforeman.foreman.foreman_installation_medium:
+    name: "{{ item.name }}"
+    locations:
+      - "Default Location"
+    organizations:
+      - "Default Organization"
+    os_family: "{{ item.os_family }}"
+    path: "{{ item.path }}"
+    server_url: "http://{{ foreman_proxy_bind_host }}"
+    username: "{{ foreman_admin_user }}"
+    password: "{{ foreman_admin_password }}"
+    state: present
+  loop: "{{ foreman_installation_mediums }}"
+
+
+- name: "Create Operating Systems"
+  theforeman.foreman.foreman_operatingsystem:
+    name: "{{ item.name }}"
+    description: "{{ item.description }}"
+    release_name: "{{ item.release_name }}"
+    family: "{{ item.family }}"
+    major: "{{ item.major }}"
+    minor: "{{ item.minor }}"
+    provisioning_templates: "{{ item.provisioning_templates | default(omit) }}"
+    ptables: "{{ item.ptables | default(omit) }}"
+    architectures: "{{ item.architectures }}"
+    media: "{{ item.media }}"
+    password_hash: "{{ item.password_hash | default('SHA256') }}"
+    parameters: "{{ item.parameters | default(omit) }}"
+    server_url: "http://{{ foreman_proxy_bind_host }}"
+    username: "{{ foreman_admin_user }}"
+    password: "{{ foreman_admin_password }}"
+    state: present
+  loop: "{{ foreman_operatingsystems }}"
+
+- name: "Create Template Associations"
+  theforeman.foreman.foreman_os_default_template:
+    operatingsystem: "{{ item.operatingsystem }}"
+    template_kind: "{{ item.template_kind }}"
+    provisioning_template: "{{ item.provisioning_template }}"
+    server_url: "http://{{ foreman_proxy_bind_host }}"
+    username: "{{ foreman_admin_user }}"
+    password: "{{ foreman_admin_password }}"
+    state: present
+  loop: "{{ foreman_os_default_templates }}"

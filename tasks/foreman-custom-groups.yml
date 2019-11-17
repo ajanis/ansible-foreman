@@ -1,0 +1,48 @@
+---
+
+- name: "Create Hostgroups"
+  theforeman.foreman.foreman_hostgroup:
+    name: "{{ item.name }}"
+    description: "{{ item.description }}"
+    architecture: "{{ item.architecture }}"
+    operatingsystem: "{{ item.operatingsystem }}"
+    medium: "{{ item.medium }}"
+    ptable: "{{ item.ptable }}"
+    domain: "{{ item.domain }}"
+    subnet: "{{ item.subnet }}"
+    locations:
+      - "Default Location"
+    organization: "Default Organization"
+    #pxe_loader: "{{ item.pxe_loader }}"
+    server_url: "http://{{ foreman_proxy_bind_host }}"
+    username: "{{ foreman_admin_user }}"
+    password: "{{ foreman_admin_password }}"
+    state: present
+  loop: "{{ foreman_hostgroups }}"
+
+- name: Create compute resources
+  theforeman.foreman.foreman_compute_resource:
+    name: "{{ item.name }}"
+    provider: "{{ item.provider }}"
+    provider_params: "{{ item.provider_params }}"
+    locations:
+      - "Default Location"
+    organizations:
+      - "Default Organization"
+    server_url: "http://{{ foreman_proxy_bind_host }}"
+    username: "{{ foreman_admin_user }}"
+    password: "{{ foreman_admin_password }}"
+    state: present
+  loop: "{{ foreman_compute_resources }}"
+
+- name: "Create Compute Hostgroups"
+  theforeman.foreman.foreman_hostgroup:
+    name: "{{ item.name }}"
+    description: "{{ item.name }} hypervisor"
+    compute_resource: "{{ item.name }}"
+    parent: kvm
+    server_url: "http://{{ foreman_proxy_bind_host }}"
+    username: "{{ foreman_admin_user }}"
+    password: "{{ foreman_admin_password }}"
+    state: present
+  loop: "{{ foreman_compute_resources }}"
