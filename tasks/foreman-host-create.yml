@@ -4,7 +4,7 @@
     hammer -r host create --name {{ item.value.name }} --hostgroup {{ item.value.hostgroup }} --location 'Default Location' --organization 'Default Organization'  
     --interface '{
     {% if item.value.provider is defined and item.value.provider == "kvm" %}
-    "compute_bridge": "br{{ item.value.vlan_id | regex_replace('10', '0') | ddefault('0') }}", 
+    "compute_bridge": "br{{ item.value.vlan_id | regex_replace('10', '0') | default('0') }}", 
     "compute_model": "virtio", 
     "compute_type": "bridge", 
     {% endif %}
