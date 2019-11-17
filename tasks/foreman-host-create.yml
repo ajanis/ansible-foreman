@@ -29,9 +29,8 @@
     "format_type": "qcow2"
     }'
     {% endif %}
-  loop: "{{ foreman_hosts | dict2list }}"
+  loop: "{{ foreman_hosts | dict2items }}"
   register: foreman_hosts_created
   failed_when:
     - foreman_hosts_created.rc != 65
     - foreman_hosts_created.rc != 0
-  when: ansible_run_tags == item.value.name
