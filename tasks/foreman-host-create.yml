@@ -4,7 +4,7 @@
   #command: hammer -r host create --name {{ item.name }} --hostgroup {{ item.hostgroup }} --location 'Default Location' --organization 'Default Organization' --managed 0 --build 0 --interface compute_type
   command: >
     hammer -r host create --name {{ item.name }} --hostgroup {{ item.hostgroup }} --location 'Default Location' --organization 'Default Organization' 
-    --interface compute_type=bridge,compute_bridge=br{{ item.vlan }},compute_model=virtio,identifier=eth0 --compute-attributes cpus={{ item.cpu_count }},memory={{ item.memory_gb }}192000000,start=1 --volume capacity={{ item.disk_gb }}G,format_type=qcow2
+    --interface compute_type=bridge,compute_bridge=br{{ item.vlan | default('0') }},compute_model=virtio,identifier=eth0 --compute-attributes cpus={{ item.cpu_count }},memory={{ item.memory_gb }}192000000,start=1 --volume capacity={{ item.disk_gb }}G,format_type=qcow2
   loop: "{{ foreman_hosts }}"
   register: foreman_hosts_created
   failed_when:
