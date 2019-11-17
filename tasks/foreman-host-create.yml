@@ -21,40 +21,40 @@
 
 - name: Create hosts via hammer cli
   command: >
-    hammer -r host create --name devbuild03 --hostgroup arthur --location 'Default Location' --organization 'Default Organization'  
+    hammer -r host create --name {{ item.value.name }} --hostgroup {{ item.value.hostgroup }} --location 'Default Location' --organization 'Default Organization'  
     --interface '{
-    {% if host.provider is defined and host.provider == "kvm" %}
-    {% if host.vlan_id is defined %}
-    "compute_bridge": "br{{ host.vlan_id | default('0') }}", 
+    {% if item.value.provider is defined and item.value.provider == "kvm" %}
+    {% if item.value.vlan_id is defined %}
+    "compute_bridge": "br{{ item.value.vlan_id | default('0') }}", 
     {% endif %}
     "compute_model": "virtio", 
     "compute_type": "bridge", 
     {% endif %}
-    {% if host.ip is defined %}
-    "ip": "{{ host.ip }}", 
+    {% if item.value.ip is defined %}
+    "ip": "{{ item.value.ip }}", 
     {% endif %}
     "identifier": "eth0", 
     "name": "eth0"
     }'
-    {% if host.provider is defined and host.provider == "kvm" %}
+    {% if item.value.provider is defined and item.value.provider == "kvm" %}
     --compute-attributes '{
-    "cpus": {{ host.cpu_cores }}, 
-    "memory": {{ host.memory | human_to_bytes }}, 
+    "cpus": {{ item.value.cpu_cores }}, 
+    "memory": {{ item.value.memory | human_to_bytes }}, 
     "start": 1
     }'
     {% endif %}
-    {% if host.provider is defined and host.provider == "kvm" %}
+    {% if item.value.provider is defined and item.value.provider == "kvm" %}
     --volume '{
-    "capacity": "{{ host.disk_size | human_to_bytes }}B", 
+    "capacity": "{{ item.value.disk_size | human_to_bytes }}B", 
     "format_type": "qcow2"
     }'
     {% endif %}
+  loop: "{{ foreman_hosts }}"
   register: foreman_hosts_created
   failed_when:
     - foreman_hosts_created.rc != 65
     - foreman_hosts_created.rc != 0
-  tags:
-    - hostcreate
+  when: ansible_run_tags == item.value.name
 
 
 #- name: Enable Host Builds via hammer cli
