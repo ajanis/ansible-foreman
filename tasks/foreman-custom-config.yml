@@ -200,3 +200,15 @@
     password: "{{ foreman_admin_password }}"
     state: present
   loop: "{{ foreman_compute_resources }}"
+
+- name: "Create Compute Hostgroups"
+  theforeman.foreman.foreman_hostgroup:
+    name: "{{ item.name }}"
+    description: "{{ item.name }} hypervisor"
+    compute_resource: "{{ item.name }}"
+    parent: kvm
+    server_url: "http://{{ foreman_proxy_bind_host }}"
+    username: "{{ foreman_admin_user }}"
+    password: "{{ foreman_admin_password }}"
+    state: present
+  loop: "{{ foreman_compute_resources }}"
