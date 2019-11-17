@@ -27,7 +27,7 @@
     --compute-attributes '{ 
     "cpus": {{ item.value.cpu_cores }}, 
     "memory": {{ item.value.memory | regex_replace('^([0-9]+)G', '\\1 G') | human_to_bytes }}, 
-    "start": "0"
+    "start": "1"
     }' 
     {% endif %}
     {% if item.value.provider is defined and item.value.provider == "kvm" %}
@@ -55,7 +55,7 @@
 - debug:
     msg: "{{ powerstatus.results }}"
 
-- name: Host Power-On
+- name: Host Power-Cycle
   command: >
     hammer -r host
     {% if item.stdout == "off" %}
