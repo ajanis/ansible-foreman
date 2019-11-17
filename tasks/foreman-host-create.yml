@@ -1,7 +1,7 @@
 ---
 
 - name: Create hosts via hammer cli
-  command: hammer -r host create --name {{ item.name }} --mac {{ item.mac_address }} --hostgroup {{ item.hostgroup }} --location 'Default Location' --organization 'Default Organization' --managed 0 --build 0
+  command: hammer -r host create --name {{ item.name }} --hostgroup {{ item.hostgroup }} --location 'Default Location' --organization 'Default Organization' --managed 0 --build 0
   loop: "{{ foreman_hosts }}"
   register: foreman_hosts_created
   failed_when:
