@@ -25,7 +25,7 @@
     {% endif %}
     {% if item.value.provider is defined and item.value.provider == "kvm" %}
     --volume '{
-    "capacity": "{{ item.value.disk_size | human_to_bytes / 1073741824 | int }}G", 
+    "capacity": "{{ item.value.disk_size | human_to_bytes / 1073741824 | round }}G", 
     "format_type": "qcow2"
     }'
     {% endif %}
