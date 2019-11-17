@@ -16,18 +16,15 @@
     {% if item.value.provider is defined and item.value.provider == "kvm" %}
     --compute-attributes '{
     "cpus": {{ item.value.cpu_cores }}, 
-    "memory": {{ item.value.memory | human_to_bytes }}, 
-    "start": 1
+    "memory": {{ item.value.memory | regex_replace('^([0-9]+)G', '\\1 G') | human_to_bytes }}, 
+    "start": "1"
     }'
     {% endif %}
     {% if item.value.provider is defined and item.value.provider == "kvm" %}
     --volume '{
-    "capacity": "{{ item.value.disk_size | human_to_bytes // 1073741824 }}G", 
+    "capacity": "{{ item.value.disk_size | regex_replace('^([0-9]+)G', '\\1 G') | human_to_bytes // 1073741824 }}G", 
     "format_type": "qcow2"
     }'
     {% endif %}
   loop: "{{ foreman_hosts | dict2items }}"
   register: foreman_hosts_created
-  failed_when:
-    - foreman_hosts_created.rc != 65
-    - foreman_hosts_created.rc != 0
