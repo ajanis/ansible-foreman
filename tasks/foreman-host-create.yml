@@ -11,7 +11,7 @@
     - hostcreate
 
 - name: Enable Host Builds via hammer cli
-  command: hammer -r host update --name {{ item.name }}.{{ item.domain }} --managed 1 --build 1
+  command: hammer -r host update --name {{ item.name }}.{{ www_domain }} --managed 1 --build 1
   loop: "{{ foreman_hosts }}"
   tags:
     - hostcreate
