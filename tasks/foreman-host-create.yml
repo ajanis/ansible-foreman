@@ -37,21 +37,17 @@
     "name": "eth0"
     }'
     {% if host.provider is defined and host.provider == "kvm" %}
-    {% if host.compute_attributes is defined %}
     --compute-attributes '{
     "cpus": {{ host.cpu_cores }}, 
     "memory": {{ host.memory | human_to_bytes }}, 
     "start": 1
     }'
     {% endif %}
-    {% endif %}
     {% if host.provider is defined and host.provider == "kvm" %}
-    {% if host.volume_attributes is defined %}
     --volume '{
     "capacity": "{{ host.disk_size | human_to_bytes }}B", 
     "format_type": "qcow2"
     }'
-    {% endif %}
     {% endif %}
   register: foreman_hosts_created
   failed_when:
