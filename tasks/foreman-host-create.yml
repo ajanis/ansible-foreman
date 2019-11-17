@@ -1,24 +1,4 @@
 ---
-
-#- name: Create hosts via hammer cli
-#  #command: hammer -r host create --name {{ item.name }} --hostgroup {{ item.hostgroup }} --location 'Default Location' --organization 'Default Organization' --managed 0 --build 0
-#  command: >
-#    hammer -r host create --name {{ item.name }} --hostgroup {{ item.hostgroup }} --location 'Default Location' --organization 'Default Organization' 
-#    {% if item.kvm is defined and item.kvm %}
-#    --interface compute_type=bridge,compute_bridge=br{{ item.vlan | default('0') }},compute_model=virtio,identifier=eth0,name=eth0 
-#    --compute-attributes cpus={{ item.cpu_count }},memory={{ item.memory_gb }}192000000,start=1 
-#    --volume capacity={{ item.disk_gb }}G,format_type=qcow2
-#    {% else %}
-#    --interface identifier=eth0,name=eth0
-#    {% endif %}
-#  loop: "{{ foreman_hosts }}"
-#  register: foreman_hosts_created
-#  failed_when:
-#    - foreman_hosts_created.rc != 65
-#    - foreman_hosts_created.rc != 0
-#  tags:
-#    - hostcreate
-
 - name: Create hosts via hammer cli
   command: >
     hammer -r host create --name {{ item.value.name }} --hostgroup {{ item.value.hostgroup }} --location 'Default Location' --organization 'Default Organization'  
@@ -55,16 +35,3 @@
     - foreman_hosts_created.rc != 65
     - foreman_hosts_created.rc != 0
   when: ansible_run_tags == item.value.name
-
-
-#- name: Enable Host Builds via hammer cli
-#  command: hammer -r host update --name {{ item.name }}.{{ www_domain }} --managed 1 --build 1
-#  loop: "{{ foreman_hosts }}"
-#  tags:
-#    - hostcreate
-#
-#- name: Boot host via hammer cli
-#  command: hammer -r host start --name {{ item.name }}.{{ www_domain }}
-#  loop: "{{ foreman_hosts }}"
-#  tags:
-#    - hostcreate
