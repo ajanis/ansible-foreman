@@ -13,8 +13,7 @@
     {% if item.value.ip is defined %}
     "ip": "{{ item.value.ip }}", 
     {% endif %}
-    "identifier": "eth0", 
-    "name": "eth0"
+    "identifier": "eth0" 
     }'
     {% if item.value.provider is defined and item.value.provider == "kvm" %}
     --compute-attributes '{
