@@ -22,12 +22,12 @@
 - name: Create hosts via hammer cli
   command: >
     hammer -r host create --name {{ host.name }} --hostgroup {{ host.hostgroup }} --location 'Default Location' --organization 'Default Organization' 
-    --interface={{ host.interface_attributes }} 
+    --interface {{ host.interface_attributes | to_json }} 
     {% if host.compute_attributes is defined %}
-    --compute-attributes={{ host.compute_attributes }} 
+    --compute-attributes {{ host.compute_attributes | to_json }} 
     {% endif %}
     {% if host.volume_attributes is defined %}
-    --volume={{ host.volume_attributes }}
+    --volume {{ host.volume_attributes | to_json }}
     {% endif %}
   register: foreman_hosts_created
   failed_when:
