@@ -29,7 +29,7 @@
     "format_type": "qcow2"
     }'
     {% endif %}
-  loop: "{{ foreman_hosts }}"
+  loop: "{{ foreman_hosts | dict2list }}"
   register: foreman_hosts_created
   failed_when:
     - foreman_hosts_created.rc != 65
