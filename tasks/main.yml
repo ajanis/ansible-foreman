@@ -140,3 +140,11 @@
         - configure
         - customizetemplates
   tags: [foreman, configure, customizetemplates]
+
+- include_tasks:
+    file: apt-cache.yml
+    apply:
+      tags:
+        - foreman
+        - apt-cache
+  tags: [foreman, apt-cache]

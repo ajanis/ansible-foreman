@@ -1,0 +1,20 @@
+---
+- name: Install apt-cacher-ng
+  package:
+    name: apt-cacher-ng
+    state: present
+
+- name: Template apt-cacher-ng config
+  template:
+    src: etc/apt-cacher-ng/acng.conf.j2
+    dest: /etc/apt-cacher-ng/acng.conf
+    mode: 644
+    owner: root
+    group: root
+  notify: restart apt-cacher-ng
+
+- name: Enable/Start apt-cacher-ng service
+  service:
+    name: apt-cacher-ng
+    state: started
+    enabled: yes

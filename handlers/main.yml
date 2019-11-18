@@ -36,3 +36,8 @@
 - name: rebuild pxe default configs
   command: hammer template build-pxe-default
   notify: restart foreman-proxy
+
+- name: restart apt-cacher-ng
+  service:
+    name: apt-cacher-ng
+    state: restarted
