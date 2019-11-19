@@ -2,90 +2,81 @@
 - name: "Deploy Foreman Server"
   hosts: all
   remote_user: root
+
   tasks:
-    - include_role:
+
+    - name: Wait for server to come online
+      wait_for_connection:
+        delay: 60
+        sleep: 10
+        connect_timeout: 5
+        timeout: 900
+
+    - import_role:
         name: common
       tags:
         - common
-    - include_role:
+
+    - import_role:
         name: isc_dhcp_server
-        public: yes
-        apply:
-          tags:
-            - dhcp
       when: foreman_proxy_dhcp
       tags:
         - dhcp
-    - include_role:
+
+    - import_role:
         name: tftp
-        public: yes
-        apply:
-          tags:
-            - tftp
       when: foreman_proxy_tftp
       tags:
         - tftp
-    - include_role:
+
+    - import_role:
         name: nginx
-        public: yes
-        apply:
-          tags:
-            - nginx
       tags:
         - nginx
-    - include_role:
+    - import_role:
         name: awx
-        public: yes
-        apply:
-          tags:
-            - awx
       tags:
         - awx
-    - include_role:
+    - import_role:
         name: docker
-        public: yes
-        apply:
-          tags:
-            - docker
       tags:
         - docker
-    - include_role:
+    - import_role:
         name: awx
-        tasks_from: update_ca.yml
-        public: yes
-        apply:
-          tags:
-            - awx
+        tasks_from: container-tasks.yml
       tags:
         - awx
-    - include_role:
+    - import_role:
         name: foreman
-        public: yes
       tags:
         - install
         - configure
         - foreman
         - smartproxy
         - customize
-    - include_role:
+        - customizesettings
+        - customizegroups
+        - customizetemplates
+        - customizeos
+        - customizenetwork
+    - import_role:
         name: foreman
-        public: yes
         tasks_from: foreman-host-create.yml
       tags:
         - never
         - hostcreate
-    - include_role:
+    - import_role:
         name: foreman
-        public: yes
         tasks_from: foreman-host-cleanup.yml
       tags:
         - never
         - hostcleanup
-    - include_role:
+    - import_role:
         name: ansible-project
-        public: yes
       tags:
-        - never
         - project
-        - projectimport
-        - projectclone
+        - projectprojects
+        - projectsettings
+        - projectjobs
+        - projectinventories
+        - projectcredentials
