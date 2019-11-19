@@ -6,21 +6,10 @@
   tags:
     - always
 
-- include_tasks:
-    file: install.yml
-    apply:
-      tags:
-        - foreman
-        - install
-        - configure
+- import_tasks: install.yml
   tags: [foreman, install, configure ]
 
-- include_tasks:
-    file: configure.yml
-    apply:
-      tags:
-        - foreman
-        - configure
+- import_tasks: configure.yml
   tags: [foreman, configure]
 
 - name: Start the foreman service
@@ -87,64 +76,23 @@
 
 - meta: flush_handlers
 
-- include_tasks:
-    file: smart-proxy.yml
-    apply:
-      tags:
-        - foreman
-        - configure
-        - smartproxy
+- import_tasks: smart-proxy.yml
   tags: [foreman, configure, smartproxy]
 
-- include_tasks:
-    file: foreman-custom-config.yml
-    apply:
-      tags:
-        - foreman
-        - configure
-        - customize
+- import_tasks: foreman-custom-config.yml
   tags: [foreman, configure, customize]
 
-- include_tasks:
-    file: foreman-custom-network.yml
-    apply:
-      tags:
-        - foreman
-        - configure
-        - customizenetwork
+- import_tasks: foreman-custom-network.yml
   tags: [foreman, configure, customizenetwork]
 
-- include_tasks:
-    file: foreman-custom-os.yml
-    apply:
-      tags:
-        - foreman
-        - configure
-        - customizeos
+- import_tasks: foreman-custom-os.yml
   tags: [foreman, configure, customizeos]
 
-- include_tasks:
-    file: foreman-custom-groups.yml
-    apply:
-      tags:
-        - foreman
-        - configure
-        - customizegroups
+- import_tasks: foreman-custom-groups.yml
   tags: [foreman, configure, customizegroups]
 
-- include_tasks:
-    file: foreman-custom-templates.yml
-    apply:
-      tags:
-        - foreman
-        - configure
-        - customizetemplates
+- import_tasks: foreman-custom-templates.yml
   tags: [foreman, configure, customizetemplates]
 
-- include_tasks:
-    file: apt-cache.yml
-    apply:
-      tags:
-        - foreman
-        - apt-cache
+- import_tasks: apt-cache.yml
   tags: [foreman, apt-cache]
