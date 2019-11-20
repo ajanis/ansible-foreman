@@ -1,28 +1,4 @@
 ---
-
-- name: "Create Hostgroups"
-  theforeman.foreman.foreman_hostgroup:
-    name: "{{ item.name }}"
-    description: "{{ item.description }}"
-    architecture: "{{ item.architecture }}"
-    operatingsystem: "{{ item.operatingsystem }}"
-    medium: "{{ item.medium }}"
-    ptable: "{{ item.ptable }}"
-    domain: "{{ item.domain }}"
-    subnet: "{{ item.subnet }}"
-    locations:
-      - "Default Location"
-    organization: "Default Organization"
-    #pxe_loader: "{{ item.pxe_loader }}"
-    server_url: "http://{{ foreman_proxy_bind_host }}"
-    username: "{{ foreman_admin_user }}"
-    password: "{{ foreman_admin_password }}"
-    state: present
-  loop: "{{ foreman_hostgroups }}"
-  when:
-    - foreman_hostgroups is defined
-    - foreman_hostgroups != None
-
 - name: Create compute resources
   theforeman.foreman.foreman_compute_resource:
     name: "{{ item.name }}"
@@ -41,17 +17,47 @@
     - foreman_compute_resources is defined
     - foreman_compute_resources != None
 
-- name: "Create Compute Hostgroups"
+- name: "Create Hostgroups"
   theforeman.foreman.foreman_hostgroup:
     name: "{{ item.name }}"
-    description: "{{ item.name }} hypervisor"
-    compute_resource: "{{ item.name }}"
-    parent: kvm
+    description: "{{ item.description }}"
+    architecture: "{{ item.architecture }}"
+    operatingsystem: "{{ item.operatingsystem }}"
+    medium: "{{ item.medium }}"
+    ptable: "{{ item.ptable }}"
+    domain: "{{ item.domain }}"
+    subnet: "{{ item.subnet }}"
+    locations:
+      - "Default Location"
+    organization: "Default Organization"
+    parent: "{{ item.parent | default(omit)"
+    compute_resource: "{{ item.compute_resource | default(omit) }}"
+    #pxe_loader: "{{ item.pxe_loader }}"
     server_url: "http://{{ foreman_proxy_bind_host }}"
     username: "{{ foreman_admin_user }}"
     password: "{{ foreman_admin_password }}"
     state: present
-  loop: "{{ foreman_compute_resources }}"
+  loop: "{{ foreman_hostgroups }}"
   when:
-    - foreman_compute_resources is defined
-    - foreman_compute_resources != None
+    - foreman_hostgroups is defined
+    - foreman_hostgroups != None
+
+
+
+#- name: "Auto-create hostgroups for compute resources"
+#  theforeman.foreman.foreman_hostgroup:
+#    name: "{{ item.name }}"
+#    description: "{{ item.name }} resource group"
+#    compute_resource: "{{ item.name }}"
+#    parent: "{{ item.parent | default('kvm') }}"
+#    locations:
+#      - "Default Location"
+#    organization: "Default Organization"
+#    server_url: "http://{{ foreman_proxy_bind_host }}"
+#    username: "{{ foreman_admin_user }}"
+#    password: "{{ foreman_admin_password }}"
+#    state: present
+#  loop: "{{ foreman_compute_resources }}"
+#  when:
+#    - foreman_compute_resources is defined
+#    - foreman_compute_resources != None
