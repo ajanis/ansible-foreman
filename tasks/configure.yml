@@ -118,18 +118,6 @@
   notify:
     - restart foreman-proxy
 
-- name: Download foreman auto-discovery image
-  unarchive:
-    src: http://downloads.theforeman.org/discovery/releases/latest/fdi-image-latest.tar
-    dest: "{{ foreman_proxy_tftp_dir }}/boot"
-    remote_src: yes
-    owner: "{{ foreman_proxy_user }}"
-    group: "{{ foreman_proxy_group }}"
-    creates: "{{ foreman_proxy_tftp_dir }}/boot/fdi-image"
-  until: result is succeeded
-  retries: 5
-  delay: 10
-
 - name: ensure correct permissions for tftp pxe directories
   file:
     path: "{{ foreman_proxy_tftp_dir }}"
@@ -138,3 +126,20 @@
     recurse: yes
     state: directory
   when: foreman_proxy_tftp
+  tags:
+    - foremanfdi
+
+- name: Download foreman auto-discovery image
+  unarchive:
+    src: http://downloads.theforeman.org/discovery/releases/latest/fdi-image-latest.tar
+    dest: "{{ foreman_proxy_tftp_dir }}/boot"
+    remote_src: yes
+    owner: "{{ foreman_proxy_user }}"
+    group: "{{ foreman_proxy_group }}"
+    creates: "{{ foreman_proxy_tftp_dir }}/boot/fdi-image"
+  register: fdi_download
+  until: not fdi_download.failed
+  retries: 5
+  delay: 5
+  tags:
+    - foremanfdi
