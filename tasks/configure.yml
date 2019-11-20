@@ -126,6 +126,9 @@
     owner: "{{ foreman_proxy_user }}"
     group: "{{ foreman_proxy_group }}"
     creates: "{{ foreman_proxy_tftp_dir }}/boot/fdi-image"
+  until: result is succeeded
+  retries: 5
+  delay: 10
 
 - name: ensure correct permissions for tftp pxe directories
   file:

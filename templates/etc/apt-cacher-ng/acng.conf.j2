@@ -18,7 +18,11 @@
 
 # Storage directory for downloaded data and related maintenance activity.
 #
+{% if apt_cacher_ng_cachedir is defined and apt_cacher_ng_cachedir != None %}
+CacheDir: {{ apt_cacher_ng_cachedir }}
+{% else %}
 CacheDir: /var/cache/apt-cacher-ng
+{% endif %}
 
 # Log file directory, can be set empty to disable logging
 #
@@ -30,10 +34,14 @@ LogDir: /var/log/apt-cacher-ng
 SupportDir: /usr/lib/apt-cacher-ng
 
 # TCP server port for incoming http (or HTTP proxy) connections.
-# Can be set to 9999 to emulate apt-proxy. Value of 0 turns off TCP server
-# (SocketPath must be set in this case).
+# Can be set to 9999 to emulate apt-proxy.
 #
-Port:{{ apt_cacher_ng_port | default('3142') }}
+{% if apt_cacher_ng_port is defined and apt_cacher_ng_port != None %}
+Port:{{ apt_cacher_ng_port }}
+{% else %}
+Port:3142
+{% endif %}
+
 
 # Addresses or hostnames to listen on. Multiple addresses must be separated by
 # spaces. Each entry must be an exact local address which is associated with a
@@ -417,7 +425,13 @@ PrecacheFor: debrep/dists/unstable/*/source/Sources* debrep/dists/unstable/*/bin
 # the server name with port and must be correctly formated and terminated.
 # Examples:
 # PassThroughPattern: private-ppa\.launchpad\.net:443$
-PassThroughPattern: .* # this would allow CONNECT to everything
+{% if apt_cacher_passthrough_patterns is defined and apt_cacher_passthrough_patterns != None %}
+{%   for item in apt_cacher_passthrough_patterns %}
+PassThroughPattern: {{ item }}
+{%   endfor %}
+{% else %}
+PassThroughPattern: .*
+{% endif %}
 #
 # Default:
 # PassThroughPattern: ^bugs\.debian\.org:443$

@@ -13,7 +13,9 @@
     password: "{{ foreman_admin_password }}"
     state: present
   loop: "{{ foreman_installation_mediums }}"
-
+  when:
+    - foreman_installation_mediums is defined
+    - foreman_installation_mediums != None
 
 - name: "Create Operating Systems"
   theforeman.foreman.foreman_operatingsystem:
@@ -34,6 +36,9 @@
     password: "{{ foreman_admin_password }}"
     state: present
   loop: "{{ foreman_operatingsystems }}"
+  when:
+    - foreman_operatingsystems is defined
+    - foreman_operatingsystems != None
 
 - name: "Create Template Associations"
   theforeman.foreman.foreman_os_default_template:
@@ -45,3 +50,6 @@
     password: "{{ foreman_admin_password }}"
     state: present
   loop: "{{ foreman_os_default_templates }}"
+  when:
+    - foreman_os_default_templates is defined
+    - foreman_os_default_templates != None

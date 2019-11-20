@@ -19,6 +19,9 @@
     password: "{{ foreman_admin_password }}"
     state: present
   loop: "{{ foreman_hostgroups }}"
+  when:
+    - foreman_hostgroups is defined
+    - foreman_hostgroups != None
 
 - name: Create compute resources
   theforeman.foreman.foreman_compute_resource:
@@ -34,6 +37,9 @@
     password: "{{ foreman_admin_password }}"
     state: present
   loop: "{{ foreman_compute_resources }}"
+  when:
+    - foreman_compute_resources is defined
+    - foreman_compute_resources != None
 
 - name: "Create Compute Hostgroups"
   theforeman.foreman.foreman_hostgroup:
@@ -46,3 +52,6 @@
     password: "{{ foreman_admin_password }}"
     state: present
   loop: "{{ foreman_compute_resources }}"
+  when:
+    - foreman_compute_resources is defined
+    - foreman_compute_resources != None

@@ -39,3 +39,6 @@
     password: "{{ foreman_admin_password }}"
     state: present
   loop: "{{ foreman_proxy_dhcp_subnets }}"
+  when:
+    - foreman_proxy_dhcp_subnets is defined
+    - foreman_proxy_dhcp_subnets != None

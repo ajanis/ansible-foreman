@@ -25,6 +25,9 @@
     name: "{{ item.name }}"
     value: "{{ item.value }}"
   loop: "{{ foreman_default_settings }}"
+  when:
+    - foreman_default_settings is defined
+    - foreman_default_settings != None
 
 - name: Configure Additional Foreman Settings
   theforeman.foreman.foreman_setting:
@@ -34,6 +37,9 @@
     name: "{{ item.name }}"
     value: "{{ item.value }}"
   loop: "{{ foreman_extra_settings }}"
+  when:
+    foreman_extra_settings is defined
+    foreman_extra_settings != None
 
 - name: "Update global parameters"
   theforeman.foreman.foreman_global_parameter:
@@ -45,3 +51,6 @@
     password: "{{ foreman_admin_password }}"
     state: present_with_defaults
   loop: "{{ foreman_global_parameters }}"
+  when:
+    - foreman_global_parameters is defined
+    - foreman_global_parameters != None
