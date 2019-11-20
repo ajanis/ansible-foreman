@@ -38,8 +38,8 @@
     value: "{{ item.value }}"
   loop: "{{ foreman_extra_settings }}"
   when:
-    foreman_extra_settings is defined
-    foreman_extra_settings != None
+    - foreman_extra_settings is defined
+    - foreman_extra_settings != None
 
 - name: "Update global parameters"
   theforeman.foreman.foreman_global_parameter:
