@@ -55,3 +55,9 @@
     dest: "/etc/default/foreman"
     backup: no
   notify: restart foreman
+
+- name: Enable the foreman service
+  systemd:
+    name: foreman
+    enabled: yes
+  when: foreman_enable_service

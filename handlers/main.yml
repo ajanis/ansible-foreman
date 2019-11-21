@@ -1,13 +1,19 @@
 ---
 - name: restart foreman-proxy
-  service:
-    name: foreman-proxy
-    state: restarted
+  set_fact:
+    foreman_proxy_require_restart: True
+#  service:
+#    name: foreman-proxy
+#    state: restarted
+  listen: "restart_netboot_services"
 
 - name: restart foreman
-  service:
-    name: foreman
-    state: restarted
+  set_fact:
+    foreman_require_restart: True
+#  service:
+#    name: foreman
+#    state: restarted
+  listen: "restart_netboot_services"
 
 - name: reload nginx config
   service:

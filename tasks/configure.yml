@@ -126,8 +126,6 @@
     recurse: yes
     state: directory
   when: foreman_proxy_tftp
-  tags:
-    - foremanfdi
 
 - name: Download foreman auto-discovery image
   unarchive:
@@ -141,5 +139,3 @@
   until: not fdi_download.failed
   retries: 5
   delay: 5
-  tags:
-    - foremanfdi
