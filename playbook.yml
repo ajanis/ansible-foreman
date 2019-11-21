@@ -2,81 +2,48 @@
 - name: "Deploy Foreman Server"
   hosts: all
   remote_user: root
+  gather_facts: yes
+  vars_files:
+    - vault.yml
 
   tasks:
+
+    - include_vars:
+        dir: extra_vars
 
     - name: Wait for server to come online
       wait_for_connection:
         delay: 60
         sleep: 10
         connect_timeout: 5
-        timeout: 900
+        timeout: 300
 
     - import_role:
         name: common
-      tags:
-        - common
 
     - import_role:
         name: isc_dhcp_server
       when: foreman_proxy_dhcp
-      tags:
-        - dhcp
 
     - import_role:
         name: tftp
       when: foreman_proxy_tftp
-      tags:
-        - tftp
 
     - import_role:
         name: nginx
-      tags:
-        - nginx
+
     - import_role:
         name: awx
-      tags:
-        - awx
+
     - import_role:
         name: docker
-      tags:
-        - docker
+
     - import_role:
         name: awx
         tasks_from: container-tasks.yml
-      tags:
-        - awx
+
     - import_role:
         name: foreman
-      tags:
-        - install
-        - configure
-        - foreman
-        - smartproxy
-        - customize
-        - customizesettings
-        - customizegroups
-        - customizetemplates
-        - customizeos
-        - customizenetwork
-    - import_role:
-        name: foreman
-        tasks_from: foreman-host-create.yml
-      tags:
-        - never
-        - hostcreate
-    - import_role:
-        name: foreman
-        tasks_from: foreman-host-cleanup.yml
-      tags:
-        - never
-        - hostcleanup
+
     - import_role:
         name: ansible-project
-      tags:
-        - project
-        - projectprojects
-        - projectsettings
-        - projectjobs
-        - projectinventories
-        - projectcredentials
