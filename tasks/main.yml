@@ -28,7 +28,7 @@
   when: foreman_enable_service
   tags: [foremanconfigure, foremanservice]
   notify:
-    - restart nginx
+    - reload nginx config
 
 - name: Verify foreman HTTP service is listening
   wait_for:

@@ -9,10 +9,10 @@
     name: foreman
     state: restarted
 
-- name: restart nginx
+- name: reload nginx config
   service:
     name: nginx
-    state: restarted
+    state: reloaded
 
 - name: capture_foreman_version
   command: foreman version
