@@ -1,17 +1,7 @@
 - name: Add the OS specific varibles
   include_vars: "{{ ansible_os_family }}.yml"
   tags:
-    - foremaninstall
-    - foremanconfigure
-    - foremanservice
-    - foremanproxyservice
-    - foremancustomize
-    - foremansmartproxy
-    - foremansettings
-    - foremannetwork
-    - foremanos
-    - foremantemplates
-    - foremanaptcache
+    - always
 
 - import_tasks: install.yml
   tags: [foremaninstall ]
