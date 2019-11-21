@@ -2,10 +2,10 @@
   include_vars: "{{ ansible_os_family }}.yml"
 
 - include_tasks: install.yml
-  tags: [foremaninstall ]
+  tags: [foremaninstall]
 
 - include_tasks: configure.yml
-  tags: [foremanconfigure ]
+  tags: [foremanconfigure]
 
 - name: Start the foreman service
   systemd:
@@ -46,7 +46,7 @@
     enabled: yes
   register: foreman_proxy_started
   when: foreman_proxy_enable_service
-  tags: [foremanconfigure, foremanproxyservice ]
+  tags: [foremanconfigure, foremanproxyservice]
 
 - name: Verify foreman-proxy service is listening
   wait_for:
@@ -56,18 +56,18 @@
   when: foreman_proxy_started.changed and foreman_proxy_enable_service
   ignore_errors: yes
   register: foreman_proxy_start_attempt
-  tags: [foremanconfigure, foremanproxyservice ]
+  tags: [foremanconfigure, foremanproxyservice]
 
 - name: Get foreman-proxy journald logs if service does not appear to be up
   shell: journalctl _SYSTEMD_INVOCATION_ID=`systemctl show -p InvocationID --value foreman-proxy.service`
   register: foreman_proxy_journal
   when: foreman_proxy_start_attempt.failed is defined and foreman_proxy_start_attempt.failed == True
-  tags: [foremanconfigure, foremanproxyservice ]
+  tags: [foremanconfigure, foremanproxyservice]
 
 - fail:
     msg: "{{ foreman_proxy_journal.stdout_lines }}"
   when: foreman_proxy_start_attempt.failed is defined and foreman_proxy_start_attempt.failed == True
-  tags: [foremanconfigure, foremanproxyservice ]
+  tags: [foremanconfigure, foremanproxyservice]
 
 - meta: flush_handlers
 
