@@ -30,7 +30,7 @@
     locations:
       - "Default Location"
     organization: "Default Organization"
-    parent: "{{ item.parent | default(omit)"
+    parent: "{{ item.parent | default(omit) }}"
     compute_resource: "{{ item.compute_resource | default(omit) }}"
     #pxe_loader: "{{ item.pxe_loader }}"
     server_url: "http://{{ foreman_proxy_bind_host }}"
