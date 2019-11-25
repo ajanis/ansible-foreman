@@ -1,0 +1,44 @@
+foreman-installer \
+--enable-foreman \
+--enable-foreman-cli \
+--enable-foreman-cli-ansible \
+--enable-foreman-cli-discovery \
+--enable-foreman-cli-remote-execution \
+--enable-foreman-cli-tasks \
+--enable-foreman-cli-templates \
+--enable-foreman-proxy \
+--enable-foreman-plugin-ansible \
+--enable-foreman-plugin-bootdisk \
+--enable-foreman-plugin-default-hostgroup \
+--enable-foreman-plugin-dhcp-browser \
+--enable-foreman-plugin-discovery \
+--enable-foreman-plugin-remote-execution \
+--enable-foreman-plugin-tasks \
+--enable-foreman-plugin-templates \
+--enable-foreman-compute-libvirt \
+--enable-foreman-proxy-plugin-ansible \
+--enable-foreman-proxy-plugin-discovery \
+--enable-foreman-proxy-plugin-dynflow \
+--enable-foreman-proxy-plugin-remote-execution-ssh \
+--foreman-db-adapter=postgresql \
+--puppet-server=false \
+--foreman-proxy-puppet=false \
+--foreman-proxy-puppetca=false \
+--no-enable-puppet \
+--foreman-proxy-bmc=true \
+--foreman-proxy-bmc-default-provider=ipmitool \
+--foreman-proxy-tftp=true \
+--foreman-proxy-tftp-managed=true \
+--foreman-proxy-dhcp=true \
+--foreman-proxy-dhcp-interface=eth0 \
+--foreman-proxy-dhcp-gateway=10.0.10.1 \
+--foreman-proxy-dhcp-range="10.0.10.249 10.0.10.250" \
+--foreman-proxy-dhcp-nameservers="10.0.10.1" \
+--foreman-proxy-foreman-base-url=https://foreman.home.prettybaked.com \
+--foreman-proxy-trusted-hosts=foreman.home.prettybaked.com \
+--foreman-db-manage-rake=true \
+--foreman-db-database=foreman \
+--foreman-db-host=10.0.10.12 \
+--foreman-db-username=foreman \
+--foreman-db-password=pgforeman
+--foreman-db-manage
