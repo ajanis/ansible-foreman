@@ -2,7 +2,7 @@
 - name: "Update provisioning templates"
   theforeman.foreman.foreman_provisioning_template:
     template: '{{ lookup("file", item.src) }}'
-    locked: yes
+    locked: no
     locations:
       - "Default Location"
     organizations:
