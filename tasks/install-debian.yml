@@ -13,7 +13,16 @@
 
 - name: Add Foreman repository [Debian/Ubuntu]
   apt_repository:
-    repo: "deb {{ foreman_repo_url }} {{ ansible_distribution_release }} {{ foreman_install_version }}"
+    repo: >-
+      deb {{ foreman_repo_url }}
+      {% if ansible_distribution == 'Ubuntu' and ansible_distribution_major_version >= '19' %}
+      bionic
+      {% elif ansible_distribution == 'Debian' and ansible_distribution_major_version >= '10' %}
+      stretch
+      {% else %}
+      {{ ansible_distribution_release }}
+      {% endif %}
+      {{ foreman_install_version }}
     state: present
 
 - name: Add Foreman Plugins repository [Debian/Ubuntu]
