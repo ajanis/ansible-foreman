@@ -64,6 +64,10 @@ foreman_default_settings:
     value: "Default Location"
   - name: "discovery_organization"
     value: "Default Organization"
+  - name: "unattended_url"
+    value: "http://{{ ansible_default_ipv4.address }}"
+  - name: "foreman_url"
+    value: "http://{{ ansible_default_ipv4.address }}"
 
 foreman_extra_settings: []
 
