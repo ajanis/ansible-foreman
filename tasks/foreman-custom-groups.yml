@@ -25,6 +25,7 @@
     operatingsystem: "{{ item.operatingsystem | default(omit) }}"
     medium: "{{ item.medium | default(omit) }}"
     ptable: "{{ item.ptable | default(omit) }}"
+    pxe_loader: "{{ item.pxe_loader | default(omit) }}"
     domain: "{{ item.domain | default(omit) }}"
     subnet: "{{ item.subnet | default(omit) }}"
     locations:
