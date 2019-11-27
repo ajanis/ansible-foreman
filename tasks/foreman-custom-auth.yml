@@ -1,0 +1,84 @@
+- name: Create Foreman internal user-groups
+  foreman_usergroup:
+    name: "{{ item.name }}"
+    admin: "{{ item.admin | default('no') }}"
+    roles: "{{ item.roles | default(omit) }}"
+    users: "{{ item.users | default(omit) }}"
+    usergroups: "{{ item.usergroups | default(omit) }}"
+    state: present
+    server_url: "http://{{ foreman_proxy_bind_host }}"
+    username: "{{ foreman_admin_user }}"
+    password: "{{ foreman_admin_password }}"
+  loop: "{{ foreman_usergroups }}"
+  when:
+    - foreman_usergroups is defined
+    - foreman_usergroups != None
+
+- name: Create Foreman Internal Users
+  foreman_user:
+    name: "{{ item.name }}"
+    firstname: "{{ item.firstname | default(omit) }}"
+    lastname: "{{ item.lastname | default(omit) }}"
+    mail: "{{ item.mail | default(omit) }}"
+    description: "{{ item.description | default(omit) }}"
+    admin: "{{ item.admin | default('no') }}"
+    user_password: "{{ item.password }}"
+    default_location: "{{ item.default_location | default('Default Location') }}"
+    default_organization: "{{ item.default_organization | default('Default Organization') }}"
+    auth_source: "{{ item.auth_source | default(omit) }}"
+    timezone: "{{ item.timezone | default(timezone) }}"
+    locale: "{{ item.locale | default('en') }}"
+    roles: "{{ item.roles | default(omit) }}"
+    locations: "{{ item.locations | default('Default Location') }}"
+    organizations: "{{ item.organizations | default('Default Organization') }}"
+    state: present
+    server_url: "http://{{ foreman_proxy_bind_host }}"
+    username: "{{ foreman_admin_user }}"
+    password: "{{ foreman_admin_password }}"
+  loop: "{{ foreman_users }}"
+  when:
+    - foreman_users is defined
+    - foreman_users != None
+
+- name: Configure LDAP Authentication with automatic registration
+  foreman_auth_source_ldap:
+    name: "{{ item.name }}"
+    host: "{{ item.host }}"
+    onthefly_register: "{{ item.onthefly_register | default('yes') }}"
+    account: "{{ item.account }}"
+    account_password: "{{ item.account_password }}"
+    base_dn: "{{ item.base_dn }}"
+    groups_base: "{{ item.groups_base }}"
+    server_type: "{{ item.server_type | default('posix') }}"
+    attr_login: "{{ item.attr_login | default('uid') }}"
+    attr_firstname: "{{ item.attr_firstname | default('givenName') }}"
+    attr_lastname: "{{ item.attr_lastname | default('sn') }}"
+    attr_mail: "{{ item.attr_mail | default('mail') }}"
+    attr_photo: "{{ item.attr_photo | default(omit) }}"
+    ldap_filter: "{{ item.ldap_filter | default(omit) }}"
+    port: "{{ item.port | default('389') }}"
+    tls: "{{ item.tls | default('no') }}"
+    usergroup_sync: "{{ item.usergroup_sync | default('yes') }}"
+    locations: "{{ item.locations | default('Default Location') }}"
+    organizations: "{{ item.organizations | default('Default Organization') }}"
+    server_url: "http://{{ foreman_proxy_bind_host }}"
+    username: "{{ foreman_admin_user }}"
+    password: "{{ foreman_admin_password }}"
+  loop: "{{ foreman_ldap_sources }}"
+  when:
+    - foreman_ldap_sources is defined
+    - foreman_ldap_sources != None
+
+- name: Create Foreman external user groups
+  foreman_external_usergroup:
+    name: "{{ item.name }}"
+    auth_source_ldap: "{{ item.auth_source_ldap }}"
+    usergroup: "{{ item.usergroup }}"
+    state: present
+    server_url: "http://{{ foreman_proxy_bind_host }}"
+    username: "{{ foreman_admin_user }}"
+    password: "{{ foreman_admin_password }}"
+  loop: "{{ foreman_external_usergroups }}"
+  when:
+    - foreman_external_usergroups is defined
+    - foreman_external_usergroups != None
