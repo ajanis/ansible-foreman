@@ -55,7 +55,7 @@ foreman_default_settings:
   - name: "update_ip_from_built_request"
     value: "True"
   - name: "token_duration"
-    value: "0"
+    value: "3600"
   - name: "discovery_auto"
     value: "True"
   - name: "safemode_render"
