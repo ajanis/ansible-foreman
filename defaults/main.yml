@@ -69,8 +69,11 @@ foreman_default_settings:
   - name: "foreman_url"
     value: "http://{{ ansible_default_ipv4.address }}"
 
+foreman_users: []
+foreman_usergroups: []
+foreman_ldap_sources: []
+foreman_external_usergroups: []
 foreman_extra_settings: []
-
 foreman_installation_mediums: []
 foreman_operatingsystems: []
 foreman_os_default_templates: []
