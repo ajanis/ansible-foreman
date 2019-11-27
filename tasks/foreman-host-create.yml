@@ -26,11 +26,6 @@
     --location 'Default Location' --organization 'Default Organization'
     --interface '{
     {% if item.item.value.provider is defined and item.item.value.provider == "kvm" %}
-    {% if item.item.value.subnet_id is defined %}
-    "subnet_id": "{{ item.item.value.subnet_id }}",
-    {% else %}
-    "subnet_id": "10.0.{{ item.item.value.vlan_id | default('10') }}.0/24",
-    {% endif %}
     "compute_bridge": "br{{ item.item.value.vlan_id | default('0') | regex_replace('10', '0') }}",
     "compute_model": "virtio",
     "compute_type": "bridge",
