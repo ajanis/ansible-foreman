@@ -71,6 +71,8 @@
 
 - import_tasks: foreman-custom-config.yml
 
+- import_tasks: foreman-custom-auth.yml
+
 - import_tasks: foreman-custom-network.yml
 
 - import_tasks: foreman-custom-os.yml
