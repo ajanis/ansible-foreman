@@ -1,49 +1,50 @@
 ---
-- name: "Deploy Foreman Server"
-  hosts: all
+- name: "Deploy Foreman and AWX/Tower Services"
+  hosts:
+    - foreman
+    - webservices
   remote_user: root
   gather_facts: yes
-  vars_files:
-    - vault.yml
 
   tasks:
+    - name: Deploy common, openldap-client, and ceph-fs services
+      block:
+        - import_role:
+            name: common
+        - import_role:
+            name: openldap
+          when:  openldap_server_ip is defined and openldap_server_ip != None
+        - import_role:
+            name: ceph-fs
 
-    - include_vars:
-        dir: extra_vars
+    - name: Deploy Foreman, AWX/Tower, TFTP and DHCP Services
+      block:
+        - import_role:
+            name: isc_dhcp_server
+          when: foreman_proxy_dhcp
+        - import_role:
+            name: tftp
+          when: foreman_proxy_tftp
+        - import_role:
+            name: awx
+        - import_role:
+            name: docker
+        - import_role:
+            name: awx
+            tasks_from: container-tasks.yml
+        - import_role:
+            name: foreman
+        - import_role:
+            name: ansible-project
+      when: "'foreman' in group_names"
 
-    - name: Wait for server to come online
-      wait_for_connection:
-        delay: 60
-        sleep: 10
-        connect_timeout: 5
-        timeout: 300
+    - name: "Configure NGINX reverse-proxy for Foreman and AWX/Tower"
+      block:
+        - import_role:
+            name: nginx
+      when: "'webservices' in group_names"
 
-    - import_role:
-        name: common
-
-    - import_role:
-        name: isc_dhcp_server
-      when: foreman_proxy_dhcp
-
-    - import_role:
-        name: tftp
-      when: foreman_proxy_tftp
-
-    - import_role:
-        name: nginx
-
-    - import_role:
-        name: awx
-
-    - import_role:
-        name: docker
-
-    - import_role:
-        name: awx
-        tasks_from: container-tasks.yml
-
-    - import_role:
-        name: foreman
-
-    - import_role:
-        name: ansible-project
+    - name: Configure Telegraf
+      block:
+        - import_role:
+            name: telegraf
