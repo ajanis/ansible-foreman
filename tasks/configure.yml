@@ -73,32 +73,42 @@
   notify:
     - restart foreman-proxy
 
-- name: template foreman-proxy dhcp.yml
+- name: "Template /etc/foreman-proxy/settings.d files"
   template:
-    src: etc/foreman-proxy/dhcp.yml.j2
-    dest: "{{ foreman_proxy_config_dir }}/settings.d/dhcp.yml"
+    src: '{{ item.src }}'
+    dest: '{{ foreman_proxy_config_dir }}/settings.d/{{ item.path }}'
     backup: yes
-  when: foreman_proxy_dhcp
+  with_filetree: 'templates/etc/foreman-proxy/settings.d'
+  when: item.state == 'file'
   notify:
     - restart foreman-proxy
 
-- name: template foreman-proxy dhcp_isc.yml
-  template:
-    src: etc/foreman-proxy/dhcp_isc.yml.j2
-    dest: "{{ foreman_proxy_config_dir }}/settings.d/dhcp_isc.yml"
-    backup: yes
-  when: foreman_proxy_dhcp
-  notify:
-    - restart foreman-proxy
-
-- name: template foreman-proxy httpboot.yml
-  template:
-    src: etc/foreman-proxy/httpboot.yml.j2
-    dest: "{{ foreman_proxy_config_dir }}/settings.d/httpboot.yml"
-    backup: yes
-  when: foreman_proxy_httpboot
-  notify:
-    - restart foreman-proxy
+#- name: template foreman-proxy dhcp.yml
+#  template:
+#    src: etc/foreman-proxy/dhcp.yml.j2
+#    dest: "{{ foreman_proxy_config_dir }}/settings.d/dhcp.yml"
+#    backup: yes
+#  when: foreman_proxy_dhcp
+#  notify:
+#    - restart foreman-proxy
+#
+#- name: template foreman-proxy dhcp_isc.yml
+#  template:
+#    src: etc/foreman-proxy/dhcp_isc.yml.j2
+#    dest: "{{ foreman_proxy_config_dir }}/settings.d/dhcp_isc.yml"
+#    backup: yes
+#  when: foreman_proxy_dhcp
+#  notify:
+#    - restart foreman-proxy
+#
+#- name: template foreman-proxy httpboot.yml
+#  template:
+#    src: etc/foreman-proxy/httpboot.yml.j2
+#    dest: "{{ foreman_proxy_config_dir }}/settings.d/httpboot.yml"
+#    backup: yes
+#  when: foreman_proxy_httpboot
+#  notify:
+#    - restart foreman-proxy
 
 - name: fix dhcp config directory permissions
   file:
@@ -109,14 +119,14 @@
   notify:
     - restart foreman-proxy
 
-- name: template foreman-proxy tftp.yaml
-  template:
-    src: etc/foreman-proxy/tftp.yml.j2
-    dest: "{{ foreman_proxy_config_dir }}/settings.d/tftp.yml"
-    backup: yes
-  when: foreman_proxy_tftp
-  notify:
-    - restart foreman-proxy
+#- name: template foreman-proxy tftp.yaml
+#  template:
+#    src: etc/foreman-proxy/tftp.yml.j2
+#    dest: "{{ foreman_proxy_config_dir }}/settings.d/tftp.yml"
+#    backup: yes
+#  when: foreman_proxy_tftp
+#  notify:
+#    - restart foreman-proxy
 
 - name: ensure correct permissions for tftp pxe directories
   file:
