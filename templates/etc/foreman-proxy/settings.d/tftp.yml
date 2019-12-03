@@ -1,0 +1,14 @@
+---
+# {{ ansible_managed }}
+
+{% if foreman_proxy_tftp %}
+# Can be true, false, or http/https to enable just one of the protocols
+:enabled: {{ foreman_proxy_tftp_protocol }}
+{% else %}
+:enabled: false
+{% endif %}
+
+:tftproot: {{ foreman_proxy_tftp_dir }}
+
+# Defines the TFTP Servername to use, overrides the name in the subnet declaration
+#:tftp_servername: {{ foreman_proxy_tftp_server }}
