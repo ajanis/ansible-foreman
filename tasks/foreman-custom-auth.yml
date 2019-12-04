@@ -42,7 +42,7 @@
 
 - name: "Set Fact for '{{ foreman_admin_group }}' ID"
   set_fact:
-    foreman_admin_id: "{{ admin_usergroup_id.stdout }}-Usergroup"
+    foreman_admin_id: "{{ admin_usergroup_id.stdout }}-Usergroups"
 
 - name: Create Foreman Internal Users
   theforeman.foreman.foreman_user:
