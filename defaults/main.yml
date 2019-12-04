@@ -8,6 +8,7 @@ foreman_hostname: "{{ ansible_hostname }}"
 foreman_interface: 0.0.0.0
 foreman_port: 3000
 foreman_config_dir: /etc/foreman
+foreman_admin_group: administrators
 foreman_admin_user: foreman
 foreman_admin_password: "{{ vault_foreman_admin_password | default('password') }}"
 foreman_env: production
