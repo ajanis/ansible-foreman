@@ -1,22 +1,4 @@
 ---
-- name: "Default Organization"
-  theforeman.foreman.foreman_organization:
-    server_url: "http://{{ foreman_proxy_bind_host }}"
-    username: "{{ foreman_admin_user }}"
-    password: "{{ foreman_admin_password }}"
-    name: "Default Organization"
-    state: present
-
-- name: "Default Location"
-  theforeman.foreman.foreman_location:
-    server_url: "http://{{ foreman_proxy_bind_host }}"
-    username: "{{ foreman_admin_user }}"
-    password: "{{ foreman_admin_password }}"
-    name: "Default Location"
-    organizations:
-      - "Default Organization"
-    state: present
-
 - name: Update Foreman Settings
   theforeman.foreman.foreman_setting:
     server_url: "http://{{ foreman_proxy_bind_host }}"
