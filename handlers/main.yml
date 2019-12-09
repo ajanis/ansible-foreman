@@ -51,7 +51,6 @@
     - name: set restart foreman
       set_fact:
         foreman_require_restart: True
-      listen: "restart_netboot_services"
     - name: Restart the foreman service
       systemd:
         name: foreman
@@ -95,7 +94,6 @@
     - name: set restart foreman-proxy
       set_fact:
         foreman_proxy_require_restart: True
-      listen: "restart_netboot_services"
     - name: Restart the foreman-proxy service
       systemd:
         name: foreman-proxy
