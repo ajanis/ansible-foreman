@@ -3,13 +3,13 @@
   set_fact:
     foreman_proxy_require_restart: True
   listen: "restart_netboot_services"
-  notify: foreman_proxy_start_trigger
+ #notify: foreman_proxy_start_trigger
 
 - name: restart foreman
   set_fact:
     foreman_require_restart: True
   listen: "restart_netboot_services"
-  notify: foreman_start_trigger
+  #notify: foreman_start_trigger
 
 - name: reload nginx config
   service:
@@ -47,6 +47,7 @@
 
 
 - name: foreman_start_trigger
+  listen: restart foreman
   block:
     - name: Restart the foreman service
       systemd:
@@ -86,6 +87,7 @@
 
 
 - name: foreman_proxy_start_trigger
+  listen: restart foreman-proxy
   block:
     - name: Restart the foreman-proxy service
       systemd:
