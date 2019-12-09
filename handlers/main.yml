@@ -1,15 +1,15 @@
 ---
-- name: restart foreman-proxy
-  set_fact:
-    foreman_proxy_require_restart: True
-  listen: "restart_netboot_services"
- #notify: foreman_proxy_start_trigger
+#- name: restart foreman-proxy
+#  set_fact:
+#    foreman_proxy_require_restart: True
+#  listen: "restart_netboot_services"
+# #notify: foreman_proxy_start_trigger
 
-- name: restart foreman
-  set_fact:
-    foreman_require_restart: True
-  listen: "restart_netboot_services"
-  #notify: foreman_start_trigger
+#- name: restart foreman
+#  set_fact:
+#    foreman_require_restart: True
+#  listen: "restart_netboot_services"
+#  #notify: foreman_start_trigger
 
 - name: reload nginx config
   service:
@@ -46,9 +46,12 @@
 
 
 
-- name: foreman_start_trigger
-  listen: restart foreman
+- name: restart foreman
   block:
+    - name: set restart foreman
+      set_fact:
+        foreman_require_restart: True
+      listen: "restart_netboot_services"
     - name: Restart the foreman service
       systemd:
         name: foreman
@@ -60,6 +63,7 @@
         - foreman_require_restart | default(false)
       notify:
         - reload nginx config
+    - meta: fluxh_handlers
     - name: Verify foreman HTTP service is listening
       wait_for:
         host: "{{ foreman_interface | default(\"localhost\", true) }}"
@@ -86,9 +90,12 @@
       when: foreman_start_attempt.failed
 
 
-- name: foreman_proxy_start_trigger
-  listen: restart foreman-proxy
+- name: restart foreman-proxy
   block:
+    - name: set restart foreman-proxy
+      set_fact:
+        foreman_proxy_require_restart: True
+      listen: "restart_netboot_services"
     - name: Restart the foreman-proxy service
       systemd:
         name: foreman-proxy
