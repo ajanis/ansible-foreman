@@ -8,49 +8,48 @@
 
 - name: Get host build status
   shell: |
-    hammer -r host info --name {{ item.value.name }}.{{ www_domain }} | egrep -i '(build status)' | sed -r 's/^.*:\s+(\w.*)$/\1/'
+    hammer -r host info --name {{ item.name }}.{{ www_domain }} | egrep -i '(build status)' | sed -r 's/^.*:\s+(\w.*)$/\1/'
   register: buildstatus
-  loop: "{{ foreman_hosts | dict2items }}"
-  when: item.key in hostlist.stdout
+  loop: "{{ foreman_hosts }}"
+  when: item.name in hostlist.stdout
 
 #- debug:
 #    msg: "{{ item }}"
 #  loop: "{{ buildstatus.results }}"
 #  when: item.changed
 
-
 - name: "Create hosts via hammer cli"
   command: >
-    {% if item.item.value.name not in hostlist.stdout %}
-    hammer -r host create --name {{ item.item.value.name }} --hostgroup {{ item.item.value.hostgroup }} --build '1'
+    {% if item.item.name not in hostlist.stdout %}
+    hammer -r host create --name {{ item.item.name }} --hostgroup {{ item.item.hostgroup }} --build '1'
     --location 'Default Location' --organization 'Default Organization'
     --interface '{
-    {% if item.item.value.provider is defined and item.item.value.provider == "kvm" %}
-    "compute_bridge": "br{{ item.item.value.vlan_id | default('0') | regex_replace('10', '0') }}",
+    {% if item.item.provider is defined and item.item.provider == "kvm" %}
+    "compute_bridge": "br{{ item.item.vlan_id | default('0') | regex_replace('10', '0') }}",
     "compute_model": "virtio",
     "compute_type": "bridge",
     {% endif %}
-    {% if item.item.value.ip is defined %}
-    "ip": "{{ item.item.value.ip }}",
+    {% if item.item.ip is defined %}
+    "ip": "{{ item.item.ip }}",
     {% endif %}
     "identifier": "eth0"
     }'
-    {% if item.item.value.provider is defined and item.item.value.provider == "kvm" %}
+    {% if item.item.provider is defined and item.item.provider == "kvm" %}
     --compute-attributes '{
-    "cpus": {{ item.item.value.cpu_cores }},
-    "memory": {{ item.item.value.memory | regex_replace("^([0-9]+)\s+?.*$", "\1GB") | human_to_bytes }},
+    "cpus": {{ item.item.cpu_cores }},
+    "memory": {{ item.item.memory | regex_replace("^([0-9]+)\s+?.*$", "\1GB") | human_to_bytes }},
     "start": "0"
     }'
     --volume '{
-    "capacity": {{ (item.item.value.disk_size | regex_replace("^([0-9]+)\s+?.*$", "\1GB") | human_to_bytes // 1073741824) }},
+    "capacity": {{ (item.item.disk_size | regex_replace("^([0-9]+)\s+?.*$", "\1GB") | human_to_bytes // 1073741824) }},
     "format_type": "qcow2"
     }'
     {% endif %}
     {% else %}
     {% if "Pending" not in item.stdout %}
-    hammer -r host update --name {{ item.item.value.name }}.{{ www_domain }} --build '1'
+    hammer -r host update --name {{ item.item.name }}.{{ www_domain }} --build '1'
     {% else %}
-    hammer -qr host info --name {{ item.item.value.name }}.{{ www_domain }}
+    hammer -qr host info --name {{ item.item.name }}.{{ www_domain }}
     {% endif %}
     {% endif %}
   loop: "{{ buildstatus.results }}"
@@ -63,7 +62,7 @@
 
 - name: Get host power status
   shell: |
-    hammer -r host status --name {{ item.item.item.key }}.{{ www_domain }} | grep -i power | awk '{print $2}'
+    hammer -r host status --name {{ item.item.item.name }}.{{ www_domain }} | grep -i power | awk '{print $2}'
   register: powerstatus
   loop: "{{ foreman_hosts_created.results  }}"
   when: item.changed
@@ -80,6 +79,6 @@
     {% else %}
     reset
     {% endif %}
-    --name {{ item.item.item.item.key }}.{{ www_domain }}
+    --name {{ item.item.item.item.name }}.{{ www_domain }}
   loop: "{{ powerstatus.results }}"
   when: item.changed
