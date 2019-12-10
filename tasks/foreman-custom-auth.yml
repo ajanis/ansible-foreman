@@ -94,6 +94,7 @@
     server_url: "http://{{ foreman_proxy_bind_host }}"
     username: "{{ foreman_admin_user }}"
     password: "{{ foreman_admin_password }}"
+  changed_when: False
   loop: "{{ foreman_ldap_sources }}"
   when:
     - foreman_ldap_sources is defined
