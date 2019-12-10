@@ -7,62 +7,18 @@
 #    state: restarted
   listen: "restart_netboot_services"
 
-#- name: set restart fact
-#  set_fact:
-#    foreman_require_restart: True
-##  service:
-##    name: foreman
-##    state: restarted
-#  listen: restart foreman
-#  notify: check_foreman_running
-
-
-
-- name: Restart the foreman service
-  systemd:
-    name: foreman
-    state: restarted
-    enabled: yes
-  #register: foreman_started
-  listen: restart foreman
-  when:
-    - foreman_enable_service
-    - foreman_require_restart | default(false)
-  notify: check_foreman_running
-
-- name: trigger foreman check
-  meta: flush_handlers
-  listen: restart foreman
-
-- name: Verify foreman HTTP service is listening
-  wait_for:
-    host: "{{ foreman_interface | default(\"localhost\", true) }}"
-    port: "{{ foreman_port | default('3000') }}"
-    delay: 5
-  listen: check_foreman_running
-  #when: foreman_started.changed and foreman_enable_service
-  ignore_errors: yes
-  register: foreman_start_attempt
-
-- name: Get foreman journald logs if service does not appear to be up
-  shell: journalctl _SYSTEMD_INVOCATION_ID=`systemctl show -p InvocationID --value foreman.service`
-  register: foreman_journal
-  listen: check_foreman_running
-  when: foreman_start_attempt.failed is defined and foreman_start_attempt.failed == True
-
-- fail:
-    msg: "{{ foreman_journal.stdout_lines }}"
-  listen: check_foreman_running
-  when: foreman_start_attempt.failed is defined and foreman_start_attempt.failed == True
-
-
-
+- name: restart foreman
+  set_fact:
+    foreman_require_restart: True
+#  service:
+#    name: foreman
+#    state: restarted
+  listen: "restart_netboot_services"
 
 - name: reload nginx config
   service:
     name: nginx
     state: reloaded
-  listen: restart foreman
 
 - name: capture_foreman_version
   command: foreman version
