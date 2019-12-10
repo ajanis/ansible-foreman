@@ -19,6 +19,8 @@
     - check_foreman_running
     - reload nginx config
 
+- meta: flush_handlers
+
 #- name: Restart the foreman service
 #  systemd:
 #    name: foreman
