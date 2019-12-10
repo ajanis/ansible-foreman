@@ -7,14 +7,15 @@
 #    state: restarted
   listen: "restart_netboot_services"
 
-- name: restart foreman
-  set_fact:
-    foreman_require_restart: True
-#  service:
-#    name: foreman
-#    state: restarted
-  listen: "restart_netboot_services"
-  notify: check_foreman_running
+#- name: set restart fact
+#  set_fact:
+#    foreman_require_restart: True
+##  service:
+##    name: foreman
+##    state: restarted
+#  listen: restart foreman
+#  notify: check_foreman_running
+
 
 
 - name: Restart the foreman service
@@ -23,12 +24,15 @@
     state: restarted
     enabled: yes
   #register: foreman_started
-  listen: check_foreman_running
+  listen: restart foreman
   when:
     - foreman_enable_service
     - foreman_require_restart | default(false)
-  notify:
-    - reload nginx config
+  notify: check_foreman_running
+
+- name: trigger foreman check
+  meta: flush_handlers
+  listen: restart foreman
 
 - name: Verify foreman HTTP service is listening
   wait_for:
@@ -58,6 +62,7 @@
   service:
     name: nginx
     state: reloaded
+  listen: restart foreman
 
 - name: capture_foreman_version
   command: foreman version
