@@ -17,13 +17,12 @@
   notify: check_foreman_running
 
 
-
 - name: Restart the foreman service
   systemd:
     name: foreman
     state: restarted
     enabled: yes
-  register: foreman_started
+  #register: foreman_started
   listen: check_foreman_running
   when:
     - foreman_enable_service
@@ -37,7 +36,7 @@
     port: "{{ foreman_port | default('3000') }}"
     delay: 5
   listen: check_foreman_running
-  when: foreman_started.changed and foreman_enable_service
+  #when: foreman_started.changed and foreman_enable_service
   ignore_errors: yes
   register: foreman_start_attempt
 

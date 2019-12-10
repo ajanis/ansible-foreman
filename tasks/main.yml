@@ -5,14 +5,14 @@
 
 - import_tasks: configure.yml
 
-- meta: flush_handlers
+#- meta: flush_handlers
 
 - name: Start the foreman service
   systemd:
     name: foreman
     state: started
     enabled: yes
-  register: foreman_started
+  #register: foreman_started
   when:
     - foreman_enable_service
   notify:
@@ -20,6 +20,7 @@
     - reload nginx config
 
 - meta: flush_handlers
+
 
 #- name: Restart the foreman service
 #  systemd:
