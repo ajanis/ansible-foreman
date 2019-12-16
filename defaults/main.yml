@@ -59,7 +59,7 @@ foreman_perform_rake_tasks: False
 
 foreman_default_settings:
   - name: "root_pass"
-    value: "{{ vault_foreman_admin_password }}"
+    value: "{{ foreman_admin_password }}"
   - name: "default_pxe_item_global"
     value: "discovery"
   - name: "update_ip_from_built_request"
@@ -94,37 +94,13 @@ foreman_default_settings:
     value: "True"
   - name: "outofsync_interval"
     value: "259200"
-  - name: "host_owner"
-    value: "{{ foreman_admin_id }}"
   - name: "ansible_out_of_sync_disabled"
     value: "True"
   - name: "ansible_interval"
     value: "0"
-  - name: "ansible_ssh_private_key_file"
-    value: "{{ provisioning_ssh_key }}"
 
 foreman_extra_settings: []
-
-
-foreman_global_parameters:
-  - name: http-proxy
-    parameter_type: string
-    value: "{{ foreman_proxy_bind_host }}"
-  - name: http-proxy-port
-    parameter_type: integer
-    value: 3142
-  - name: remote_execution_ssh_keys
-    value: "{{ provisioning_ssh_key }}"
-  - name: ansible_host_config_key
-    value: "{{ awx_host_config_key }}"
-  - name: ansible_tower_fqdn
-    value: "{{ awx_web_url }}"
-  - name: ansible_enabled
-    parameter_type: boolean
-    value: "True"
-  - name: ansible_tower_provisioning
-    parameter_type: boolean
-    value: "True"
+foreman_global_parameters: []
 
 
 foreman_usergroups:
