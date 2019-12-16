@@ -53,6 +53,7 @@ d-i netcfg/confirm_static boolean true
 
 # Network configuration
 d-i netcfg/choose_interface select auto
+d-i debian-installer/add-kernel-opts string biosdevname=0 net.ifnames=0
 d-i netcfg/get_hostname string <%= @host %>
 d-i netcfg/get_domain string <%= @host.domain %>
 d-i netcfg/wireless_wep string
