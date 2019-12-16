@@ -55,6 +55,7 @@ oses:
 <%= snippet 'saltstack_setup' %>
 <% end -%>
 
+<%= snippet 'bmc_nic_setup' %>
 <%= snippet 'preseed_networking_setup' %>
 sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin yes/g' /etc/ssh/sshd_config
 <%= snippet 'efibootmgr_netboot' %>
