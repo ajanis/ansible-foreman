@@ -30,6 +30,26 @@
     repo: "deb {{ foreman_repo_url }} plugins {{ foreman_plugins_version }}"
     state: present
 
+- name: "If installing Foreman > 1.21, set up Foreman Plugins 1.21 repository for smart-proxy remote-execution workaround"
+  apt_repository:
+    repo: "deb {{ foreman_repo_url }} plugins 1.21"
+    state: present
+  when: foreman_plugins_version is version('1.21', '>')
+
+- name: "If Ubuntu version > Xenial, set up up Xenial universe repo for ruby-concurrent pinning"
+  apt_repository:
+    repo: "deb http://archive.ubuntu.com/ubuntu xenial universe"
+    state: present
+  when:
+    - ansible_distribution == 'Ubuntu'
+    - ansible_distribution_version is version('16.04', '>')
+
+- name: "Set pinned versions for ruby-concurrent and ruby-foreman-remote-execution-core"
+  copy:
+    src: 10-foreman-pinned
+    dest: /etc/apt/preferences.d/10-foreman-pinned
+    mode: 0644
+
 - name: Install foreman packages [Debian/Ubuntu]
   apt:
     name: "{{ foreman_pkgs }}"
