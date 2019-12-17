@@ -21,6 +21,57 @@
     dest: /root/.hammer/cli_config.yml
     mode: 644
 
+- name: get foreman-proxy user info
+  getent:
+    database: passwd
+    key: "{{ foreman_proxy_user }}"
+
+- name: set foreman-proxy user home directory
+  set_fact:
+    foreman_proxy_user_homedir: "{{ getent_passwd[foreman_proxy_user][4] }}"
+
+- name: Create foreman-proxy user ssh directory
+  file:
+    path: "/var/lib/foreman-proxy/ssh"
+    state: directory
+    owner: foreman-proxy
+    group: foreman-proxy
+    mode: 0755
+
+- name: Ensure foreman-proxy .ssh symlink exists
+  file:
+    state: link
+    src: /var/lib/foreman-proxy/ssh
+    dest: "{{ foreman_proxy_user_homedir }}/.ssh"
+    owner: foreman-proxy
+    group: foreman-proxy
+
+- name: Copy foreman-proxy user ssh config
+  copy:
+    owner: foreman-proxy
+    group: foreman-proxy
+    mode: 0755
+    dest: "{{ foreman_proxy_user_homedir }}/.ssh/config"
+    content: |
+      StrictHostKeyChecking no
+      UserKnownHostsFile /dev/null
+
+- name: Copy ssh private key to server
+  copy:
+    mode: 0600
+    owner: foreman-proxy
+    group: foreman-proxy
+    content: "{{ foreman_ssh_private_key }}"
+    dest: "{{ foreman_proxy_user_homedir }}/.ssh/id_rsa"
+
+- name: Copy foreman-proxy user ssh pubkey to server
+  copy:
+    mode: 0644
+    owner: foreman-proxy
+    group: foreman-proxy
+    dest: "{{ foreman_proxy_user_homedir }}/.ssh/id_rsa.pub"
+    content: "{{ foreman_ssh_public_key }}"
+
 - name: Generate foreman database config from template
   template:
     src: etc/foreman/database.yml.j2
