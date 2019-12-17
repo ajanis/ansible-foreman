@@ -67,13 +67,14 @@ foreman_pkgs:
   - ruby-foreman-dhcp-browser
   - ruby-foreman-tasks-core
   - ruby-foreman-remote-execution-core
-  - ruby-foreman-ansible-core
+  - ruby-foreman-ansible
 
 foreman_proxy_pkgs:
   - foreman-proxy
   - foreman-proxy-journald
   - ruby-smart-proxy-discovery
-  #- ruby-smart-proxy-remote-execution-ssh
+  - ruby-smart-proxy-remote-execution-ssh
+  - ruby-smart-proxy-ansible
 
 foreman_proxy_extra_repos_pkg: []
 
