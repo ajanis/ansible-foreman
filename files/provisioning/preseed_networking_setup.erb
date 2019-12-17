@@ -24,7 +24,6 @@ network:
   version: 2
   renderer: networkd
   ethernets:
-    #<%= @host.primary_interface.identifier %>
     $real:
 <% if host_dhcp6 -%>
       dhcp6: true
@@ -32,12 +31,12 @@ network:
 <% if host_dhcp -%>
       dhcp4: true
 <% else -%>
-      addresses: [ <%= @host.ip %>/<%= host_subnet.cidr %><% if @host.ip6 && host_subnet6 && !host_dhcp6 -%>, <%= @host.ip6 %>/<%= host_subnet6.cidr %><% end -%> ]
-      gateway4: <%= host_subnet.gateway %>
-      <% if @host.ip6 && host_subnet6 && host_subnet6.gateway -%>gateway6: <%= host_subnet6.gateway %><% end -%>
+      addresses: [ <%= @host.ip %>/<%= host_subnet.cidr %><% if @host.ip6 && host_subnet6 && !host_dhcp6 %>, <%= @host.ip6 %>/<%= host_subnet6.cidr %><% end %> ]
+      gateway4: <%= host_subnet.gateway -%>
+      <% if @host.ip6 && host_subnet6 && host_subnet6.gateway -%>gateway6: <%= host_subnet6.gateway -%><% end %>
       nameservers:
-                search: [ <%= @host.domain %> ]
-                addresses: [ <%= host_subnet.dns_servers.join(', ') %> ]
+        search: [ <%= @host.domain %> ]
+        addresses: [ <%= host_subnet.dns_servers.join(', ') %> ]
 <% end -%>
 EOF
 
@@ -47,7 +46,6 @@ cat << EOF > /etc/network/interfaces
 auto lo
 iface lo inet loopback
 
-#<%= @host.primary_interface.identifier %>
 auto $real
 allow-hotplug $real
 iface $real inet <%= host_dhcp ? 'dhcp' : 'static' %>
