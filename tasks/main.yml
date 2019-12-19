@@ -1,5 +1,7 @@
 - name: Add the OS specific varibles
   include_vars: "{{ ansible_os_family }}.yml"
+  tags:
+    - always
 
 - import_tasks: install.yml
 
@@ -72,17 +74,26 @@
 - meta: flush_handlers
 
 - import_tasks: smart-proxy.yml
-
+  tags:
+    - foreman-smartproxy
 - import_tasks: foreman-custom-auth.yml
-
+  tags:
+    - foreman-auth
 - import_tasks: foreman-custom-network.yml
-
+  tags:
+    - foreman-network
 - import_tasks: foreman-custom-os.yml
-
+  tags:
+    - foreman-os
 - import_tasks: foreman-custom-groups.yml
-
+  tags:
+    - foreman-groups
 - import_tasks: foreman-custom-templates.yml
-
+  tags:
+    - foreman-templates
 - import_tasks: foreman-custom-config.yml
-
+  tags:
+    - foreman-config
 - import_tasks: apt-cache.yml
+  tags:
+    - foreman-aptcache
