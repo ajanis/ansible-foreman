@@ -100,6 +100,8 @@ foreman_default_settings:
     value: "True"
   - name: "ansible_interval"
     value: "0"
+  - name: "use_shortname_for_vms"
+    value: "True"
 
 foreman_extra_settings: []
 foreman_global_parameters: []
