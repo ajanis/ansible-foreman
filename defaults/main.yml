@@ -46,6 +46,10 @@ foreman_proxy_tftp_dir: /srv/tftp
 foreman_proxy_tftp_pxe_dir:
   - boot
   - pxelinux.cfg
+foreman_proxy_templates: True
+foreman_proxy_templates_protocol: http
+foreman_proxy_discovery: True
+foreman_proxy_dynflow: True
 
 foreman_db_adapter: postgresql
 foreman_db_host: localhost
