@@ -34,6 +34,7 @@
     parent: "{{ item.parent | default(omit) }}"
     compute_resource: "{{ item.compute_resource | default(omit) }}"
     #pxe_loader: "{{ item.pxe_loader }}"
+    parameters: "{{ item.parameters | default(omit) }}"
     server_url: "http://{{ foreman_proxy_bind_host }}"
     username: "{{ foreman_admin_user }}"
     password: "{{ foreman_admin_password }}"

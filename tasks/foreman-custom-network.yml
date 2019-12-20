@@ -3,6 +3,7 @@
   theforeman.foreman.foreman_domain:
     name: "{{ www_domain }}"
     description: "{{ www_domain }}"
+    parameters: "{{ item.parameters | default(omit) }}"
     locations:
       - "Default Location"
     organizations:
@@ -30,6 +31,7 @@
     vlanid: "{{ item.vlanid | default(omit) }}"
     mtu: "{{ item.mtu | default(omit) }}"
     domains: "{{ item.domains | default(www_domain) }}"
+    parameters: "{{ item.parameters | default(omit) }}"
     organizations:
     - "Default Organization"
     locations:
