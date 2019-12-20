@@ -1,0 +1,11 @@
+---
+# {{ ansible_managed }}
+
+{% if foreman_proxy_discovery %}
+:enabled: true
+{% else %}
+:enabled: false
+{% endif %}
+# connection to discovered nodes
+:node_scheme: {{ foreman_proxy_protocol }}
+:node_port: {{ foreman_proxy_port }}

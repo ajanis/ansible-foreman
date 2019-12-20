@@ -3,7 +3,7 @@
 
 {% if foreman_proxy_tftp %}
 # Can be true, false, or http/https to enable just one of the protocols
-:enabled: {{ foreman_proxy_tftp_protocol }}
+:enabled: {{ foreman_proxy_tftp_protocol | default(foreman_proxy_protocol) }}
 {% else %}
 :enabled: false
 {% endif %}
