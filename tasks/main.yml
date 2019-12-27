@@ -79,6 +79,7 @@
 - import_tasks: foreman-custom-auth.yml
   tags:
     - foreman-auth
+    - foreman-config
 - import_tasks: foreman-custom-network.yml
   tags:
     - foreman-network
