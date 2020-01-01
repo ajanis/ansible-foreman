@@ -11,6 +11,8 @@ description: this will configure your host networking, it configures your primar
 <% os_major = @host.operatingsystem.major.to_i -%>
 <% host_subnet = @host.subnet -%>
 <% host_dhcp = host_subnet.nil? ? false : host_subnet.dhcp_boot_mode? -%>
+<% host_ip = @host.ip -%>
+<% host_ipset = host_ip.nil? ? false : true -%>
 <% host_subnet6 = @host.subnet6 -%>
 <% host_dhcp6 = host_subnet6.nil? ? false : host_subnet6.dhcp_boot_mode? -%>
 
@@ -25,10 +27,10 @@ network:
   renderer: networkd
   ethernets:
     $real:
-<% if host_dhcp6 -%>
+<% if host_dhcp6 && !host_ipset -%>
       dhcp6: true
 <% end -%>
-<% if host_dhcp -%>
+<% if host_dhcp && !host_ipset -%>
       dhcp4: true
 <% else -%>
       addresses: [ <%= @host.ip %>/<%= host_subnet.cidr %><% if @host.ip6 && host_subnet6 && !host_dhcp6 %>, <%= @host.ip6 %>/<%= host_subnet6.cidr %><% end %> ]

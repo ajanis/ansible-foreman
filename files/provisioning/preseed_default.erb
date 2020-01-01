@@ -30,7 +30,12 @@ d-i console-keymaps-at/keymap seen true
 <% end -%>
 
 <% subnet = @host.subnet -%>
+<% host_ip = @host.ip -%>
+<% host_ipset = host_ip.nil? ? false : true -%>
+
 <% if @static -%>
+  <%- dhcp = false -%>
+<% elsif host_ipset -%>
   <%- dhcp = false -%>
 <% elsif subnet.nil? -%>
   <%- dhcp = true -%>
