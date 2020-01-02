@@ -30,6 +30,11 @@
     repo: "deb {{ foreman_repo_url }} plugins {{ foreman_plugins_version }}"
     state: present
 
+- name: "Add Ansible Repository (For Foreman-Ansible Dependencies)"
+  apt_repository:
+    repo: ppa:ansible/ansible
+    state: present
+
 - name: "If installing Foreman > 1.21, set up Foreman Plugins 1.21 repository for smart-proxy remote-execution workaround"
   apt_repository:
     repo: "deb {{ foreman_repo_url }} plugins 1.21"
