@@ -20,6 +20,7 @@ foreman_python2_pkgs:
   - apypie
   - requests
   - foreman-yml
+  - urllib3==1.23
   - foreman
   - PyYAML
   - setuptools
