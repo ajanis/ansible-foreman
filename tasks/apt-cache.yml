@@ -14,9 +14,10 @@
   notify: restart apt-cacher-ng
 
 - name: Create CentOS mirrorlist map
-  command:
+  shell:
     cmd: curl https://www.centos.org/download/full-mirrorlist.csv | sed 's/^.*"http:/http:/' | sed 's/".*$//' | grep ^http >/etc/apt-cacher-ng/centos_mirrors
     creates: /etc/apt-cacher-ng/centos_mirrors
+    executable: /bin/bash
 
 - name: Enable/Start apt-cacher-ng service
   service:
