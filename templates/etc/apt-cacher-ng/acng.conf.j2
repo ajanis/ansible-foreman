@@ -135,8 +135,10 @@ PidFile: /var/run/apt-cacher-ng/pid
 # available for some days (mirror downtime) then there is a risk of removal of
 # still useful package files.
 #
+{% if ansible_facts['packages']['apt-cacher-ng'][0]['version'] is version('1.0.0', '<') %}
+ExTreshold: 4
+{% else %}
 ExThreshold: 4
-
 # If the expiration is run daily, it sometimes does not make much sense to do
 # it because the expected changes (i.e. removal of expired files) don't justify
 # the extra processing time or additional downloads for expiration operation
@@ -152,6 +154,9 @@ ExThreshold: 4
 # The number can have a suffix (k,K,m,M for Kb,KiB,Mb,MiB)
 #
 ExStartTradeOff: 5000m
+{% endif %}
+
+
 
 # Stop expiration when a critical problem appears, issue like a failed update
 # of an index file in the preparation step.
