@@ -4,6 +4,18 @@
     name: apt-cacher-ng
     state: present
 
+- name: Collect installed packages
+  package_facts:
+
+#- name: Collect apt-cacher-ng version
+#  set_fact:
+#    acng_pkg_version: "{{ ansible_facts.packages['apt-cacher-ng'][0]['version'] }}"
+#
+#- name: print acng version
+#  debug:
+#    msg: "{{ acng_pkg_version }}"
+#  when: acng_pkg_version is version('1.0.0', '<')
+
 - name: Template apt-cacher-ng config
   template:
     src: etc/apt-cacher-ng/acng.conf.j2
