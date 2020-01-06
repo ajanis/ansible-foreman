@@ -4,6 +4,7 @@
     name: "{{ www_domain }}"
     description: "{{ www_domain }}"
     parameters: "{{ item.parameters | default(omit) }}"
+    dns_proxy: "{{ item.dns_proxy | default(omit) }}"
     locations:
       - "Default Location"
     organizations:
@@ -26,6 +27,7 @@
     boot_mode: "{{ item.boot_mode | default('DHCP') }}"
     dhcp_proxy: "{{ item.dhcp_proxy | default(omit) }}"
     tftp_proxy: "{{ item.tftp_proxy | default(omit) }}"
+    dns_proxy: "{{ item.dns_proxy | default(omit) }}"
     discovery_proxy: "{{ item.discovery_proxy | default(omit) }}"
     httpboot_proxy: "{{ item.httpboot_proxy | default(omit) }}"
     vlanid: "{{ item.vlanid | default(omit) }}"
