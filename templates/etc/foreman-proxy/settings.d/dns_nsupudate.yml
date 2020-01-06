@@ -1,0 +1,10 @@
+---
+# {{ ansible_managed }}
+
+# Configuration file for 'nsupdate' dns provider
+
+# nameserver rndc.key file path
+:dns_key: {{ foreman_proxy_dns_key }}
+
+# use this setting if you are managing a dns server which is not localhost though this proxy
+:dns_server: {{ foreman_proxy_dns_server }}
