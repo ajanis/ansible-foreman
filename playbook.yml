@@ -23,6 +23,9 @@
             name: isc_dhcp_server
           when: foreman_proxy_dhcp
         - import_role:
+            name: isc_bind_server
+          when: foreman_proxy_dns
+        - import_role:
             name: tftp
           when: foreman_proxy_tftp
         - import_role:
