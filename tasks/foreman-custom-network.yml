@@ -1,8 +1,8 @@
 ---
-- name: "Create Domain"
+- name: "Create Domains"
   theforeman.foreman.foreman_domain:
-    name: "{{ www_domain }}"
-    description: "{{ www_domain }}"
+    name: "{{ item.name }}"
+    description: "{{ item.description | default(omit) }}"
     parameters: "{{ item.parameters | default(omit) }}"
     dns_proxy: "{{ item.dns_proxy | default(omit) }}"
     locations:
@@ -13,6 +13,10 @@
     username: "{{ foreman_admin_user }}"
     password: "{{ foreman_admin_password }}"
     state: present
+  loop: "{{ foreman_domains }}"
+  when:
+    - foreman_domains is defined
+    - foreman_domains != None
 
 - name: Create Subnets
   theforeman.foreman.foreman_subnet:
