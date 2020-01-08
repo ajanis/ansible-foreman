@@ -115,6 +115,9 @@ foreman_default_settings:
 foreman_extra_settings: []
 foreman_global_parameters: []
 
+foreman_domains:
+  - name: "{{ www_domain }}"
+    description: "{{ www_domain }}"
 
 foreman_usergroups:
   - name: "{{ foreman_admin_group }}"
