@@ -105,4 +105,6 @@
     {% endif %}
     --name {{ item.item.item.item.name }}.{{ www_domain }}
   loop: "{{ powerstatus.results }}"
-  when: item.changed
+  when:
+    - item.changed
+    -  - item.item.item.item.provider == "kvm"
