@@ -61,7 +61,7 @@ d-i netcfg/choose_interface select auto
 <% if host_param('kernel_params') -%>
 d-i debian-installer/add-kernel-opts string <%= host_param('kernel_params') %>
 <% end -%>
-d-i netcfg/get_hostname string <%= @host %>
+d-i netcfg/get_hostname string <%= @host.shortname %>
 d-i netcfg/get_domain string <%= @host.domain %>
 d-i netcfg/wireless_wep string
 
