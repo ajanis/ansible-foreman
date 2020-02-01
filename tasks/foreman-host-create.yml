@@ -35,7 +35,9 @@
     {% if item.item.mac_address is defined %}
     "mac": "{{ item.item.mac_address }}",
     {% endif %}
-    "identifier": "{{ item.item.interface | default('eth0') }}"
+    {% if item.item.interface is defined %}
+    "identifier": "{{ item.item.interface }}"
+    {% endif %}
     }'
     {% if item.item.provider is defined and item.item.provider == "kvm" %}
     --compute-attributes '{
