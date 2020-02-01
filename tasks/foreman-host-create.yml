@@ -107,4 +107,4 @@
   loop: "{{ powerstatus.results }}"
   when:
     - item.changed
-    -  - item.item.item.item.provider == "kvm"
+    - item.item.item.item.provider == "kvm"
