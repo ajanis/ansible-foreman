@@ -48,6 +48,15 @@
     "format_type": "qcow2"
     }'
     {% endif %}
+    {% if item.item.provider is defined and item.item.provider == "ipmi" %}
+    --interface '{
+    "ip": "{{ item.item.ipmi_ip}}",
+    "mac": "{{ item.item.ipmi_mac_address }}",
+    "type": "bmc",
+    "provider": "ipmi",
+    "username": "{{ item.item.ipmi_username }}",
+    "password": "{{ item.item.ipmi_password }}"
+    {% endif %}
     {% else %}
     {% if "Pending" not in item.stdout %}
     hammer -r host update --name {{ item.item.name }}.{{ www_domain }} --build '1'
