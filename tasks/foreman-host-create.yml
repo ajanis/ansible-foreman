@@ -83,6 +83,15 @@
 #    msg: "{{ item }}"
 #  loop: "{{ powerstatus.results }}"
 
+- name: Set host to boot from network device
+  command: >
+    hammer -r host boot --device pxe --name {{ item.item.item.name }}.{{ www_domain }}
+  loop:
+    "{{ foreman_hosts_created.results }}"
+  when:
+    - item.changed
+    - item.item.item.provider == "ipmi"
+
 - name: Host Power-Cycle
   command: >
     hammer -r host
