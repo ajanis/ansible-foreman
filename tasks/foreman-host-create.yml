@@ -25,18 +25,18 @@
     --location 'Default Location' --organization 'Default Organization'
     --interface '{
     {% if item.item.provider is defined and item.item.provider == "kvm" %}
-    "compute_bridge": "br{{ item.item.vlan_id | default('0') | regex_replace('10', '0') }}",
-    "compute_model": "virtio",
-    "compute_type": "bridge",
+    "compute_bridge": "br{{ item.item.vlan_id | default('0') | regex_replace('10', '0') }}"
+    ,"compute_model": "virtio"
+    ,"compute_type": "bridge"
     {% endif %}
     {% if item.item.ip is defined %}
-    "ip": "{{ item.item.ip }}",
+    ,"ip": "{{ item.item.ip }}"
     {% endif %}
     {% if item.item.mac_address is defined %}
-    "mac": "{{ item.item.mac_address }}",
+    ,"mac": "{{ item.item.mac_address }}"
     {% endif %}
     {% if item.item.interface is defined %}
-    "identifier": "{{ item.item.interface }}"
+    ,"identifier": "{{ item.item.interface }}"
     {% endif %}
     }'
     {% if item.item.provider is defined and item.item.provider == "kvm" %}
