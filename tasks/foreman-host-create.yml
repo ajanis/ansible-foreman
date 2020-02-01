@@ -21,7 +21,7 @@
 - name: "Create hosts via hammer cli"
   command: >
     {% if item.item.name not in hostlist.stdout %}
-    hammer -r host create --name {{ item.item.name }} --hostgroup {{ item.item.hostgroup }} --build '1'
+    hammer -r host create --name '{{ item.item.name }}' --hostgroup '{{ item.item.hostgroup }}' --build '1'
     --location 'Default Location' --organization 'Default Organization'
     --interface '{
     {% if item.item.provider is defined and item.item.provider == "kvm" %}
