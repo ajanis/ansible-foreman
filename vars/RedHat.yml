@@ -47,7 +47,7 @@ foreman_pkgs:
   - foreman-plugin
   - foreman-cli
   - foreman-selinux
-  - foreman-service
+  - foreman-discovery-image-service
   - foreman-console
   - foreman-debug
   - foreman-journald
@@ -83,7 +83,6 @@ foreman_proxy_pkgs:
   - rubygem-smart_proxy_ansible
 
 foreman_proxy_extra_repos_pkg: []
-#foreman_proxy_dns_key: /var/opt/isc/isc-bind/named/data/rndc.key
 
 foreman_proxy_dhcp_config_dir: /etc/dhcp
 foreman_proxy_dhcp_config: /etc/dhcp/dhcpd.conf
