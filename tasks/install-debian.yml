@@ -91,12 +91,16 @@
     name: "{{ foreman_python2_pkgs }}"
     state: present
     executable: pip2
+  when:
+    - ansible_python.version.major == 2
 
 - name: Install foreman python3 requirements
   pip:
     name: "{{ foreman_python3_pkgs }}"
     state: present
     executable: pip3
+  when:
+    - ansible_python.version.major == 3
 
 - name: template /etc/default/foreman
   template:
