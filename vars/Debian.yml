@@ -17,13 +17,14 @@ python_pip_pkg:
   - python3-pip
 
 foreman_python2_pkgs:
-  - apypie
-  - requests
-  - foreman-yml
-  - urllib3==1.23
-  - foreman
-  - PyYAML
-  - setuptools
+  - apypie==0.2.1
+  - requests==2.22.0
+  - requests-futures==0.9.9
+  - urllib3==1.25.8
+  - python-foreman
+  - foreman-yml==1.0.4
+  - foreman==0.9.7
+  - PyYAML==3.10
 
 foreman_python3_pkgs:
   - apypie
@@ -60,7 +61,7 @@ foreman_pkgs:
   - ruby-hammer-cli-foreman-ansible
   - ruby-powerbar
   - ruby-foreman-templates
-  - ruby-foreman-cockpit
+#  - ruby-foreman-cockpit
   - ruby-foreman-tasks
   - ruby-foreman-remote-execution
   - ruby-foreman-discovery
@@ -74,8 +75,8 @@ foreman_proxy_pkgs:
   - foreman-proxy
   - foreman-proxy-journald
   - ruby-smart-proxy-discovery
-  - ruby-smart-proxy-remote-execution-ssh
-  - ruby-smart-proxy-ansible
+#  - ruby-smart-proxy-remote-execution-ssh
+#  - ruby-smart-proxy-ansible
 
 foreman_proxy_extra_repos_pkg: []
 
