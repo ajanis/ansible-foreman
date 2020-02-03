@@ -9,7 +9,7 @@ foreman_nginx_passenger_ruby: /usr/bin/tfm-ruby
 foreman_nginx_passenger_registry: /var/run/passenger-instreg
 foreman_nginx_passenger_app_root: /usr/share/foreman/public
 
-
+foreman_yum_repo_url: "https://yum.theforeman.org/releases/{{ foreman_install_version }}"
 python_pip_pkg: python-pip
 
 foreman_dependency_pkgs:
@@ -17,14 +17,26 @@ foreman_dependency_pkgs:
   - python-httplib2
   - curl
   - wget
-  - gcc
-  - python-devel
-  - python-setuptools
-  - passenger
+  - syslinux
+  - syslinux-tftpboot
+  - syslinux-extlinux
 
-foreman_python_pkgs:
+foreman_python2_pkgs:
+  - apypie==0.2.1
+  - requests==2.22.0
+  - requests-futures==0.9.9
+  - urllib3==1.25.8
+  - python-foreman===0.4.20-
+  - foreman-yml==1.0.4
+  - foreman==0.9.7
+  - PyYAML==3.10
+
+foreman_python3_pkgs:
   - apypie
   - requests
+  - requests-futures
+  - urllib3
+  - python-foreman
   - foreman-yml
   - foreman
   - PyYAML
@@ -32,38 +44,47 @@ foreman_python_pkgs:
 foreman_pkgs:
   - foreman
   - foreman-libvirt
+  - foreman-plugin
+  - foreman-cli
+  - foreman-selinux
+  - foreman-service
   - foreman-console
   - foreman-debug
   - foreman-journald
-  - foreman-cli
-  - ruby-foreman
-  - ruby-hammer-cli
-  - ruby-hammer-cli-foreman
-  - ruby-hammer-cli-foreman-discovery
-  - ruby-hammer-cli-foreman-remote-execution
-  - ruby-powerbar
-  - ruby-foreman-templates
-  - ruby-foreman-tasks
-  - ruby-foreman-remote-execution
-  - ruby-foreman-discovery
-  - ruby-foreman-bootdisk
-  - ruby-foreman-dhcp-browser
-  - ruby-foreman-ansible
+  - tfm-rubygem-hammer_cli
+  - tfm-rubygem-hammer_cli_foreman_discovery
+  - tfm-rubygem-hammer_cli_foreman_remote_execution
+  - tfm-rubygem-hammer_cli_foreman_ansible
+  - tfm-rubygem-hammer_cli_foreman_bootdisk
+  - tfm-rubygem-hammer_cli_foreman_ssh
+  - tfm-rubygem-hammer_cli_foreman_tasks
+  - tfm-rubygem-foreman_templates
+  - tfm-rubygem-foreman-tasks
+  - tfm-rubygem-foreman-tasks-core
+  - tfm-rubygem-foreman_remote_execution
+  - tfm-rubygem-foreman_discovery
+  - tfm-rubygem-foreman_bootdisk
+  - tfm-rubygem-foreman_dhcp_browser
+  - tfm-rubygem-foreman_ansible
+  - tfm-rubygem-foreman_ansible_core
+  - tfm-rubygem-foreman_rescue
+  - foreman-bootloaders-redhat-tftpboot
+  - foreman-bootloaders-redhat
+
 
 foreman_proxy_pkgs:
   - foreman-proxy
   - foreman-proxy-journald
-  - ruby-smart-proxy-discovery
-  - ruby-smart-proxy-remote-execution-ssh
-  - ruby-smart-proxy-ansible
-
+  - foreman-proxy-selinux
+  - rubygem-smart_proxy_remote_execution_ssh
+  - rubygem-smart_proxy_dynflow
+  - rubygem-smart_proxy_discovery_image
+  - rubygem-smart_proxy_discovery
+  - rubygem-smart_proxy_ansible
 
 foreman_proxy_extra_repos_pkg: []
+#foreman_proxy_dns_key: /var/opt/isc/isc-bind/named/data/rndc.key
 
 foreman_proxy_dhcp_config_dir: /etc/dhcp
 foreman_proxy_dhcp_config: /etc/dhcp/dhcpd.conf
-foreman_proxy_dhcp_leases: /var/lib/dhcp/dhcpd.leases
-
-foreman_db_sqlite_adapter_pkg: foreman-sqlite3
-foreman_db_mysql_adapter_pkg: foreman-mysql2
-foreman_db_pgsql_adapter_pkg: foreman-postgresql
+foreman_proxy_dhcp_leases: /var/lib/dhcpd/dhcpd.leases
