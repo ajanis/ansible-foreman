@@ -79,5 +79,7 @@
 - name: Enable the foreman service
   systemd:
     name: foreman
+    state: started
     enabled: yes
+    daemon_reload: yes
   when: foreman_enable_service
