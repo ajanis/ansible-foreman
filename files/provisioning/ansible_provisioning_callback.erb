@@ -1,0 +1,24 @@
+<%#
+kind: snippet
+name: ansible_provisioning_callback
+model: ProvisioningTemplate
+snippet: true
+-%>
+<% if host_param_true?('ansible_tower_provisioning') -%>
+
+# Create ansible-callback systemd service file
+<%= save_to_file('/etc/systemd/system/ansible-callback.service',
+                 snippet('ansible_tower_callback_service')) %>
+
+# Create ansible-callback script called by service
+<%= save_to_file('/usr/local/bin/ansible-callback.sh',
+                 snippet('ansible_tower_callback_script')) %>
+
+# Make script executable
+/usr/bin/chmod +x /usr/local/bin/ansible-callback.sh
+
+# Enable ansible-callback service
+/usr/bin/systemctl enable ansible-callback
+
+<% end -%>
+<%#-%>
