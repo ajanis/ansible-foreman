@@ -46,7 +46,8 @@ foreman_pkgs:
   - foreman-libvirt
   - foreman-plugin
   - foreman-cli
-  - foreman-selinux
+#  - foreman-selinux
+  - foreman-service
   - foreman-discovery-image-service
   - foreman-console
   - foreman-debug
@@ -75,7 +76,7 @@ foreman_pkgs:
 foreman_proxy_pkgs:
   - foreman-proxy
   - foreman-proxy-journald
-  - foreman-proxy-selinux
+#  - foreman-proxy-selinux
   - rubygem-smart_proxy_remote_execution_ssh
   - rubygem-smart_proxy_dynflow
   - rubygem-smart_proxy_discovery_image
@@ -87,3 +88,4 @@ foreman_proxy_extra_repos_pkg: []
 foreman_proxy_dhcp_config_dir: /etc/dhcp
 foreman_proxy_dhcp_config: /etc/dhcp/dhcpd.conf
 foreman_proxy_dhcp_leases: /var/lib/dhcpd/dhcpd.leases
+foreman_proxy_tftp_dir: /var/lib/tftpboot
