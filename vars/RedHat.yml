@@ -26,7 +26,7 @@ foreman_python2_pkgs:
   - requests==2.22.0
   - requests-futures==0.9.9
   - urllib3==1.25.8
-  - python-foreman===0.4.20-
+  - python-foreman
   - foreman-yml==1.0.4
   - foreman==0.9.7
   - PyYAML==3.10
