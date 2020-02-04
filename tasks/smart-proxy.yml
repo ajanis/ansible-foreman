@@ -31,7 +31,7 @@
       changed_when: False
   rescue:
     - fail:
-        mag: |
+        msg: |
           {% if apipie_cache_results.stderr is defined and apipie_cache_results.stderr != None %}
           {{ apipie_cache_results.stderr }}
           {% endif %}
