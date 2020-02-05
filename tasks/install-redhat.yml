@@ -43,14 +43,14 @@
     name: "{{ foreman_pkgs }}"
     state: present
     update_cache: yes
-  register: foreman_installed
-  notify: capture_foreman_version
+  notify: foreman_installed
 
 - name: Install foreman proxy packages [Centos]
   yum:
     name: "{{ foreman_proxy_pkgs }}"
     state: present
     update_cache: yes
+  notify: foreman_proxy_installed
 
 - name: Install foreman python2 requirements
   pip:

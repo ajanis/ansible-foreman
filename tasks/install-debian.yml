@@ -76,8 +76,7 @@
     state: latest
     update_cache: yes
     cache_valid_time: 3600
-  register: foreman_installed
-  notify: capture_foreman_version
+  notify: foreman_installed
 
 - name: Install foreman proxy packages [Debian/Ubuntu]
   apt:
@@ -85,6 +84,7 @@
     state: latest
     update_cache: yes
     cache_valid_time: 3600
+  notify: foreman_proxy_installed
 
 - name: Install foreman python2 requirements
   pip:

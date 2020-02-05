@@ -98,3 +98,28 @@
 - import_tasks: apt-cache.yml
   tags:
     - foreman-aptcache
+
+- name: Print Foreman Package Version
+  block:
+    - name: Gather the rpm package facts
+      package_facts:
+        manager: auto
+
+    - name: Capture Foreman Debug
+      command: foreman-debug
+      register: foreman_debug_output
+
+    - name: Display Foreman Package Version and Debug Output
+      debug:
+        msg: |
+
+          Foreman Installed Package Version:
+          {{ hostvars[inventory_hostname].packages['foreman'] | to_nice_yaml }}
+
+          Foreman Installed Smart-Proxy Package Version:
+          {{ hostvars[inventory_hostname].packages['foreman-proxy'] | to_nice_yaml }}
+
+          Debug Output:
+          {{ foreman_debug_output.stdout }}
+  when: (foreman_pkgs_updated | default(false)) or
+        (foreman_proxy_pkgs_updated | default(false))
