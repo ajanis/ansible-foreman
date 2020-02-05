@@ -76,12 +76,12 @@ foreman_pkgs:
 foreman_proxy_pkgs:
   - foreman-proxy
   - foreman-proxy-journald
-#  - foreman-proxy-selinux
   - rubygem-smart_proxy_remote_execution_ssh
   - rubygem-smart_proxy_dynflow
   - rubygem-smart_proxy_discovery_image
   - rubygem-smart_proxy_discovery
-  - rubygem-smart_proxy_ansible
+
+foreman_smart_proxy_ansible_pkg: rubygem-smart_proxy_ansible
 
 foreman_proxy_extra_repos_pkg: []
 
@@ -89,3 +89,16 @@ foreman_proxy_dhcp_config_dir: /etc/dhcp
 foreman_proxy_dhcp_config: /etc/dhcp/dhcpd.conf
 foreman_proxy_dhcp_leases: /var/lib/dhcpd/dhcpd.leases
 foreman_proxy_tftp_dir: /var/lib/tftpboot
+
+foreman_allowed_ports:
+  - "{{ foreman_port }}/tcp"
+  - "{{ foreman_proxy_port }}/tcp"
+  - "{{ foreman_proxy_dhcp_omapi_port }}/tcp"
+  - "80/tcp"    #http
+  - "443/tcp"   #https
+  - "5432/tcp"  #postgresql
+  - "3142/tcp"  #apt-cacher-ng
+  - "3306/tcp"  #mysql
+  - "5910-5930/tcp"
+  - "8140/tcp"
+  - "8443/tcp"

@@ -131,3 +131,16 @@ foreman_operatingsystems: []
 foreman_os_default_templates: []
 foreman_hostgroups: []
 foreman_compute_resources: []
+
+foreman_allowed_ports:
+  - "{{ foreman_port }}/tcp"
+  - "{{ foreman_proxy_port }}/tcp"
+  - "{{ foreman_proxy_dhcp_omapi_port }}/tcp"
+  - "80/tcp"    #http
+  - "443/tcp"   #https
+  - "5432/tcp"  #postgresql
+  - "3142/tcp"  #apt-cacher-ng
+  - "3306/tcp"  #mysql
+  - "5910-5930/tcp"
+  - "8140/tcp"
+  - "8443/tcp"
