@@ -65,22 +65,37 @@
 - name: Install foreman proxy packages [Centos]
   yum:
     name: "{{ foreman_proxy_pkgs }}"
-    state: latest
+    state: present
     update_cache: yes
 
-- name: Install foreman python2 requirements
-  pip:
-    name: "{{ foreman_python2_pkgs }}"
-    state: present
-    executable: pip2
+- name: Workaround for Foreman Smart-Proxy Ansible Plugin under Python2
+  block:
+
+    - name: Gather the rpm package facts
+      package_facts:
+        manager: auto
+
+    - name: Download rubygem-smart_proxy_ansible package
+      yum:
+        name: "{{ foreman_smart_proxy_ansible_pkg }}"
+        download_only: yes
+        download_dir: /tmp
+      when: foreman_smart_proxy_ansible_pkg not in hostvars[inventory_hostname].packages
+
+    - name: Install rubygem-smart_proxy_ansible
+      command:
+        cmd: "rpm -ivh --nodeps /tmp/{{ foreman_smart_proxy_ansible_pkg }}*.rpm"
+        warn: false
+      when: foreman_smart_proxy_ansible_pkg not in hostvars[inventory_hostname].packages
+
   when:
     - ansible_python.version.major == 2
 
-- name: Install foreman python3 requirements
-  pip:
-    name: "{{ foreman_python3_pkgs }}"
+- name: Install Foreman Smart-Proxy Ansible Plugin under Python3
+  yum:
+    name: "{{ foreman_smart_proxy_ansible_pkg }}"
     state: present
-    executable: pip3
+    update_cache: yes
   when:
     - ansible_python.version.major == 3
 
