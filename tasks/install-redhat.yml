@@ -38,6 +38,20 @@
     state: present
     update_cache: yes
 
+- name: Install foreman packages [CentOS]
+  yum:
+    name: "{{ foreman_pkgs }}"
+    state: present
+    update_cache: yes
+  register: foreman_installed
+  notify: capture_foreman_version
+
+- name: Install foreman proxy packages [Centos]
+  yum:
+    name: "{{ foreman_proxy_pkgs }}"
+    state: present
+    update_cache: yes
+
 - name: Install foreman python2 requirements
   pip:
     name: "{{ foreman_python2_pkgs }}"
@@ -53,20 +67,6 @@
     executable: pip3
   when:
     - ansible_python.version.major == 3
-
-- name: Install foreman packages [CentOS]
-  yum:
-    name: "{{ foreman_pkgs }}"
-    state: present
-    update_cache: yes
-  register: foreman_installed
-  notify: capture_foreman_version
-
-- name: Install foreman proxy packages [Centos]
-  yum:
-    name: "{{ foreman_proxy_pkgs }}"
-    state: present
-    update_cache: yes
 
 - name: Workaround for Foreman Smart-Proxy Ansible Plugin under Python2
   block:
