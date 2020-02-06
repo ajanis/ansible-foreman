@@ -25,6 +25,7 @@ foreman_python2_pkgs:
   - foreman-yml==1.0.4
   - foreman==0.9.7
   - PyYAML==3.10
+  - virtualenv
 
 foreman_python3_pkgs:
   - apypie
@@ -32,6 +33,7 @@ foreman_python3_pkgs:
   - foreman
   - PyYAML
   - setuptools
+  - virtualenv
 
 foreman_yml_python_pkgs:
   - apypie==0.2.1
