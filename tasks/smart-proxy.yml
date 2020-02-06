@@ -44,6 +44,7 @@
     name: "{{ foreman_yml_python_pkgs }}"
     state: present
     virtualenv: /opt/foreman-yml
+    virtualenv_python: python2.7
 
 - name: copy foreman-yml template for initial foreman smart-proxy config
   template:
