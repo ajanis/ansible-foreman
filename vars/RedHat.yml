@@ -22,6 +22,7 @@ foreman_dependency_pkgs:
   - syslinux
   - syslinux-tftpboot
   - syslinux-extlinux
+  - python-virtualenv
 
 foreman_python2_pkgs:
   - apypie==0.2.1
@@ -31,7 +32,6 @@ foreman_python2_pkgs:
   - python-foreman
   - foreman==0.9.7
   - PyYAML==5.3
-  - virtualenv
 
 foreman_yml_python_pkgs:
   - apypie==0.2.1
@@ -51,7 +51,6 @@ foreman_python3_pkgs:
   - python-foreman
   - foreman
   - PyYAML
-  - virtualenv
 
 foreman_pkgs:
   - foreman

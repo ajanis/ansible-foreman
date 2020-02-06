@@ -15,6 +15,8 @@ foreman_nginx_passenger_upstream_repo_keyserver: hkp://keyserver.ubuntu.com:80
 python_pip_pkg:
   - python-pip
   - python3-pip
+  - python-virtualenv
+  - python3-virtualenv
 
 foreman_python2_pkgs:
   - apypie==0.2.1
@@ -25,7 +27,6 @@ foreman_python2_pkgs:
   - foreman-yml==1.0.4
   - foreman==0.9.7
   - PyYAML==3.10
-  - virtualenv
 
 foreman_python3_pkgs:
   - apypie
@@ -33,17 +34,8 @@ foreman_python3_pkgs:
   - foreman
   - PyYAML
   - setuptools
-  - virtualenv
 
-foreman_yml_python_pkgs:
-  - apypie==0.2.1
-  - requests==2.22.0
-  - requests-futures==0.9.9
-  - urllib3==1.25.8
-  - python-foreman
-  - foreman-yml==1.0.4
-  - foreman==0.9.7
-  - PyYAML==3.10
+foreman_yml_python_pkgs: apypie==0.2.1 requests==2.22.0 requests-futures==0.9.9 urllib3==1.25.8 python-foreman foreman-yml==1.0.4 foreman==0.9.7 PyYAML==3.10
 
 foreman_dependency_pkgs:
   - ca-certificates
