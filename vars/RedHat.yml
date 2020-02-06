@@ -49,16 +49,15 @@ foreman_python3_pkgs:
   - requests-futures
   - urllib3
   - python-foreman
-  - foreman-yml
   - foreman
   - PyYAML
+  - virtualenv
 
 foreman_pkgs:
   - foreman
   - foreman-libvirt
   - foreman-plugin
   - foreman-cli
-#  - foreman-selinux
   - foreman-service
   - foreman-discovery-image-service
   - foreman-console
@@ -92,8 +91,7 @@ foreman_proxy_pkgs:
   - rubygem-smart_proxy_dynflow
   - rubygem-smart_proxy_discovery_image
   - rubygem-smart_proxy_discovery
-
-foreman_smart_proxy_ansible_pkg: rubygem-smart_proxy_ansible
+  - rubygem-smart_proxy_ansible
 
 foreman_proxy_extra_repos_pkg: []
 
