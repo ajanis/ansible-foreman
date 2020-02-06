@@ -68,36 +68,36 @@
   when:
     - ansible_python.version.major == 3
 
-- name: Workaround for Foreman Smart-Proxy Ansible Plugin under Python2
-  block:
-
-    - name: Gather the rpm package facts
-      package_facts:
-        manager: auto
-
-    - name: Download rubygem-smart_proxy_ansible package
-      yum:
-        name: "{{ foreman_smart_proxy_ansible_pkg }}"
-        download_only: yes
-        download_dir: /tmp
-      when: foreman_smart_proxy_ansible_pkg not in hostvars[inventory_hostname].packages
-
-    - name: Install rubygem-smart_proxy_ansible
-      command:
-        cmd: "rpm -ivh --nodeps /tmp/{{ foreman_smart_proxy_ansible_pkg }}*.rpm"
-        warn: false
-      when: foreman_smart_proxy_ansible_pkg not in hostvars[inventory_hostname].packages
-
-  when:
-    - ansible_python.version.major == 2
-
-- name: Install Foreman Smart-Proxy Ansible Plugin under Python3
-  yum:
-    name: "{{ foreman_smart_proxy_ansible_pkg }}"
-    state: present
-    update_cache: yes
-  when:
-    - ansible_python.version.major == 3
+#- name: Workaround for Foreman Smart-Proxy Ansible Plugin under Python2
+#  block:
+#
+#    - name: Gather the rpm package facts
+#      package_facts:
+#        manager: auto
+#
+#    - name: Download rubygem-smart_proxy_ansible package
+#      yum:
+#        name: "{{ foreman_smart_proxy_ansible_pkg }}"
+#        download_only: yes
+#        download_dir: /tmp
+#      when: foreman_smart_proxy_ansible_pkg not in hostvars[inventory_hostname].packages
+#
+#    - name: Install rubygem-smart_proxy_ansible
+#      command:
+#        cmd: "rpm -ivh --nodeps /tmp/{{ foreman_smart_proxy_ansible_pkg }}*.rpm"
+#        warn: false
+#      when: foreman_smart_proxy_ansible_pkg not in hostvars[inventory_hostname].packages
+#
+#  when:
+#    - ansible_python.version.major == 2
+#
+#- name: Install Foreman Smart-Proxy Ansible Plugin under Python3
+#  yum:
+#    name: "{{ foreman_smart_proxy_ansible_pkg }}"
+#    state: present
+#    update_cache: yes
+#  when:
+#    - ansible_python.version.major == 3
 
 - name: template /etc/default/foreman
   template:
