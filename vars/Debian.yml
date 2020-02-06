@@ -33,6 +33,16 @@ foreman_python3_pkgs:
   - PyYAML
   - setuptools
 
+foreman_yml_python_pkgs:
+  - apypie==0.2.1
+  - requests==2.22.0
+  - requests-futures==0.9.9
+  - urllib3==1.25.8
+  - python-foreman
+  - foreman-yml==1.0.4
+  - foreman==0.9.7
+  - PyYAML==3.10
+
 foreman_dependency_pkgs:
   - ca-certificates
   - python-httplib2
