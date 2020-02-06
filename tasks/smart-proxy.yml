@@ -39,6 +39,12 @@
           {{ apipie_cache_results.stdout }}
           {% endif %}
 
+- name: Install foreman-yml
+  pip:
+    name: "{{ foreman_yml_python_pkgs }}"
+    state: present
+    virtualenv: /opt/foreman-yml
+
 - name: copy foreman-yml template for initial foreman smart-proxy config
   template:
     src: "smart-proxy/foreman_config.j2"
@@ -46,8 +52,8 @@
 
 - name: configure foreman smart-proxy via foreman-yml
   block:
-    - name: 'foreman-yml /tmp/foreman_config.yml'
-      command: foreman-yml /tmp/foreman_config.yml
+    - name: '/opt/foreman-yml/bin/foreman-yml /tmp/foreman_config.yml'
+      command: /opt/foreman-yml/bin/foreman-yml /tmp/foreman_config.yml
       args:
         creates: "{{ foreman_config_dir }}/foreman_smartproxy_configured"
       register: foreman_yml_results
