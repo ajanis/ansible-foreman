@@ -9,15 +9,14 @@
 
 - meta: flush_handlers
 
-- name: Restart the foreman service
+- name: "Start/Restart the foreman service"
   systemd:
     name: foreman
-    state: restarted
+    state: "{% if foreman_require_restart | default(false) %}restarted{% else %}started{% endif %}"
     enabled: yes
   register: foreman_started
   when:
     - foreman_enable_service
-    - foreman_require_restart | default(false)
   notify:
     - reload nginx config
 
@@ -41,15 +40,14 @@
   when: foreman_start_attempt.failed
   failed_when: foreman_start_attempt.failed
 
-- name: Restart the foreman-proxy service
+- name: "Start/Restart the foreman-proxy service"
   systemd:
     name: foreman-proxy
-    state: restarted
+    state: "{% if foreman_proxy_require_restart | default(false) %}restarted{% else %}started{% endif %}"
     enabled: yes
   register: foreman_proxy_started
   when:
     - foreman_proxy_enable_service
-    - foreman_proxy_require_restart | default(false)
 
 - name: Verify foreman-proxy service is listening
   wait_for:
