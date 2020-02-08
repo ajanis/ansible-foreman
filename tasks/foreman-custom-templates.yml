@@ -12,8 +12,18 @@
     password: "{{ foreman_admin_password }}"
     state: present
   with_filetree: 'files/provisioning'
-  when: item.state == 'file'
+  when:
+    - foreman_proxy_tftp
+    - item.state == 'file'
   notify: rebuild pxe default configs
+
+- meta: flush_handlers
+
+- name: Rebuild Foreman default PXE configurations
+  command: hammer template build-pxe-default
+  when:
+    - foreman_proxy_tftp
+    - foreman_pxe_templates_updated | default(false)
 
 #- name: "Lock provisioning templates"
 #  theforeman.foreman.foreman_provisioning_template:
