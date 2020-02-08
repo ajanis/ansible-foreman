@@ -81,23 +81,48 @@
   notify: restart foreman
   register: db_config
 
-- name: Perform initial database setup (migrate)
+- name: Get foreman database migration status
+  command:
+    cmd: foreman-rake db:migrate:status
+  register: foreman_db_status
+  changed_when: False
+
+#- debug:
+#    msg: "{{ foreman_db_status }}"
+
+#- name: Check migration status of foreman database
+#  shell:
+#    executable: /bin/bash
+#    cmd: foreman-rake:db:status | sed -n '/^$/d;/---/,${n;p}' | awk '{print $1}' | sort | uniq
+#   register: foreman_db_status
+
+- name: "Trigger foreman-rake  db:migrate and db:seed tasks"
+  set_fact:
+    foreman_migrate_db: True
+  when: ( foreman_db_status.stdout_lines | length < 2 ) or
+        ( foreman_db_status.stdout | regex_search('\\b(?:down)\\b') )
+
+#- debug:
+#    msg: "Foreman db needs migrating: {{ foreman_migrate_db | default(false) }}"
+
+- name: "Perform initial database setup (db:migrate)"
   command: foreman-rake db:migrate
   register: migrate_results
   notify: restart foreman
-  when: db_config is changed or foreman_perform_rake_tasks
+  when: ( db_config is changed ) or
+        ( foreman_migrate_db | default(false) )
   ignore_errors: yes
 
 - fail:
     msg: "{{ migrate_results.stdout_lines }}"
   when: migrate_results.failed is defined and migrate_results.failed == True
 
-
-- name: perform initial database setup (seed)
+- name: "Perform initial database seeding (db:seed)"
   command: foreman-rake db:seed
   register: seed_results
   notify: restart foreman
-  when: settings_config is changed or foreman_perform_rake_tasks
+  when: ( settings_config is changed ) or
+        ( foreman_migrate_db | default(false) )
   ignore_errors: yes
 
 - fail:
@@ -113,7 +138,8 @@
 
 - name: set foreman admin password
   command: "foreman-rake permissions:reset username={{ foreman_admin_user }} password={{ foreman_admin_password }}"
-  when: foreman_pw_updated is changed or foreman_perform_rake_tasks
+  when: ( foreman_pw_updated is changed ) or
+        ( foreman_migrate_db | default(false) )
   no_log: True
 
 - name: template foreman-proxy settings.yml
