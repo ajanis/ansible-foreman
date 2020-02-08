@@ -226,3 +226,4 @@
   until: not fdi_download.failed
   retries: 5
   delay: 5
+  when: foreman_proxy_tftp
