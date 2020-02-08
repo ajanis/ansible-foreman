@@ -28,8 +28,9 @@
   no_log: True
 
 - name: rebuild pxe default configs
-  command: hammer template build-pxe-default
-  notify: restart foreman-proxy
+  set_fact:
+    foreman_pxe_templates_updated: True
+  #notify: restart foreman-proxy
 
 - name: restart apt-cacher-ng
   service:
