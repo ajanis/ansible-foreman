@@ -86,6 +86,7 @@
     cmd: foreman-rake db:migrate:status
   register: foreman_db_status
   changed_when: False
+  failed_when: foreman_db_status.stderr |  regex_search('(?:rake\\saborted)')
 
 #- debug:
 #    msg: "{{ foreman_db_status }}"
