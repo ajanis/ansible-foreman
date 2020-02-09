@@ -1,16 +1,10 @@
 ---
 # {{ ansible_managed }}
 
-{% if foreman_proxy_dynflow %}
+{% if foreman_proxy_dynflow -%}
 :enabled: true
-{% else %}
-:enabled: false
-{% endif %}
-
 :database: /var/lib/foreman-proxy/dynflow/dynflow.sqlite
 :core_url: '{{ foreman_proxy_protocol }}://{{ foreman_proxy_bind_host }}:{{ foreman_proxy_port }}'
-
-# If true, external core will be used even if the core gem is available
-# If false, the feature will be disabled if the core gem is not available
-# If unset, the process will fallback to external core if the core gem is not available
-# :external_core: true
+{%- else -%}
+:enabled: false
+{%- endif %}

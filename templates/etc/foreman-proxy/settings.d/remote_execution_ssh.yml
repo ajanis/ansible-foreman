@@ -1,20 +1,16 @@
 ---
 # {{ ansible_managed }}
 
+{% if foreman_proxy_remote_execution_ssh -%}
 :enabled: true
-:ssh_identity_key_file: '{{ foreman_proxy_ssh_key }}'
-:local_working_dir: '/var/tmp'
-:remote_working_dir: '/var/tmp'
-
-# :kerberos_auth: false
-# :async_ssh: false
-
-# Defines how often (in seconds) should the runner check
-# for new data leave empty to use the runner's default
-# (1 second for regular, 60 seconds with async_ssh enabled)
-# :runner_refresh_interval:
-
-# Defines the verbosity of logging coming from Net::SSH
-# one of :debug, :info, :warn, :error, :fatal
-# must be lower than general log level
+:ssh_identity_key_file: '{{ foreman_proxy_user_homedir }}/.ssh/id_rsa'
+{%- if foreman_proxy_remote_execution_local_working_dir is defined %}
+:local_working_dir: '{{ foreman_proxy_remote_execution_local_working_dir | default('/var/tmp') }}'
+{%- endif %}
+{%- if foreman_proxy_remote_execution_remote_working_dir is defined %}
+:remote_working_dir: '{{ foreman_proxy_remote_execution_remote_working_dir | default('/var/tmp') }}'
+{%- endif %}
 :ssh_log_level: :error
+{%- else -%}
+:enabled: false
+{% endif -%}
