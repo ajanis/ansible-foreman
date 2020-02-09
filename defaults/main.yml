@@ -23,19 +23,21 @@ foreman_proxy_enable_service: True
 foreman_proxy_config_dir: /etc/foreman-proxy
 foreman_proxy_user: foreman-proxy
 foreman_proxy_group: foreman-proxy
+foreman_proxy_user_homedir: /usr/share/foreman-proxy
 foreman_proxy_protocol: http
 foreman_proxy_bind_host: "{{ ansible_default_ipv4.address }}"
 foreman_proxy_port: 8000
 foreman_proxy_foreman_url: http://127.0.0.1
 foreman_proxy_remote_execution: True
 foreman_proxy_remote_execution_ssh: True
+foreman_proxy_remote_execution_ssh_keyfile: "{{ foreman_proxy_user_homedir }}/.ssh/id_rsa"
 foreman_proxy_remote_execution_local_working_dir: /var/tmp
 foreman_proxy_remote_execution_remote_working_dir: /var/tmp
 foreman_proxy_bmc: True
 foreman_proxy_bmc_protocol: http
 foreman_proxy_bmc_provider: freeipmi
 foreman_proxy_bmc_ssh_user: root
-foreman_proxy_bmc_ssh_key: "{{ foreman_proxy_ssh_key }}"
+foreman_proxy_bmc_ssh_keyfile: "{{ foreman_proxy_user_homedir }}/.ssh/id_rsa"
 foreman_proxy_dhcp: True
 foreman_proxy_dhcp_protocol: http
 foreman_proxy_dhcp_provider: dhcp_isc
