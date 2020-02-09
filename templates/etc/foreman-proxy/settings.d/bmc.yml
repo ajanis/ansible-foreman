@@ -12,7 +12,7 @@
 {%- if foreman_proxy_bmc_provider == "ssh" %}
 # default user and ssh key for ssh provider
 :bmc_ssh_user: {{ foreman_proxy_bmc_ssh_user | default('root') }}
-:bmc_ssh_key: {{ foreman_proxy_bmc_ssh_key | default('/usr/share/foreman/.ssh/id_rsa') }}
+:bmc_ssh_key: {{ foreman_proxy_bmc_ssh_keyfile }}
 # individual commands for actions
 :bmc_ssh_powerstatus: "true"
 :bmc_ssh_powercycle: "shutdown -r +1"
