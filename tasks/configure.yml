@@ -111,6 +111,7 @@
   register: migrate_results
   notify: restart foreman
   when: ( db_config is changed ) or
+        ( settings_config is changed ) or
         ( foreman_migrate_db | default(false) )
   ignore_errors: yes
 
@@ -122,7 +123,8 @@
   command: foreman-rake db:seed
   register: seed_results
   notify: restart foreman
-  when: ( settings_config is changed ) or
+  when: ( db_config is changed ) or
+        ( settings_config is changed ) or
         ( foreman_migrate_db | default(false) )
   ignore_errors: yes
 
@@ -131,15 +133,15 @@
   when: seed_results.failed is defined and seed_results.failed == True
 
 
-- name: Check for foreman admin password change
-  copy:
-    dest: "{{ foreman_config_dir }}/password_configured"
-    content: "{{ foreman_admin_password | checksum }}"
-  register: foreman_pw_updated
+#- name: Check for foreman admin password change
+#  copy:
+#    dest: "{{ foreman_config_dir }}/password_configured"
+#    content: "{{ foreman_admin_password | checksum }}"
+#  register: foreman_pw_updated
 
 - name: set foreman admin password
   command: "foreman-rake permissions:reset username={{ foreman_admin_user }} password={{ foreman_admin_password }}"
-  when: ( foreman_pw_updated is changed ) or
+  when: ( settings_config is changed ) or
         ( foreman_migrate_db | default(false) )
   no_log: True
 
