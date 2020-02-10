@@ -7,6 +7,13 @@
 - name: Collect installed packages
   package_facts:
 
+- name: Create apt-cacher-ng directory for socket and pid files
+  file:
+    path: /var/run/apt-cacher-ng
+    state: directory
+    owner: apt-cacher-ng
+    group: apt-cacher-ng
+
 #- name: Collect apt-cacher-ng version
 #  set_fact:
 #    acng_pkg_version: "{{ ansible_facts.packages['apt-cacher-ng'][0]['version'] }}"
