@@ -38,6 +38,8 @@
           {% if apipie_cache_results.stdout is defined and apipie_cache_results.stdout != None %}
           {{ apipie_cache_results.stdout }}
           {% endif %}
+  when: ( foreman_migrate_db | default(false) ) or
+        ( foreman_proxy_started is changed )
 
 - name: Install foreman-yml
   pip:
