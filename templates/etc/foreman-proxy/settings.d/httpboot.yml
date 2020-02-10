@@ -5,9 +5,9 @@
 # Directory listing is not possible, symlinks are followed but not outside
 # of the root directory specified in this file.
 # Make sure to enable TFTP module as well to allow configuration files deployment.
-{% if foreman_proxy_httpboot is defined and foreman_proxy_httpboot -%}
+{% if foreman_proxy_httpboot is defined and foreman_proxy_httpboot %}
 :enabled: true
 :root_dir: {{ foreman_proxy_tftp_dir }}
-{%- else -%}
+{% else %}
 :enabled: false
-{%- endif %}
+{% endif %}

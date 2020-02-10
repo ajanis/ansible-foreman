@@ -1,16 +1,16 @@
 ---
 # {{ ansible_managed }}
 
-{% if foreman_proxy_remote_execution_ssh -%}
+{% if foreman_proxy_remote_execution_ssh %}
 :enabled: true
 :ssh_identity_key_file: {{ foreman_proxy_remote_execution_ssh_keyfile }}
-{%- if foreman_proxy_remote_execution_local_working_dir is defined %}
+{% if foreman_proxy_remote_execution_local_working_dir is defined %}
 :local_working_dir: {{ foreman_proxy_remote_execution_local_working_dir | default('/var/tmp') }}
-{%- endif %}
-{%- if foreman_proxy_remote_execution_remote_working_dir is defined %}
+{% endif %}
+{% if foreman_proxy_remote_execution_remote_working_dir is defined %}
 :remote_working_dir: {{ foreman_proxy_remote_execution_remote_working_dir | default('/var/tmp') }}
-{%- endif %}
+{% endif %}
 :ssh_log_level: :error
-{%- else -%}
+{% else %}
 :enabled: false
-{% endif -%}
+{% endif %}

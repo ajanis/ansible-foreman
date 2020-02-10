@@ -1,10 +1,10 @@
 ---
 # {{ ansible_managed }}
 
-{% if foreman_proxy_dynflow -%}
+{% if foreman_proxy_dynflow %}
 :enabled: true
 :database: /var/lib/foreman-proxy/dynflow/dynflow.sqlite
 :core_url: '{{ foreman_proxy_protocol }}://{{ foreman_proxy_bind_host }}:{{ foreman_proxy_port }}'
-{%- else -%}
+{% else %}
 :enabled: false
-{%- endif %}
+{% endif %}

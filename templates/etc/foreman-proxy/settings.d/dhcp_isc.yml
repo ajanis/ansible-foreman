@@ -2,19 +2,19 @@
 # {{ ansible_managed }}
 
 # use :server setting in dhcp.yml if you are managing a dhcp server which is not localhost
-{% if foreman_proxy_dhcp -%}
-{%- if foreman_proxy_dhcp_provider == "dhcp_isc" %}
+{% if foreman_proxy_dhcp %}
+{% if foreman_proxy_dhcp_provider == "dhcp_isc" %}
 # Configuration file for ISC dhcp provider
 :config: {{ foreman_proxy_dhcp_config }}
 :leases: {{ foreman_proxy_dhcp_leases }}
-{%- if foreman_proxy_dhcp_key_name is defined %}
+{% if foreman_proxy_dhcp_key_name is defined %}
 :key_name: {{ foreman_proxy_dhcp_key_name }}
-{%- endif %}
-{%- if foreman_proxy_dhcp_key_secret is defined %}
+{% endif %}
+{% if foreman_proxy_dhcp_key_secret is defined %}
 :key_secret: {{ foreman_proxy_dhcp_key_secret }}
-{%- endif %}
-{%- if foreman_proxy_dhcp_omapi_port is defined %}
+{% endif %}
+{% if foreman_proxy_dhcp_omapi_port is defined %}
 :omapi_port: {{ foreman_proxy_dhcp_omapi_port }}
-{%- endif %}
-{%- endif %}
-{%- endif %}
+{% endif %}
+{% endif %}
+{% endif %}
