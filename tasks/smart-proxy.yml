@@ -4,15 +4,15 @@
   block:
     - name: '/usr/sbin/foreman-rake apipie:cache --trace'
       command: /usr/sbin/foreman-rake apipie:cache --trace
-      args:
-        creates: "{{ foreman_config_dir }}/foreman_apipie_configured"
+#      args:
+#        creates: "{{ foreman_config_dir }}/foreman_apipie_configured"
       register: apipie_cache_results
-    - name: write lockfile on success
-      file:
-        state: touch
-        modification_time: preserve
-        access_time: preserve
-        dest: "{{ foreman_config_dir }}/foreman_apipie_configured"
+#    - name: write lockfile on success
+#      file:
+#        state: touch
+#        modification_time: preserve
+#        access_time: preserve
+#        dest: "{{ foreman_config_dir }}/foreman_apipie_configured"
   always:
     - name: writing foreman-rake apipie:cache output to /var/log/foreman/apipie_cache.log
       blockinfile:
