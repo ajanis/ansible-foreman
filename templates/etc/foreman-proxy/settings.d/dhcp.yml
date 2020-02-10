@@ -1,7 +1,7 @@
 ---
 # {{ ansible_managed }}
 
-{% if foreman_proxy_dhcp -%}
+{% if foreman_proxy_dhcp %}
 :enabled: {{ foreman_proxy_dhcp_protocol }}
 # valid providers:
 #   - dhcp_isc (ISC dhcp server)
@@ -10,9 +10,9 @@
 :use_provider: {{ foreman_proxy_dhcp_provider }}
 :server: {{ foreman_proxy_dhcp_server }}
 # subnets restricts the subnets queried to a subset, to reduce the query time.
-{%- if foreman_proxy_dhcp_subnets is defined and foreman_proxy_dhcp_subnets != None %}
-:subnets: [ {% for net in foreman_proxy_dhcp_subnets %}{{ net.network }}/{{ net.mask }}{% if not loop.last %},{% endif %}{% endfor %} ]
-{%- endif %}
-{%- else -%}
+{% if foreman_proxy_dhcp_subnets is defined and foreman_proxy_dhcp_subnets != None %}
+:subnets: [ {% for net in foreman_proxy_dhcp_subnets %}{% if net.mask is defined %}{{ net.network + '/' + net.mask }}{% elif net.cidr is defined %}{% set host_prefix = net.network + '/' + (net.cidr|string) %}{{ net.network }}/{{ host_prefix | ipaddr('netmask') }}{% endif %}{% if not loop.last %},{% endif %}{% endfor %} ]
+{% endif %}
+{% else %}
 :enabled: false
-{%- endif %}
+{% endif %}
