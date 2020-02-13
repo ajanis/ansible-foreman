@@ -30,7 +30,7 @@ kind: snippet
                         :interface => bond,
                         :subnet => bond.subnet,
                         :subnet6 => bond.subnet6,
-                        :dhcp => :dhcp? }) -%>
+                        :dhcp => dhcp }) -%>
 <%=   save_to_file('/etc/sysconfig/network-scripts/ifcfg-$sanitized_real', ifcfg) %>
 
 <%-   @host.interfaces_with_identifier(bond.attached_devices_identifiers).each do |interface| -%>
@@ -60,7 +60,8 @@ kind: snippet
                         :subnet => interface.subnet,
                         :subnet6 => interface.subnet6,
                         :bonding_interfaces => bonding_interfaces,
-                        :dhcp => :dhcp?,
+                        :dhcp => dhcp,
                         :attached_to_bond => interface_identifier.present? }) %>
 <%=   save_to_file('/etc/sysconfig/network-scripts/ifcfg-$sanitized_real', ifcfg) %>
 <%- end %>
+<%#-%>
