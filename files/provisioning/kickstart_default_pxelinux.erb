@@ -7,6 +7,20 @@ oses:
 - Fedora
 - RedHat
 -%>
+<% subnet = @host.subnet -%>
+<% host_ip = @host.ip -%>
+<% host_ipset = host_ip.nil? ? false : true -%>
+
+<% if @static -%>
+  <%- dhcp = false -%>
+<% elsif host_ipset -%>
+  <%- dhcp = false -%>
+<% elsif subnet.nil? -%>
+  <%- dhcp = true -%>
+<% else -%>
+  <%- dhcp = subnet.dhcp_boot_mode? -%>
+<% end -%>
+
 # This file was deployed via '<%= template_name %>' template
 
 <%
@@ -26,8 +40,8 @@ oses:
   options.push("kssendmac", "ks.sendmac", "inst.ks.sendmac")
 
   # handle non-DHCP environments (e.g. bootdisk)
-  subnet = @host.provision_interface.subnet
-  unless subnet.dhcp_boot_mode?
+  #subnet = @host.provision_interface.subnet
+  unless dhcp
     # static network configuration
     ip = @host.provision_interface.ip
     mask = subnet.mask
