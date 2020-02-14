@@ -17,6 +17,14 @@
     - foreman_compute_resources is defined
     - foreman_compute_resources != None
 
+- name: "Enable/Disable VM console passwords for Libvirt providers"
+  command: hammer -r compute-resource update --name {{ item.name }} --set-console-password {% if foreman_libvirt_set_console_password %}'1'{% else %}'0'{% endif %}
+  loop: "{{ foreman_compute_resources }}"
+  when:
+    - foreman_compute_resources is defined
+    - foreman_compute_resources != None
+    - item.provider == "libvirt"
+
 - name: "Create Hostgroups"
   theforeman.foreman.foreman_hostgroup:
     name: "{{ item.name }}"
