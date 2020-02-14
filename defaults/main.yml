@@ -121,6 +121,8 @@ foreman_default_settings:
 foreman_extra_settings: []
 foreman_global_parameters: []
 
+foreman_libvirt_set_console_password: False
+
 foreman_domains:
   - name: "{{ www_domain }}"
     description: "{{ www_domain }}"
