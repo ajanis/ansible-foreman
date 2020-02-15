@@ -24,6 +24,7 @@
     - foreman_compute_resources is defined
     - foreman_compute_resources != None
     - item.provider == "libvirt"
+  changed_when: False
 
 - name: "Create Hostgroups"
   theforeman.foreman.foreman_hostgroup:
