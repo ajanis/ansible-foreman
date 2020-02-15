@@ -53,3 +53,5 @@
   when:
     - foreman_proxy_dhcp_subnets is defined
     - foreman_proxy_dhcp_subnets != None
+  register: foreman_network_results
+  changed_when: foreman_network_results.diff.before != foreman_network_results.diff.after
