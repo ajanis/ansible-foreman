@@ -4,10 +4,16 @@
     - always
 
 - import_tasks: install.yml
+  tags:
+    - foreman-install
 
 - import_tasks: configure.yml
+  tags:
+    - foreman-configure
 
 - meta: flush_handlers
+  tags:
+    - always
 
 - name: "Start/Restart the foreman service"
   systemd:
@@ -19,6 +25,8 @@
     - foreman_enable_service
   notify:
     - reload nginx config
+  tags:
+    - always
 
 - name: Verify foreman HTTP service is listening
   wait_for:
@@ -28,6 +36,8 @@
   when: foreman_enable_service
   ignore_errors: yes
   register: foreman_start_attempt
+  tags:
+    - always
 
 - name: Get foreman journald logs if service does not appear to be up
   shell: journalctl _SYSTEMD_INVOCATION_ID=`systemctl show -p InvocationID --value foreman.service`
@@ -39,6 +49,8 @@
       foreman_journal.stdout_lines
   when: foreman_start_attempt.failed
   failed_when: foreman_start_attempt.failed
+  tags:
+    - always
 
 - name: "Start/Restart the foreman-proxy service"
   systemd:
@@ -48,6 +60,8 @@
   register: foreman_proxy_started
   when:
     - foreman_proxy_enable_service
+  tags:
+    - always
 
 - name: Verify foreman-proxy service is listening
   wait_for:
@@ -57,19 +71,27 @@
   when: foreman_proxy_enable_service
   ignore_errors: yes
   register: foreman_proxy_start_attempt
+  tags:
+    - always
 
 - name: Get foreman-proxy journald logs if service does not appear to be up
   shell: journalctl _SYSTEMD_INVOCATION_ID=`systemctl show -p InvocationID --value foreman-proxy.service`
   register: foreman_proxy_journal
   when: foreman_proxy_start_attempt.failed
+  tags:
+    - always
 
 - debug:
     var: |
       foreman_proxy_journal.stdout_lines
   when: foreman_proxy_start_attempt.failed
   failed_when: foreman_proxy_start_attempt.failed
+  tags:
+    - always
 
 - meta: flush_handlers
+  tags:
+    - always
 
 - import_tasks: smart-proxy.yml
   tags:
@@ -77,7 +99,7 @@
 - import_tasks: foreman-custom-auth.yml
   tags:
     - foreman-auth
-    - foreman-config
+    - foreman-settings
 - import_tasks: foreman-custom-network.yml
   tags:
     - foreman-network
@@ -92,7 +114,7 @@
     - foreman-templates
 - import_tasks: foreman-custom-config.yml
   tags:
-    - foreman-config
+    - foreman-settings
 - import_tasks: apt-cache.yml
   tags:
     - foreman-aptcache
