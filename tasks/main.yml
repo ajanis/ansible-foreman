@@ -43,6 +43,8 @@
   shell: journalctl _SYSTEMD_INVOCATION_ID=`systemctl show -p InvocationID --value foreman.service`
   register: foreman_journal
   when: foreman_start_attempt.failed
+  tags:
+    - always
 
 - debug:
     var: |
