@@ -97,9 +97,9 @@ foreman_default_settings:
     value: "http://{{ ansible_default_ipv4.address }}"
   - name: "foreman_url"
     value: "http://{{ ansible_default_ipv4.address }}"
-  - name: update_subnets_from_facts
+  - name: "update_subnets_from_facts"
     value: "True"
-  - name: remote_execution_sync_templates
+  - name: "remote_execution_sync_templates"
     value: "False"
   - name: "query_local_nameservers"
     value: "True"
@@ -111,10 +111,10 @@ foreman_default_settings:
     value: "True"
   - name: "outofsync_interval"
     value: "259200"
-#  - name: "ansible_out_of_sync_disabled"
-#    value: "True"
-#  - name: "ansible_interval"
-#    value: "0"
+  - name: "ansible_out_of_sync_disabled"
+    value: "True"
+  - name: "ansible_interval"
+    value: "0"
   - name: "use_shortname_for_vms"
     value: "True"
 
