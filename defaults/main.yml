@@ -118,7 +118,7 @@ foreman_default_settings:
   - name: "use_shortname_for_vms"
     value: "True"
 
-foreman_extra_settings: []
+foreman_settings: []
 foreman_global_parameters: []
 
 foreman_libvirt_set_console_password: False
