@@ -3,8 +3,11 @@
   command: hammer -r host list
   register: hostlist
 
-#- debug:
-#    msg: "{{ hostlist }}"
+- debug:
+    msg: "{{ hostlist }}"
+  tags:
+    - never
+    - debug
 
 - name: Get host build status
   shell: |
@@ -13,34 +16,13 @@
   loop: "{{ foreman_hosts }}"
   when: item.name in hostlist.stdout
 
-#- debug:
-#    msg: "{{ item }}"
-#  loop: "{{ buildstatus.results }}"
-#  when: item.changed
-
-#    {% if item.item.ip is defined %}
-#    {{ interface_cmd.append('ip:' + item.item.ip) }}
-#    {% endif %}
-#    {% if item.item.interface is defined %}
-#    {{ interface_cmd.append("identifier:"+item.item.interface) }}
-#    {% endif %}
-#    {% if item.item.mac_address is defined %}
-#    {{ interface_cmd.append("mac:"+item.item.mac_address) }}
-#    {% endif %}
-
-#- set_fact:
-#
-#    interface_options: [{}]
-#- set_fact:
-#    interface_options: "{{ interface_options | combine({ 'compute_model': 'virtio'},{'compute_type': 'bridge'}) }}"
-#  when: item.item.provider == kvm
-#  loop: "{{ buildstatus.results }}"
-#
-#- debug:
-#    msg: "{{ interface_options | to_json }}"
-#  loop: "{{ buildstatus.results }}"
-#
-#- meta: end_play
+- debug:
+    msg: "{{ item }}"
+  loop: "{{ buildstatus.results }}"
+  when: item.changed
+  tags:
+    - never
+    - debug
 
 - name: "Create hosts via hammer cli"
   command: >
@@ -95,10 +77,12 @@
   register: foreman_hosts_created
   changed_when: foreman_hosts_created.stdout == "Host updated." or foreman_hosts_created.stdout == "Host created."
 
-#- debug:
-#    msg: "{{ item }}"
-#  loop: "{{ foreman_hosts_created.results  }}"
-#- meta: end_play
+- debug:
+    msg: "{{ item }}"
+  loop: "{{ foreman_hosts_created.results  }}"
+  tags:
+    - never
+    - debug
 
 - name: Get host power status
   shell: |
@@ -107,9 +91,12 @@
   loop: "{{ foreman_hosts_created.results  }}"
   when: item.changed
 
-#- debug:
-#    msg: "{{ item }}"
-#  loop: "{{ powerstatus.results }}"
+- debug:
+    msg: "{{ item }}"
+  loop: "{{ powerstatus.results }}"
+  tags:
+    - never
+    - debug
 
 #- name: Set host to boot from network device
 #  command: >
