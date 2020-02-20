@@ -88,14 +88,11 @@
   changed_when: False
   failed_when: foreman_db_status.stderr |  regex_search('(?:rake\\saborted)')
 
-#- debug:
-#    msg: "{{ foreman_db_status }}"
-
-#- name: Check migration status of foreman database
-#  shell:
-#    executable: /bin/bash
-#    cmd: foreman-rake:db:status | sed -n '/^$/d;/---/,${n;p}' | awk '{print $1}' | sort | uniq
-#   register: foreman_db_status
+- debug:
+    msg: "{{ foreman_db_status }}"
+  tags:
+    - never
+    - debug
 
 - name: "Trigger foreman-rake  db:migrate and db:seed tasks"
   set_fact:
@@ -103,8 +100,11 @@
   when: ( foreman_db_status.stdout_lines | length < 2 ) or
         ( foreman_db_status.stdout | regex_search('\\b(?:down)\\b') )
 
-#- debug:
-#    msg: "Foreman db needs migrating: {{ foreman_migrate_db | default(false) }}"
+- debug:
+    msg: "Foreman db needs migrating: {{ foreman_migrate_db | default(false) }}"
+  tags:
+    - never
+    - debug
 
 - name: "Perform initial database setup (db:migrate)"
   command: foreman-rake db:migrate
@@ -132,13 +132,6 @@
     msg: "{{ seed_results.stdout_lines }}"
   when: seed_results.failed is defined and seed_results.failed == True
 
-
-#- name: Check for foreman admin password change
-#  copy:
-#    dest: "{{ foreman_config_dir }}/password_configured"
-#    content: "{{ foreman_admin_password | checksum }}"
-#  register: foreman_pw_updated
-
 - name: set foreman admin password
   command: "foreman-rake permissions:reset username={{ foreman_admin_user }} password={{ foreman_admin_password }}"
   when: ( settings_config is changed ) or
@@ -163,33 +156,6 @@
   notify:
     - restart foreman-proxy
 
-#- name: template foreman-proxy dhcp.yml
-#  template:
-#    src: etc/foreman-proxy/dhcp.yml.j2
-#    dest: "{{ foreman_proxy_config_dir }}/settings.d/dhcp.yml"
-#    backup: yes
-#  when: foreman_proxy_dhcp
-#  notify:
-#    - restart foreman-proxy
-#
-#- name: template foreman-proxy dhcp_isc.yml
-#  template:
-#    src: etc/foreman-proxy/dhcp_isc.yml.j2
-#    dest: "{{ foreman_proxy_config_dir }}/settings.d/dhcp_isc.yml"
-#    backup: yes
-#  when: foreman_proxy_dhcp
-#  notify:
-#    - restart foreman-proxy
-#
-#- name: template foreman-proxy httpboot.yml
-#  template:
-#    src: etc/foreman-proxy/httpboot.yml.j2
-#    dest: "{{ foreman_proxy_config_dir }}/settings.d/httpboot.yml"
-#    backup: yes
-#  when: foreman_proxy_httpboot
-#  notify:
-#    - restart foreman-proxy
-
 - name: fix dhcp config directory permissions
   file:
     path: "{{ foreman_proxy_dhcp_config_dir }}"
@@ -199,14 +165,6 @@
   notify:
     - restart foreman-proxy
 
-#- name: template foreman-proxy tftp.yaml
-#  template:
-#    src: etc/foreman-proxy/tftp.yml.j2
-#    dest: "{{ foreman_proxy_config_dir }}/settings.d/tftp.yml"
-#    backup: yes
-#  when: foreman_proxy_tftp
-#  notify:
-#    - restart foreman-proxy
 
 - name: ensure correct permissions for tftp pxe directories
   file:
