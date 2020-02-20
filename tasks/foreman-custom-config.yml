@@ -1,27 +1,17 @@
 ---
 - name: Update Foreman Settings
-  theforeman.foreman.foreman_setting:
-    server_url: "http://{{ foreman_proxy_bind_host }}"
-    username: "{{ foreman_admin_user }}"
-    password: "{{ foreman_admin_password }}"
-    name: "{{ item.name }}"
-    value: "{{ item.value }}"
-  loop: "{{ foreman_default_settings }}"
-  when:
-    - foreman_default_settings is defined
-    - foreman_default_settings != None
-
-- name: Configure Additional Foreman Settings
-  theforeman.foreman.foreman_setting:
-    server_url: "http://{{ foreman_proxy_bind_host }}"
-    username: "{{ foreman_admin_user }}"
-    password: "{{ foreman_admin_password }}"
-    name: "{{ item.name }}"
-    value: "{{ item.value }}"
-  loop: "{{ foreman_extra_settings }}"
-  when:
-    - foreman_extra_settings is defined
-    - foreman_extra_settings != None
+  block:
+    - name: Combine Foreman default settings with user-defined settings
+      set_fact:
+        foreman_settings: '{{ foreman_default_settings + foreman_extra_settings }}'
+    - name: Update Foreman Settings
+      theforeman.foreman.foreman_setting:
+        server_url: "http://{{ foreman_proxy_bind_host }}"
+        username: "{{ foreman_admin_user }}"
+        password: "{{ foreman_admin_password }}"
+        name: "{{ item.name }}"
+        value: "{{ item.value }}"
+      loop: "{{ foreman_settings }}"
 
 - name: "Update global parameters"
   theforeman.foreman.foreman_global_parameter:
