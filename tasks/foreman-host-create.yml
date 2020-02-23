@@ -58,7 +58,7 @@
     {% endif %}
     {% if item.item.provider is defined and item.item.provider == "ipmi" %}
     --interface '{
-    "ip": "{{ item.item.ipmi_ip}}",
+    "ip": "{{ item.item.ipmi_ip }}",
     "mac": "{{ item.item.ipmi_mac_address }}",
     "type": "bmc",
     "provider": "ipmi",
