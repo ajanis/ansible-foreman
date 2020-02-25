@@ -91,6 +91,48 @@
   tags:
     - always
 
+- name: "Start/Restart the foreman dynflow service"
+  systemd:
+    name: smart_proxy_dynflow_core
+    state: "{% if foreman_proxy_require_restart | default(false) %}restarted{% else %}started{% endif %}"
+    enabled: yes
+  register: foreman_proxy_dynflow_started
+  when:
+    - ansible_os_family == "RedHat"
+    - foreman_proxy_enable_service
+    - foreman_proxy_dynflow
+  tags:
+    - always
+
+- name: Verify foreman dynflow service is listening
+  wait_for:
+    host: 127.0.0.1
+    port: "{{ foreman_proxy_dynflow_port }}"
+    delay: 5
+  when:
+    - ansible_os_family == "RedHat"
+    - foreman_proxy_enable_service
+    - foreman_proxy_dynflow
+  ignore_errors: yes
+  register: foreman_proxy_dynflow_start_attempt
+  tags:
+    - always
+
+- name: Get foreman dynflow journald logs if service does not appear to be up
+  shell: journalctl _SYSTEMD_INVOCATION_ID=`systemctl show -p InvocationID --value smart_proxy_dynflow_core.service`
+  register: foreman_proxy_dynflow_journal
+  when: foreman_proxy_dynflow_start_attempt.failed
+  tags:
+    - always
+
+- debug:
+    var: |
+      foreman_proxy_dynflow_journal.stdout_lines
+  when: foreman_proxy_dynflow_start_attempt.failed
+  failed_when: foreman_proxy_dynflow_start_attempt.failed
+  tags:
+    - always
+
 - meta: flush_handlers
   tags:
     - always
