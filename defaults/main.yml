@@ -61,7 +61,7 @@ foreman_proxy_templates: True
 foreman_proxy_templates_protocol: http
 foreman_proxy_discovery: True
 foreman_proxy_dynflow: True
-
+foreman_proxy_dynflow_port: 8008
 foreman_db_adapter: postgresql
 foreman_db_host: localhost
 foreman_db_name: foreman
