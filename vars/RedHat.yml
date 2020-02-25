@@ -74,6 +74,7 @@ foreman_pkgs:
   - tfm-rubygem-foreman-tasks
   - tfm-rubygem-foreman-tasks-core
   - tfm-rubygem-foreman_remote_execution
+  - tfm-rubygem-foreman_remote_execution_core
   - tfm-rubygem-foreman_discovery
   - tfm-rubygem-foreman_bootdisk
   - tfm-rubygem-foreman_dhcp_browser
@@ -92,6 +93,7 @@ foreman_proxy_pkgs:
   - rubygem-smart_proxy_discovery_image
   - rubygem-smart_proxy_discovery
   - rubygem-smart_proxy_ansible
+  - tfm-rubygem-smart_proxy_dynflow_core
 
 foreman_proxy_extra_repos_pkg: []
 
