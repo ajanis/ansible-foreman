@@ -4,7 +4,7 @@
 {% if foreman_proxy_dynflow %}
 :enabled: true
 :database: /var/lib/foreman-proxy/dynflow/dynflow.sqlite
-:core_url: '{{ foreman_proxy_protocol }}://{{ foreman_proxy_bind_host }}:{{ foreman_proxy_port }}'
+:core_url: '{{ foreman_proxy_protocol }}://127.0.0.1:{{ foreman_proxy_dynflow_port }}'
 {% else %}
 :enabled: false
 {% endif %}
