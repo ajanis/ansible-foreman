@@ -107,6 +107,18 @@
 #    - item.changed
 #    - item.item.item.provider == "ipmi"
 
+- name: Set Boot Device to PXE (ipmi)
+  command: >
+    ipmitool -I lanplus
+     -U {{ item.item.item.item.ipmi_username }}
+     -P {{ item.item.item.item.ipmi_password }}
+     -H {{ item.item.item.item.ipmi_ip }}
+     chassis bootdev pxe options=persistent,verbose=yes,cons_redirect=enable
+  loop: "{{ powerstatus.results }}"
+  when:
+    - item.changed
+    - item.item.item.item.provider == "ipmi"
+
 - name: Host Power-Cycle
   command: >
     hammer -r host
