@@ -142,26 +142,26 @@
     - foreman-smartproxy
 - import_tasks: foreman-custom-auth.yml
   tags:
-    - foreman-auth
-    - foreman-settings
+    - foreman_auth
+    - foreman_settings
 - import_tasks: foreman-custom-network.yml
   tags:
-    - foreman-network
+    - foreman_network
 - import_tasks: foreman-custom-os.yml
   tags:
-    - foreman-os
+    - foreman_os
 - import_tasks: foreman-custom-groups.yml
   tags:
-    - foreman-groups
+    - foreman_groups
 - import_tasks: foreman-custom-templates.yml
   tags:
-    - foreman-templates
+    - foreman_templates
 - import_tasks: foreman-custom-config.yml
   tags:
-    - foreman-settings
+    - foreman_settings
 - import_tasks: apt-cache.yml
   tags:
-    - foreman-aptcache
+    - foreman_aptcache
 
 - name: Print Foreman Package Version
   block:
