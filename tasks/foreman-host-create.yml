@@ -30,6 +30,9 @@
     {% set interface_cmd = '{}' %}
     hammer -r host create --name '{{ item.item.name }}' --hostgroup '{{ item.item.hostgroup }}' --build '1'
     --location 'Default Location' --organization 'Default Organization'
+    {% if item.operatingsystem is defined %}
+    --operatingsystem '{{ item.item.operatingsystem }}'
+    {% endif %}
     {% if item.item.provider is defined and item.item.provider == "kvm" %}
     {% set interface_cmd = interface_cmd | from_json | combine({ 'compute_bridge': 'br' + ( item.item.vlan_id | default("0") | regex_replace("10", "0") ) },
       { 'compute_model': 'virtio' },
@@ -107,18 +110,6 @@
 #    - item.changed
 #    - item.item.item.provider == "ipmi"
 
-- name: Set Boot Device to PXE (ipmi)
-  command: >
-    ipmitool -I lanplus
-     -U {{ item.item.item.item.ipmi_username }}
-     -P {{ item.item.item.item.ipmi_password }}
-     -H {{ item.item.item.item.ipmi_ip }}
-     chassis bootdev pxe options=persistent,verbose=yes,cons_redirect=enable
-  loop: "{{ powerstatus.results }}"
-  when:
-    - item.changed
-    - item.item.item.item.provider == "ipmi"
-
 - name: Host Power-Cycle
   command: >
     hammer -r host
@@ -131,4 +122,4 @@
   loop: "{{ powerstatus.results }}"
   when:
     - item.changed
-    #- item.item.item.item.provider != "ssh"
+    - item.item.item.item.provider == "kvm"
