@@ -30,6 +30,12 @@
     {% set interface_cmd = '{}' %}
     hammer -r host create --name '{{ item.item.name }}' --hostgroup '{{ item.item.hostgroup }}' --build '1'
     --location 'Default Location' --organization 'Default Organization'
+    {% if item.operatingsystem is defined %}
+    --operatingsystem '{{ item.item.operatingsystem }}'
+    {% endif %}
+    {% if item.subnet is defined %}
+    --subnet '{{ item.item.subnet }}'
+    {% endif %}
     {% if item.item.provider is defined and item.item.provider == "kvm" %}
     {% set interface_cmd = interface_cmd | from_json | combine({ 'compute_bridge': 'br' + ( item.item.vlan_id | default("0") | regex_replace("10", "0") ) },
       { 'compute_model': 'virtio' },
