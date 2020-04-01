@@ -37,6 +37,16 @@
     --subnet '{{ item.item.subnet }}'
     {% endif %}
     {% if item.item.provider is defined and item.item.provider == "kvm" %}
+    --compute-resource '{{ item.item.compute_resource }}'
+    --compute-attributes '{
+    "cpus": {{ item.item.cpu_cores }},
+    "memory": {{ item.item.memory | regex_replace("^([0-9]+)\s+?.*$", "\1GB") | human_to_bytes }},
+    "start": "0"
+    }'
+    --volume '{
+    "capacity": {{ (item.item.disk_size | regex_replace("^([0-9]+)\s+?.*$", "\1GB") | human_to_bytes // 1073741824) }},
+    "format_type": "qcow2"
+    }'
     {% set interface_cmd = interface_cmd | from_json | combine({ 'compute_bridge': 'br' + ( item.item.vlan_id | default("0") | regex_replace("10", "0") ) },
       { 'compute_model': 'virtio' },
       { 'compute_type': 'bridge' }) | to_json %}
@@ -51,17 +61,17 @@
     {% set interface_cmd = interface_cmd | from_json | combine({ 'mac': item.item.mac_address }) | to_json %}
     {% endif %}
     --interface {{ interface_cmd | to_json }}
-    {% if item.item.provider is defined and item.item.provider == "kvm" %}
-    --compute-attributes '{
-    "cpus": {{ item.item.cpu_cores }},
-    "memory": {{ item.item.memory | regex_replace("^([0-9]+)\s+?.*$", "\1GB") | human_to_bytes }},
-    "start": "0"
-    }'
-    --volume '{
-    "capacity": {{ (item.item.disk_size | regex_replace("^([0-9]+)\s+?.*$", "\1GB") | human_to_bytes // 1073741824) }},
-    "format_type": "qcow2"
-    }'
-    {% endif %}
+#    {% if item.item.provider is defined and item.item.provider == "kvm" %}
+#    --compute-attributes '{
+#    "cpus": {{ item.item.cpu_cores }},
+#    "memory": {{ item.item.memory | regex_replace("^([0-9]+)\s+?.*$", "\1GB") | human_to_bytes }},
+#    "start": "0"
+#    }'
+#    --volume '{
+#    "capacity": {{ (item.item.disk_size | regex_replace("^([0-9]+)\s+?.*$", "\1GB") | human_to_bytes // 1073741824) }},
+#    "format_type": "qcow2"
+#    }'
+#    {% endif %}
     {% if item.item.provider is defined and item.item.provider == "ipmi" %}
     --interface '{
     "ip": "{{ item.item.ipmi_ip }}",
