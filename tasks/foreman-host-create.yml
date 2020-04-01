@@ -32,6 +32,8 @@
     --location 'Default Location' --organization 'Default Organization'
     {% if item.item.operatingsystem is defined %}
     --operatingsystem '{{ item.item.operatingsystem }}'
+    --media '{% for os in foreman_operatingsystems %}{% if os.description == {{ item.item.operatingsystem }} %}{{ query('items', os.media) }}{% endif %}{% endfor %}'
+    --partition-table '{% for os in foreman_operatingsystems %}{% if os.description == {{ item.item.operatingsystem }} %}{{ query('items', os.ptables[0]) }}{% endif %}{% endfor %}'
     {% endif %}
     {% if item.item.subnet is defined %}
     --subnet '{{ item.item.subnet }}'
