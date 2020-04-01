@@ -30,10 +30,10 @@
     {% set interface_cmd = '{}' %}
     hammer -r host create --name '{{ item.item.name }}' --hostgroup '{{ item.item.hostgroup }}' --build '1'
     --location 'Default Location' --organization 'Default Organization'
-    {% if item.operatingsystem is defined %}
+    {% if item.item.operatingsystem is defined %}
     --operatingsystem '{{ item.item.operatingsystem }}'
     {% endif %}
-    {% if item.subnet is defined %}
+    {% if item.item.subnet is defined %}
     --subnet '{{ item.item.subnet }}'
     {% endif %}
     {% if item.item.provider is defined and item.item.provider == "kvm" %}
