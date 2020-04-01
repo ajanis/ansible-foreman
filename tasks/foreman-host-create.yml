@@ -1,13 +1,19 @@
 ---
+- name: Gather and delegate facts for all Ceph nodes
+  setup:
+  delegate_to: "{{ item }}"
+  delegate_facts: True
+  loop: "{{ groups['foreman'] }}"
+  run_once: true
+
 - name: Query foreman hosts
   command: hammer -r host list
   register: hostlist
 
-- debug:
+- name: print hostlist
+  debug:
     msg: "{{ hostlist }}"
-  tags:
-    - never
-    - debug
+    verbosity: 1
 
 - name: Get host build status
   shell: |
@@ -16,13 +22,12 @@
   loop: "{{ foreman_hosts }}"
   when: item.name in hostlist.stdout
 
-- debug:
+- name: print buildstatus results
+  debug:
     msg: "{{ item }}"
+    verbosity: 1
   loop: "{{ buildstatus.results }}"
   when: item.changed
-  tags:
-    - never
-    - debug
 
 - name: "Create hosts via hammer cli"
   command: >
@@ -32,8 +37,12 @@
     --location 'Default Location' --organization 'Default Organization'
     {% if item.item.operatingsystem is defined %}
     --operatingsystem '{{ item.item.operatingsystem }}'
-    --media '{% for os in foreman_operatingsystems %}{% if os.description == {{ item.item.operatingsystem }} %}{{ query('items', os.media) }}{% endif %}{% endfor %}'
-    --partition-table '{% for os in foreman_operatingsystems %}{% if os.description == {{ item.item.operatingsystem }} %}{{ query('items', os.ptables[0]) }}{% endif %}{% endfor %}'
+    {% for os in foreman_operatingsystems %}
+    {% if os.description == item.item.operatingsystem %}
+    --medium '{{ os.media }}'
+    --partition-table '{{ os.ptables[0] }}'
+    {% endif %}
+    {% endfor %}
     {% endif %}
     {% if item.item.subnet is defined %}
     --subnet '{{ item.item.subnet }}'
@@ -84,12 +93,11 @@
   register: foreman_hosts_created
   changed_when: foreman_hosts_created.stdout == "Host updated." or foreman_hosts_created.stdout == "Host created."
 
-- debug:
+- name: print host-create results
+  debug:
     msg: "{{ item }}"
+    verbosity: 1
   loop: "{{ foreman_hosts_created.results  }}"
-  tags:
-    - never
-    - debug
 
 - name: Get host power status
   shell: |
@@ -98,12 +106,11 @@
   loop: "{{ foreman_hosts_created.results  }}"
   when: item.changed
 
-- debug:
+- name: print power status results
+  debug:
     msg: "{{ item }}"
+    verbosity: 1
   loop: "{{ powerstatus.results }}"
-  tags:
-    - never
-    - debug
 
 #- name: Set host to boot from network device
 #  command: >
