@@ -23,7 +23,7 @@
     roles: "{{ item.roles | default(omit) }}"
     users: "{{ item.users | default(omit) }}"
     usergroups: "{{ item.usergroups | default(omit) }}"
-    state: present
+    state: "{{ item.state | default('present') }}"
     server_url: "http://{{ foreman_proxy_bind_host }}"
     username: "{{ foreman_admin_user }}"
     password: "{{ foreman_admin_password }}"
@@ -61,7 +61,7 @@
     roles: "{{ item.roles | default(omit) }}"
     locations: "{{ item.locations | default('Default Location') }}"
     organizations: "{{ item.organizations | default('Default Organization') }}"
-    state: present
+    state: "{{ item.state | default('present') }}"
     server_url: "http://{{ foreman_proxy_bind_host }}"
     username: "{{ foreman_admin_user }}"
     password: "{{ foreman_admin_password }}"
@@ -105,7 +105,7 @@
     name: "{{ item.name }}"
     auth_source_ldap: "{{ item.auth_source_ldap }}"
     usergroup: "{{ item.usergroup }}"
-    state: present
+    state: "{{ item.state | default('present') }}"
     server_url: "http://{{ foreman_proxy_bind_host }}"
     username: "{{ foreman_admin_user }}"
     password: "{{ foreman_admin_password }}"

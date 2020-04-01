@@ -12,7 +12,7 @@
     server_url: "http://{{ foreman_proxy_bind_host }}"
     username: "{{ foreman_admin_user }}"
     password: "{{ foreman_admin_password }}"
-    state: present
+    state: "{{ item.state | default('present') }}"
   loop: "{{ foreman_domains }}"
   when:
     - foreman_domains is defined
@@ -48,7 +48,7 @@
     server_url: "http://{{ foreman_proxy_bind_host }}"
     username: "{{ foreman_admin_user }}"
     password: "{{ foreman_admin_password }}"
-    state: present
+    state: "{{ item.state | default('present') }}"
   loop: "{{ foreman_proxy_dhcp_subnets }}"
   when:
     - foreman_proxy_dhcp_subnets is defined

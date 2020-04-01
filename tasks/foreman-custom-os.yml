@@ -11,7 +11,7 @@
     server_url: "http://{{ foreman_proxy_bind_host }}"
     username: "{{ foreman_admin_user }}"
     password: "{{ foreman_admin_password }}"
-    state: present
+    state: "{{ item.state | default('present') }}"
   loop: "{{ foreman_installation_mediums }}"
   when:
     - foreman_installation_mediums is defined
@@ -34,7 +34,7 @@
     server_url: "http://{{ foreman_proxy_bind_host }}"
     username: "{{ foreman_admin_user }}"
     password: "{{ foreman_admin_password }}"
-    state: present
+    state: "{{ item.state | default('present') }}"
   loop: "{{ foreman_operatingsystems }}"
   when:
     - foreman_operatingsystems is defined
@@ -48,7 +48,7 @@
     server_url: "http://{{ foreman_proxy_bind_host }}"
     username: "{{ foreman_admin_user }}"
     password: "{{ foreman_admin_password }}"
-    state: present
+    state: "{{ item.state | default('present') }}"
   loop: "{{ foreman_os_default_templates }}"
   when:
     - foreman_os_default_templates is defined

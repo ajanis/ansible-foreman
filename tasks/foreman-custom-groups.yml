@@ -11,7 +11,7 @@
     server_url: "http://{{ foreman_proxy_bind_host }}"
     username: "{{ foreman_admin_user }}"
     password: "{{ foreman_admin_password }}"
-    state: present
+    state: "{{ item.state | default('present') }}"
   loop: "{{ foreman_compute_resources }}"
   when:
     - foreman_compute_resources is defined
@@ -49,7 +49,7 @@
     server_url: "http://{{ foreman_proxy_bind_host }}"
     username: "{{ foreman_admin_user }}"
     password: "{{ foreman_admin_password }}"
-    state: present
+    state: "{{ item.state | default('present') }}"
   loop: "{{ foreman_hostgroups }}"
   when:
     - foreman_hostgroups is defined
