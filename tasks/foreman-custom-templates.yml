@@ -1,7 +1,7 @@
 ---
 - name: "Update provisioning templates"
   theforeman.foreman.foreman_provisioning_template:
-    template: '{{ lookup("file", item.src) }}'
+    template: "{{ lookup('file', item.src) }}"
     locked: no
     locations:
       - "Default Location"
@@ -11,7 +11,7 @@
     username: "{{ foreman_admin_user }}"
     password: "{{ foreman_admin_password }}"
     state: present
-  with_filetree: 'files/provisioning'
+  loop: "{{ lookup('filetree', 'files/provisioning/', wantlist=True) }}"
   when:
     - foreman_proxy_tftp
     - item.state == 'file'
