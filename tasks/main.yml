@@ -146,7 +146,7 @@
     - foreman-settings
 - import_tasks: foreman-custom-network.yml
   tags:
-    - foreman-network
+    - foreman-networks
 - import_tasks: foreman-custom-os.yml
   tags:
     - foreman-os
