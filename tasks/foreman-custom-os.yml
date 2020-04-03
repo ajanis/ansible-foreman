@@ -13,6 +13,8 @@
     password: "{{ foreman_admin_password }}"
     state: "{{ item.state | default('present') }}"
   loop: "{{ foreman_installation_mediums }}"
+  loop_control:
+    label: "{{ item.name }}: {{ item.path }} "
   when:
     - foreman_installation_mediums is defined
     - foreman_installation_mediums != None
@@ -36,6 +38,8 @@
     password: "{{ foreman_admin_password }}"
     state: "{{ item.state | default('present') }}"
   loop: "{{ foreman_operatingsystems }}"
+  loop_control:
+    label: "{{ item.name }} {{ item.major }}.{{ item.minor }}"
   when:
     - foreman_operatingsystems is defined
     - foreman_operatingsystems != None
@@ -50,6 +54,8 @@
     password: "{{ foreman_admin_password }}"
     state: "{{ item.state | default('present') }}"
   loop: "{{ foreman_os_default_templates }}"
+  loop_control:
+    label: "{{ item.operatingsystem }} {{ item.template_kind }}: {{ item.provisioning_template }}"
   when:
     - foreman_os_default_templates is defined
     - foreman_os_default_templates != None

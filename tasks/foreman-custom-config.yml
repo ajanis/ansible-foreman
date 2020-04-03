@@ -12,6 +12,8 @@
         name: "{{ item.name }}"
         value: "{{ item.value }}"
       loop: "{{ foreman_settings }}"
+      loop_control:
+        label: "{{ item.name }}: {{ item.value }}"
 
 - name: "Update global parameters"
   theforeman.foreman.foreman_global_parameter:
@@ -23,6 +25,8 @@
     password: "{{ foreman_admin_password }}"
     state: present_with_defaults
   loop: "{{ foreman_global_parameters }}"
+  loop_control:
+    label: "{{ item.name }}: {{ item.value }}"
   when:
     - foreman_global_parameters is defined
     - foreman_global_parameters != None

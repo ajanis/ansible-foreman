@@ -29,6 +29,8 @@
     password: "{{ foreman_admin_password }}"
   register: foreman_created_usergroups
   loop: "{{ foreman_usergroups }}"
+  loop_control:
+    label: "{{ item.name }}"
   when:
     - foreman_usergroups is defined
     - foreman_usergroups != None
@@ -66,6 +68,8 @@
     username: "{{ foreman_admin_user }}"
     password: "{{ foreman_admin_password }}"
   loop: "{{ foreman_users }}"
+  loop_control:
+    label: "{{ item.name }}"
   when:
     - foreman_users is defined
     - foreman_users != None
@@ -96,6 +100,8 @@
     password: "{{ foreman_admin_password }}"
   changed_when: False
   loop: "{{ foreman_ldap_sources }}"
+  loop_control:
+    label: "{{ item.name }}: {{ item.groups_base }}"
   when:
     - foreman_ldap_sources is defined
     - foreman_ldap_sources != None
@@ -110,6 +116,8 @@
     username: "{{ foreman_admin_user }}"
     password: "{{ foreman_admin_password }}"
   loop: "{{ foreman_external_usergroups }}"
+  loop_control:
+    label: "{{ item.name }}: {{ item.usergroup }}: {{ item.auth_source_ldap }}"
   when:
     - foreman_external_usergroups is defined
     - foreman_external_usergroups != None

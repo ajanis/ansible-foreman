@@ -13,6 +13,8 @@
     password: "{{ foreman_admin_password }}"
     state: "{{ item.state | default('present') }}"
   loop: "{{ foreman_compute_resources }}"
+  loop_control:
+    label: "{{ item.name }}: {{ item.provider }}"
   when:
     - foreman_compute_resources is defined
     - foreman_compute_resources != None
@@ -22,6 +24,8 @@
     hammer -r compute-resource update --name {{ item.name }}
      --set-console-password {% if foreman_libvirt_set_console_password %}'1'{% else %}'0'{% endif %}
   loop: "{{ foreman_compute_resources }}"
+  loop_control:
+    label: "{{ item.name }} --set-console-password {{ foreman_libvirt_set_console_password }}"
   when:
     - foreman_compute_resources is defined
     - foreman_compute_resources != None
@@ -51,6 +55,8 @@
     password: "{{ foreman_admin_password }}"
     state: "{{ item.state | default('present') }}"
   loop: "{{ foreman_hostgroups }}"
+  loop_control:
+    label: "{{ item.name }}"
   when:
     - foreman_hostgroups is defined
     - foreman_hostgroups != None

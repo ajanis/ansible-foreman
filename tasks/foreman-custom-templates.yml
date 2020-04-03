@@ -12,6 +12,8 @@
     password: "{{ foreman_admin_password }}"
     state: present
   loop: "{{ lookup('filetree', 'files/provisioning/', wantlist=True) }}"
+  loop_control:
+    label: "{{ item.path }}"
   when:
     - foreman_proxy_tftp
     - item.state == 'file'
