@@ -1,23 +1,39 @@
 <%#
 kind: PXELinux
-name: Kickstart default PXELinux
+name: Kickstart rescue PXELinux
 model: ProvisioningTemplate
-oses:
-- CentOS
-- Fedora
-- RedHat
+snippet: true
 -%>
 
+
 # This file was deployed via '<%= template_name %>' template
-#
-# Supported host/hostgroup parameters:
-#
-# kernel_params = console=ttyS1,115200n8 console=tty1 net.ifnames=0 biosdevname=0
-#  Kernel Parameters to be appended to PXE kernel line and OS bootloader
-#
 
 <%
-  major = @host.operatingsystem.major.to_i
+
+  if @host.operatingsystem.family == 'Debian'
+
+  pxe_kernel_options = []
+  if host_param('kernel_params')
+    pxe_kernel_options << host_param('kernel_params')
+  end
+  pxe_kernel_options = pxe_kernel_options.join(' ')
+
+  options = []
+  if host_param('blacklist')
+    options << host_param('blacklist').split(',').collect{|x| "#{x.strip}.blacklist=yes"}.join(' ')
+  end
+  if @host.operatingsystem.name == 'Debian'
+    options << "auto=true"
+    options << "domain=#{@host.domain}"
+  else
+    options << 'console-setup/ask_detect=false console-setup/layout=USA console-setup/variant=USA keyboard-configuration/layoutcode=us localechooser/translation/warn-light=true localechooser/translation/warn-severe=true'
+  end
+  options << "locale=#{host_param('lang') || 'en_US'}"
+  options = options.join(' ')
+
+elsif @host.operatingsystem.family == 'RedHat'
+
+ major = @host.operatingsystem.major.to_i
   mac = @host.provision_interface.mac
 
   # Tell Anaconda to perform network functions with boot interface
@@ -95,29 +111,51 @@ oses:
   end
   pxe_kernel_options = pxe_kernel_options.join(' ')
 
+end
 -%>
 
-UI menu.c32
-DEFAULT menu
-MENU TITLE Booting into OS installer (ESC to stop)
-TIMEOUT <%= timeout %>
-ONTIMEOUT installer
 
-LABEL installer
-  MENU LABEL Install <%= @host.operatingsystem %>
-  KERNEL <%= @kernel %>
-  APPEND initrd=<%= @initrd %> ks=<%= foreman_url('provision') %> <%= ksoptions %> <%= pxe_kernel_options %>
-  IPAPPEND 2
+UI menu.c32
+MENU TITLE Booting unknown host (ESC to stop)
+TIMEOUT 200
+ONTIMEOUT rescue
+DEFAULT rescue
+
+LABEL local
+  MENU LABEL Default local boot
+  LOCALBOOT 0
+
+LABEL local_primary
+  MENU LABEL Default local boot from primary hard drive
+  LOCALBOOT 0x80
+
+<% if @host.operatingsystem.family == 'RedHat' -%>
 
 LABEL rescue
-  MENU LABEL Rescue <%= @host.operatingsystem %>
-  KERNEL <%= @kernel %>
-  APPEND initrd=<%= @initrd %> ks=<%= foreman_url('provision') %> <%= ksoptions %> rescue quiet <%= pxe_kernel_options %>
+  MENU LABEL Rescue CentOS 8 Linux System
+  KERNEL boot/centos8-vmlinuz
+  APPEND initrd=boot/centos8-initrd.img ks=<%= foreman_url('provision') %> <%= pxe_kernel_options %> <%= ksoptions %> rescue quiet
   IPAPPEND 2
+
+<% elsif @host.operatingsystem.family == 'Debian' -%>
+
+LABEL rescue
+  MENU LABEL <%= template_name %> rescue
+  KERNEL <%= @kernel %>
+  APPEND initrd=<%= @initrd %> interface=auto url=<%= foreman_url('provision')%> ramdisk_size=10800 root=/dev/rd/0 rw auto rescue/enable=true hostname=<%= @host.name %> <%= options %> <%= pxe_kernel_options %>
+  IPAPPEND 2
+
+<% else -%>
+
+LABEL rescue
+  MENU LABEL <%= template_name %> rescue
+  KERNEL <%= @kernel %>
+  APPEND initrd=<%= @initrd %> ks=<%= foreman_url('provision') %> <%= pxe_kernel_options %> <%= ksoptions %> rescue quiet
+  IPAPPEND 2
+
+<% end -%>
 
 LABEL memtest
   MENU LABEL Memtest86+ v5.01
   KERNEL boot/memtest
-  APPEND <%= pxe_kernel_options %>
-<%= snippet_if_exists(template_name + " custom menu") %>
 <%#-%>
