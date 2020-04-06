@@ -1,10 +1,10 @@
 ---
-- name: Gather and delegate facts for Foreman build server
-  setup:
-  delegate_to: "{{ item }}"
-  delegate_facts: True
-  loop: "{{ groups['foreman'] }}"
-  run_once: true
+#- name: Gather and delegate facts for Foreman build server
+#  setup:
+#  delegate_to: "{{ item }}"
+#  delegate_facts: True
+#  loop: "{{ groups['foreman'] }}"
+#  run_once: true
 
 - name: Query foreman hosts
   command: hammer -r host list
