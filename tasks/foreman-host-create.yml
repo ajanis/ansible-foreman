@@ -104,13 +104,19 @@
     hammer -r host status --name {{ item.item.item.name }}.{{ www_domain }} | grep -i power | awk '{print $2}'
   register: powerstatus
   loop: "{{ foreman_hosts_created.results  }}"
-  when: item.changed
+  when:
+    - item.changed
+    - ( item.item.item.provider == "ipmi" or
+      item.item.item.provider == "kvm" )
 
 - name: print power status results
   debug:
     msg: "{{ item }}"
     verbosity: 1
   loop: "{{ powerstatus.results }}"
+  when:
+    - ( item.item.item.item.provider == "ipmi" or
+      item.item.item.item.provider == "kvm" )
 
 #- name: Set host to boot from network device
 #  command: >
@@ -145,4 +151,5 @@
   loop: "{{ powerstatus.results }}"
   when:
     - item.changed
-    #- item.item.item.item.provider != "ssh
+    - ( item.item.item.provider == "ipmi" or
+      item.item.item.provider == "kvm" )
