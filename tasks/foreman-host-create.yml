@@ -58,7 +58,7 @@
     "capacity": {{ (item.item.disk_size | regex_replace("^([0-9]+)\s+?.*$", "\1GB") | human_to_bytes // 1073741824) }},
     "format_type": "qcow2"
     }'
-    {% set interface_cmd = interface_cmd | from_json | combine({ 'compute_bridge': 'br' + ( item.item.vlan_id | default("0") | regex_replace("10", "0") ) },
+    {% set interface_cmd = interface_cmd | from_json | combine({ 'compute_bridge': 'br' + ( item.item.vlan_id|default("0") ) },
       { 'compute_model': 'virtio' },
       { 'compute_type': 'bridge' }) | to_json %}
     {% endif %}
