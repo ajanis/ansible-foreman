@@ -54,13 +54,13 @@ ONTIMEOUT installer
 LABEL installer
     MENU LABEL Install <%= @host.operatingsystem %>
     KERNEL <%= @kernel %>
-    APPEND initrd=<%= @initrd %> interface=auto url=<%= foreman_url('provision')%> DEBIAN_FRONTEND=text ramdisk_size=10800 root=/dev/rd/0 rw auto hostname=<%= @host.name %> <%= options %> --- <%= pxe_kernel_options %>
+    APPEND initrd=<%= @initrd %> interface=auto url=<%= foreman_url('provision')%> DEBIAN_FRONTEND=text ramdisk_size=10800 root=/dev/rd/0 rw auto vga=normal fb=false hostname=<%= @host.name %> <%= options %> --- <%= pxe_kernel_options %>
     IPAPPEND 2
 
 LABEL rescue
   MENU LABEL Rescue <%= @host.operatingsystem %>
   KERNEL <%= @kernel %>
-  APPEND initrd=<%= @initrd %> interface=auto url=<%= foreman_url('provision')%> DEBIAN_FRONTEND=text ramdisk_size=10800 root=/dev/rd/0 rw auto rescue/enable=true hostname=<%= @host.name %> <%= options %> <%= pxe_kernel_options %>
+  APPEND initrd=<%= @initrd %> interface=auto url=<%= foreman_url('provision')%> DEBIAN_FRONTEND=text ramdisk_size=10800 root=/dev/rd/0 rw auto vga=normal fb=false rescue/enable=true hostname=<%= @host.name %> <%= options %> <%= pxe_kernel_options %>
   IPAPPEND 2
 
 LABEL memtest
