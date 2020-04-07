@@ -151,5 +151,5 @@
   loop: "{{ powerstatus.results }}"
   when:
     - item.changed
-    - ( item.item.item.provider == "ipmi" or
-      item.item.item.provider == "kvm" )
+    - ( item.item.item.item.provider == "ipmi" or
+      item.item.item.item.provider == "kvm" )
