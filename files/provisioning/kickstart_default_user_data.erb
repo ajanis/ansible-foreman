@@ -1,48 +1,26 @@
 <%#
-kind: finish
-name: Kickstart default finish
+kind: user_data
+name: Kickstart default user data
 model: ProvisioningTemplate
 oses:
 - CentOS
 - Fedora
-%>
-  <%#
-  This template accepts the following parameters:
-  - bootloader-append: string (default="nofb quiet splash=quiet")
-  - force-puppet: boolean (default=false)
-  - ntp-server: string (default="0.fedora.pool.ntp.org")
-  - package_upgrade: boolean (default=true)
-  - salt_master: string (default=undef)
-  %>
-<% subnet = @host.subnet -%>
-<% host_ip = @host.ip -%>
-<% host_ipset = host_ip.nil? ? false : true -%>
-
-<% if @static -%>
-  <%- dhcp = false -%>
-<% elsif host_ipset -%>
-  <%- dhcp = false -%>
-<% elsif subnet.nil? -%>
-  <%- dhcp = true -%>
-<% else -%>
-  <%- dhcp = subnet.dhcp_boot_mode? -%>
-<% end -%>
-
-<% if dhcp -%>
-<%= snippet 'kickstart_networking_setup' %>
-service network restart
-<% end -%>
-
+-%>
 <%
   rhel_compatible = @host.operatingsystem.family == 'Redhat' && @host.operatingsystem.name != 'Fedora'
+  # safemode renderer does not support unary negation
   pm_set = @host.puppetmaster.empty? ? false : true
   proxy_uri = host_param('http-proxy') ? "http://#{host_param('http-proxy')}:#{host_param('http-proxy-port')}" : nil
   puppet_enabled = pm_set || host_param_true?('force-puppet')
   salt_enabled = host_param('salt_master') ? true : false
   chef_enabled = @host.respond_to?(:chef_proxy) && @host.chef_proxy
-%>
+-%>
+#!/bin/bash
 
-<% if @host.provision_method == 'image' && root_pass.present? -%>
+<%# Cloud instances frequently have incorrect hosts data %>
+<%= snippet 'fix_hosts' %>
+
+<% if @host.provision_method == 'image' && !root_pass.empty? -%>
 # Install the root password
 echo 'root:<%= root_pass -%>' | /usr/sbin/chpasswd -e
 <% end -%>
@@ -100,7 +78,6 @@ fi
 <%= snippet 'ansible_provisioning_callback' %>
 <% end -%>
 
-sync
-
-exit 0
+# UserData still needs to mark the build as finished
+<%= snippet 'built' %>
 <%#-%>

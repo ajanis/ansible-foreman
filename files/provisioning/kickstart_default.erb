@@ -266,7 +266,9 @@ yum -t -y remove kernel-uek*
 sed -e 's/DEFAULTKERNEL=kernel-uek/DEFAULTKERNEL=kernel/g' -i /etc/sysconfig/kernel
 <% end -%>
 
-<%= snippet('ansible_provisioning_callback') %>
+<% if host_param_true?('ansible_tower_provisioning') %>
+<%= snippet 'ansible_provisioning_callback' %>
+<% end -%>
 
 <%= snippet 'efibootmgr_netboot' %>
 

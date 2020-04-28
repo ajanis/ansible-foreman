@@ -52,9 +52,10 @@ echo 'Acquire::http::Proxy "<%= proxy_uri %>";' >> /etc/apt/apt.conf
 <% end -%>
 
 <% if host_param_true?('ansible_tower_provisioning') %>
-<%= snippet 'ansible_provisioning_callback_ubuntu' %>
+<%= snippet 'ansible_provisioning_callback' %>
 <% end -%>
 
 # UserData still needs wget to mark as finished
 <%= snippet 'built' %>
 
+<%#-%>
