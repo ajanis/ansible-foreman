@@ -76,7 +76,7 @@ foreman_perform_rake_tasks: False
 
 foreman_default_settings:
   - name: "root_pass"
-    value: "{{ foreman_admin_password }}"
+    value: "{{ foreman_provisioning_ssh_password|default('password') }}"
   - name: "default_pxe_item_global"
     value: "discovery"
   - name: "update_ip_from_built_request"
