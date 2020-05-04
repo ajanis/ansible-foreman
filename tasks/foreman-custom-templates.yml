@@ -7,7 +7,7 @@
       - "Default Location"
     organizations:
       - "Default Organization"
-    server_url: "http://{{ foreman_proxy_bind_host }}"
+    server_url: "http://{{ foreman_proxy_bind_host }}:{{ foreman_port }}"
     username: "{{ foreman_admin_user }}"
     password: "{{ foreman_admin_password }}"
     state: present

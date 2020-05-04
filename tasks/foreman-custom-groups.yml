@@ -8,7 +8,7 @@
       - "Default Location"
     organizations:
       - "Default Organization"
-    server_url: "http://{{ foreman_proxy_bind_host }}"
+    server_url: "http://{{ foreman_proxy_bind_host }}:{{ foreman_port }}"
     username: "{{ foreman_admin_user }}"
     password: "{{ foreman_admin_password }}"
     state: "{{ item.state | default('present') }}"
@@ -50,7 +50,7 @@
     compute_resource: "{{ item.compute_resource | default(omit) }}"
     #pxe_loader: "{{ item.pxe_loader }}"
     parameters: "{{ item.parameters | default(omit) }}"
-    server_url: "http://{{ foreman_proxy_bind_host }}"
+    server_url: "http://{{ foreman_proxy_bind_host }}:{{ foreman_port }}"
     username: "{{ foreman_admin_user }}"
     password: "{{ foreman_admin_password }}"
     state: "{{ item.state | default('present') }}"
@@ -72,7 +72,7 @@
 #    locations:
 #      - "Default Location"
 #    organization: "Default Organization"
-#    server_url: "http://{{ foreman_proxy_bind_host }}"
+#    server_url: "http://{{ foreman_proxy_bind_host }}:{{ foreman_port }}"
 #    username: "{{ foreman_admin_user }}"
 #    password: "{{ foreman_admin_password }}"
 #    state: present

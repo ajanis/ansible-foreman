@@ -1,6 +1,6 @@
 - name: "Default Organization"
   theforeman.foreman.foreman_organization:
-    server_url: "http://{{ foreman_proxy_bind_host }}"
+    server_url: "http://{{ foreman_proxy_bind_host }}:{{ foreman_port }}"
     username: "{{ foreman_admin_user }}"
     password: "{{ foreman_admin_password }}"
     name: "Default Organization"
@@ -8,7 +8,7 @@
 
 - name: "Default Location"
   theforeman.foreman.foreman_location:
-    server_url: "http://{{ foreman_proxy_bind_host }}"
+    server_url: "http://{{ foreman_proxy_bind_host }}:{{ foreman_port }}"
     username: "{{ foreman_admin_user }}"
     password: "{{ foreman_admin_password }}"
     name: "Default Location"
@@ -24,7 +24,7 @@
     users: "{{ item.users | default(omit) }}"
     usergroups: "{{ item.usergroups | default(omit) }}"
     state: "{{ item.state | default('present') }}"
-    server_url: "http://{{ foreman_proxy_bind_host }}"
+    server_url: "http://{{ foreman_proxy_bind_host }}:{{ foreman_port }}"
     username: "{{ foreman_admin_user }}"
     password: "{{ foreman_admin_password }}"
   register: foreman_created_usergroups
@@ -64,7 +64,7 @@
     locations: "{{ item.locations | default('Default Location') }}"
     organizations: "{{ item.organizations | default('Default Organization') }}"
     state: "{{ item.state | default('present') }}"
-    server_url: "http://{{ foreman_proxy_bind_host }}"
+    server_url: "http://{{ foreman_proxy_bind_host }}:{{ foreman_port }}"
     username: "{{ foreman_admin_user }}"
     password: "{{ foreman_admin_password }}"
   loop: "{{ foreman_users }}"
@@ -95,7 +95,7 @@
     usergroup_sync: "{{ item.usergroup_sync | default('yes') }}"
     locations: "{{ item.locations | default('Default Location') }}"
     organizations: "{{ item.organizations | default('Default Organization') }}"
-    server_url: "http://{{ foreman_proxy_bind_host }}"
+    server_url: "http://{{ foreman_proxy_bind_host }}:{{ foreman_port }}"
     username: "{{ foreman_admin_user }}"
     password: "{{ foreman_admin_password }}"
   changed_when: False
@@ -112,7 +112,7 @@
     auth_source_ldap: "{{ item.auth_source_ldap }}"
     usergroup: "{{ item.usergroup }}"
     state: "{{ item.state | default('present') }}"
-    server_url: "http://{{ foreman_proxy_bind_host }}"
+    server_url: "http://{{ foreman_proxy_bind_host }}:{{ foreman_port }}"
     username: "{{ foreman_admin_user }}"
     password: "{{ foreman_admin_password }}"
   loop: "{{ foreman_external_usergroups }}"
