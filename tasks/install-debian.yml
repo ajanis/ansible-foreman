@@ -64,7 +64,7 @@
     - ansible_distribution == 'Ubuntu'
     - ansible_distribution_version is version('16.04', '>')
 
-- name: "Set pinned versions for ruby-concurrent and ruby-foreman-remote-execution-core"
+- name: "Set pinned versions for ruby-concurrent, ruby-foreman-remote-execution-core and ruby-foreman-tasks-core"
   copy:
     src: 10-foreman-pinned
     dest: /etc/apt/preferences.d/10-foreman-pinned
