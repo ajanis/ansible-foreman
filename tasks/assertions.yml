@@ -1,0 +1,28 @@
+---
+- name: foreman_admin_password should be defined
+  assert:
+    that:
+    - foreman_admin_password is defined
+    - foreman_admin_password != None
+    msg: "Set a vault-encrypted value for 'foreman_admin_password' in the inventory, playbook.yml, group|host vars or vault.yml file."
+
+- name: foreman_db_password should be defined
+  assert:
+    that:
+    - foreman_db_password is defined
+    - foreman_db_password != None
+    msg: "Set a vault-encrypted value for 'foreman_db_password' in the inventory, playbook.yml, group|host vars or vault.yml file."
+
+- name: foreman_ssh_private_key should be defined
+  assert:
+    that:
+    - foreman_ssh_private_key is defined
+    - foreman_ssh_private_key != None
+    msg: "Set a vault-encrypted value for 'foreman_ssh_private_key' in the inventory, playbook.yml, group|host vars or vault.yml file."
+
+- name: foreman_ssh_public_key should be defined
+  assert:
+    that:
+    - foreman_ssh_public_key is defined
+    - foreman_ssh_public_key != None
+    msg: "Set a vault-encrypted value for 'foreman_ssh_public_key' in the inventory, playbook.yml, group|host vars or vault.yml file."

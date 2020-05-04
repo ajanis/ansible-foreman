@@ -3,6 +3,9 @@
   tags:
     - always
 
+- name: Assure variables are set
+  import_tasks: assertions.yml
+
 - import_tasks: install.yml
   tags:
     - foreman-install
