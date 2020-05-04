@@ -118,33 +118,29 @@
     - foreman_proxy_dynflow
   ignore_errors: yes
   register: foreman_proxy_dynflow_start_attempt
-  when:
-    - ansible_os_family == "RedHat"
-    - foreman_proxy_enable_service
-    - foreman_proxy_dynflow
   tags:
     - always
 
 - name: Get foreman dynflow journald logs if service does not appear to be up
   shell: journalctl _SYSTEMD_INVOCATION_ID=`systemctl show -p InvocationID --value smart_proxy_dynflow_core.service`
   register: foreman_proxy_dynflow_journal
-  when: foreman_proxy_dynflow_start_attempt.failed
   when:
     - ansible_os_family == "RedHat"
     - foreman_proxy_enable_service
     - foreman_proxy_dynflow
+    - foreman_proxy_dynflow_start_attempt.failed
   tags:
     - always
 
 - debug:
     var: |
       foreman_proxy_dynflow_journal.stdout_lines
-  when: foreman_proxy_dynflow_start_attempt.failed
   failed_when: foreman_proxy_dynflow_start_attempt.failed
   when:
     - ansible_os_family == "RedHat"
     - foreman_proxy_enable_service
     - foreman_proxy_dynflow
+    - foreman_proxy_dynflow_start_attempt.failed
   tags:
     - always
 
