@@ -11,6 +11,7 @@
         password: "{{ foreman_admin_password }}"
         name: "{{ item.name }}"
         value: "{{ item.value }}"
+        state: present
       loop: "{{ foreman_settings }}"
       loop_control:
         label: "{{ item.name }}: {{ item.value }}"
@@ -23,7 +24,7 @@
     server_url: "http://{{ foreman_proxy_bind_host }}:{{ foreman_port }}"
     username: "{{ foreman_admin_user }}"
     password: "{{ foreman_admin_password }}"
-    state: present_with_defaults
+    state: present
   loop: "{{ foreman_global_parameters }}"
   loop_control:
     label: "{{ item.name }}: {{ item.value }}"
