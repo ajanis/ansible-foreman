@@ -19,7 +19,9 @@ done
 echo "Ansible Tower connection successful."
 echo "Running Ansible Tower auto-provisioning callback."
 /usr/bin/curl -k -s --data "host_config_key=<%= host_param('ansible_host_config_key') %>" <%= host_param('ansible_tower_fqdn') %>/api/v2/job_templates/<%= host_param('host_configure_job_id') %>/callback/
-
+<% if host_param_true?('ceph_ansible_install') -%>
+/usr/bin/curl -k -s --data "host_config_key=<%= host_param('ansible_host_config_key') %>" <%= host_param('ansible_tower_fqdn') %>/api/v2/job_templates/<%= host_param('ceph_ansible_job_id') %>/callback/
+<% end -%>
 echo "Removing ansible-callback service"
 /usr/bin/systemctl disable ansible-callback.service
 <%#-%>
