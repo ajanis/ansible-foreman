@@ -14,16 +14,11 @@ snippet: true
 <%= save_to_file('/usr/local/bin/ansible-callback.sh',
                  snippet('ansible_tower_callback_script')) %>
 
-
-export SYSTEMCTLBIN=$(which systemctl)
-export CHMODBIN=$(which chmod)
-
 # Make script executable
-$CHMODBIN +x /usr/local/bin/ansible-callback.sh
+chmod +x /usr/local/bin/ansible-callback.sh
 
 # Enable ansible-callback service
-$SYSTEMCTLBIN enable ansible-callback
-
+systemctl enable ansible-callback
 
 <% end -%>
 <%#-%>
