@@ -14,20 +14,21 @@ snippet: true
 <%= save_to_file('/usr/local/bin/ansible-callback.sh',
                  snippet('ansible_tower_callback_script')) %>
 
-<% if os_family == 'Redhat' %>
-# Make script executable
-/usr/bin/chmod +x /usr/local/bin/ansible-callback.sh
-
-# Enable ansible-callback service
-/usr/bin/systemctl enable ansible-callback
-
-<% elsif os_family == 'Debian' %>
+<% if @host.operatingsystem.family == 'Debian' && @host.operatingsystem.major.to_i <= 18 %>
 
 # Make script executable
 /bin/chmod +x /usr/local/bin/ansible-callback.sh
 
 # Enable ansible-callback service
 /bin/systemctl enable ansible-callback
+
+<% else -%>
+
+# Make script executable
+/usr/bin/chmod +x /usr/local/bin/ansible-callback.sh
+
+# Enable ansible-callback service
+/usr/bin/systemctl enable ansible-callback
 
 <% end -%>
 
