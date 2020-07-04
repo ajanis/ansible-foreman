@@ -47,7 +47,7 @@ foreman_proxy_dhcp_subnets: []
 foreman_proxy_dns: True
 foreman_proxy_dns_protocol: http
 foreman_proxy_dns_provider: dns_nsupdate
-foreman_proxy_dns_key: /etc/rndc.key
+foreman_proxy_dns_key: /etc/bind/rndc.key
 foreman_proxy_dns_server: 127.0.0.1
 foreman_proxy_httpboot: True
 foreman_proxy_tftp: True
