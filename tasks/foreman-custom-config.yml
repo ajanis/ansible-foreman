@@ -5,7 +5,7 @@
       set_fact:
         foreman_settings: '{{ foreman_settings + foreman_default_settings }}'
     - name: Update Foreman Settings
-      theforeman.foreman.foreman_setting:
+      theforeman.foreman.setting:
         server_url: "http://{{ foreman_proxy_bind_host }}:{{ foreman_port }}"
         username: "{{ foreman_admin_user }}"
         password: "{{ foreman_admin_password }}"
@@ -16,7 +16,7 @@
         label: "{{ item.name }}: {{ item.value }}"
 
 - name: "Update global parameters"
-  theforeman.foreman.foreman_global_parameter:
+  theforeman.foreman.global_parameter:
     name: "{{ item.name }}"
     value: "{{ item.value }}"
     parameter_type: "{{ item.parameter_type | default('string') }}"

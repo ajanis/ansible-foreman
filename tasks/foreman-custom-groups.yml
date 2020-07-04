@@ -1,6 +1,6 @@
 ---
 - name: Create compute resources
-  theforeman.foreman.foreman_compute_resource:
+  theforeman.foreman.compute_resource:
     name: "{{ item.name }}"
     provider: "{{ item.provider }}"
     provider_params: "{{ item.provider_params }}"
@@ -33,7 +33,7 @@
   changed_when: False
 
 - name: "Create Hostgroups"
-  theforeman.foreman.foreman_hostgroup:
+  theforeman.foreman.hostgroup:
     name: "{{ item.name }}"
     description: "{{ item.description | default(omit) }}"
     architecture: "{{ item.architecture | default(omit) }}"
@@ -64,7 +64,7 @@
 
 
 #- name: "Auto-create hostgroups for compute resources"
-#  theforeman.foreman.foreman_hostgroup:
+#  theforeman.foreman.hostgroup:
 #    name: "{{ item.name }}"
 #    description: "{{ item.name }} resource group"
 #    compute_resource: "{{ item.name }}"

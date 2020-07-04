@@ -1,5 +1,5 @@
 - name: "Default Organization"
-  theforeman.foreman.foreman_organization:
+  theforeman.foreman.organization:
     server_url: "http://{{ foreman_proxy_bind_host }}:{{ foreman_port }}"
     username: "{{ foreman_admin_user }}"
     password: "{{ foreman_admin_password }}"
@@ -7,7 +7,7 @@
     state: present
 
 - name: "Default Location"
-  theforeman.foreman.foreman_location:
+  theforeman.foreman.location:
     server_url: "http://{{ foreman_proxy_bind_host }}:{{ foreman_port }}"
     username: "{{ foreman_admin_user }}"
     password: "{{ foreman_admin_password }}"
@@ -17,7 +17,7 @@
     state: present
 
 - name: Create Foreman internal user-groups
-  theforeman.foreman.foreman_usergroup:
+  theforeman.foreman.usergroup:
     name: "{{ item.name }}"
     admin: "{{ item.admin | default('no') }}"
     roles: "{{ item.roles | default(omit) }}"
@@ -47,7 +47,7 @@
     foreman_admin_id: "{{ admin_usergroup_id.stdout }}-Usergroups"
 
 - name: Create Foreman Internal Users
-  theforeman.foreman.foreman_user:
+  theforeman.foreman.user:
     name: "{{ item.name }}"
     firstname: "{{ item.firstname | default(omit) }}"
     lastname: "{{ item.lastname | default(omit) }}"
@@ -75,7 +75,7 @@
     - foreman_users != None
 
 - name: Configure LDAP Authentication with automatic registration
-  theforeman.foreman.foreman_auth_source_ldap:
+  theforeman.foreman.auth_source_ldap:
     name: "{{ item.name }}"
     host: "{{ item.host }}"
     onthefly_register: "{{ item.onthefly_register | default('yes') }}"
@@ -107,7 +107,7 @@
     - foreman_ldap_sources != None
 
 - name: Create Foreman external user groups
-  theforeman.foreman.foreman_external_usergroup:
+  theforeman.foreman.external_usergroup:
     name: "{{ item.name }}"
     auth_source_ldap: "{{ item.auth_source_ldap }}"
     usergroup: "{{ item.usergroup }}"

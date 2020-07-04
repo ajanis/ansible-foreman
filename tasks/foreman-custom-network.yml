@@ -1,6 +1,6 @@
 ---
 - name: "Create Domains"
-  theforeman.foreman.foreman_domain:
+  theforeman.foreman.domain:
     name: "{{ item.name }}"
     description: "{{ item.description | default(omit) }}"
     parameters: "{{ item.parameters | default(omit) }}"
@@ -21,7 +21,7 @@
     - foreman_domains != None
 
 - name: Create Subnets
-  theforeman.foreman.foreman_subnet:
+  theforeman.foreman.subnet:
     name: "{{ item.name }}"
     description: "{{ item.description | default(omit) }}"
     network: "{{ item.network }}"

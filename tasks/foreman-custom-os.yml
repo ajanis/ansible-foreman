@@ -1,6 +1,6 @@
 ---
 - name: "Create OS Install Mediums"
-  theforeman.foreman.foreman_installation_medium:
+  theforeman.foreman.installation_medium:
     name: "{{ item.name }}"
     locations:
       - "Default Location"
@@ -20,7 +20,7 @@
     - foreman_installation_mediums != None
 
 - name: "Create Operating Systems"
-  theforeman.foreman.foreman_operatingsystem:
+  theforeman.foreman.operatingsystem:
     name: "{{ item.name }}"
     description: "{{ item.description }}"
     release_name: "{{ item.release_name | default(omit) }}"
@@ -45,7 +45,7 @@
     - foreman_operatingsystems != None
 
 - name: "Create Template Associations"
-  theforeman.foreman.foreman_os_default_template:
+  theforeman.foreman.os_default_template:
     operatingsystem: "{{ item.operatingsystem }}"
     template_kind: "{{ item.template_kind }}"
     provisioning_template: "{{ item.provisioning_template }}"
