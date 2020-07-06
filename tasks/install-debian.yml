@@ -29,6 +29,9 @@
   apt_repository:
     repo: "deb {{ foreman_repo_url }} plugins {{ foreman_plugins_version }}"
     state: present
+  when:
+    - ansible_distribution == 'Ubuntu'
+    - ansible_distribution_version is version('20.04', '<')
 
 - name: "Add Ansible Repository (For Foreman-Ansible Dependencies)"
   apt_repository:
