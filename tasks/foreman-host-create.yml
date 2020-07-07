@@ -44,8 +44,7 @@
     --partition-table '{{ hg.ptable }}'
     {% endif %}
     {% endfor %}
-    {% endif %}
-    {% if item.item.operatingsystem is defined %}
+    {% elif item.item.operatingsystem is defined %}
     --operatingsystem '{{ item.item.operatingsystem }}'
     {% for os in foreman_operatingsystems %}
     {% if os.description == item.item.operatingsystem %}
