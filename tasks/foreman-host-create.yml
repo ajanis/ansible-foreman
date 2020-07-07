@@ -33,8 +33,18 @@
   command: >
     {% if item.item.name not in hostlist.stdout %}
     {% set interface_cmd = '{}' %}
-    hammer -r host create --name '{{ item.item.name }}' --hostgroup '{{ item.item.hostgroup }}' --build '1'
+    hammer -r host create --name '{{ item.item.name }}' --build '1'
     --location 'Default Location' --organization 'Default Organization'
+    {% if item.item.hostgroup is defined %}
+    --hostgroup '{{ item.item.hostgroup }}'
+    {% for hg in foreman_hostgroups %}
+    {% if hg.name == item.item.hostgroup %}
+    --operatingsystem '{{ hg.operatingsystem }}'
+    --medium '{{ hg.medium }}'
+    --partition-table '{{ hg.ptable }}'
+    {% endif %}
+    {% endfor %}
+    {% endif %}
     {% if item.item.operatingsystem is defined %}
     --operatingsystem '{{ item.item.operatingsystem }}'
     {% for os in foreman_operatingsystems %}
