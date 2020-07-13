@@ -37,19 +37,20 @@
     --location 'Default Location' --organization 'Default Organization'
     {% if item.item.hostgroup is defined %}
     --hostgroup '{{ item.item.hostgroup }}'
-    {% for hg in foreman_hostgroups %}
-    {% if hg.name == item.item.hostgroup %}
-    --operatingsystem '{{ hg.operatingsystem }}'
-    --medium '{{ hg.medium }}'
-    --partition-table '{{ hg.ptable }}'
-    {% endif %}
-    {% endfor %}
-    {% elif item.item.operatingsystem is defined %}
+    {% if item.item.operatingsystem is defined %}
     --operatingsystem '{{ item.item.operatingsystem }}'
     {% for os in foreman_operatingsystems %}
     {% if os.description == item.item.operatingsystem %}
     --medium '{{ os.media }}'
     --partition-table '{{ os.ptables[0] }}'
+    {% endif %}
+    {% endfor %}
+    {% else %}
+    {% for hg in foreman_hostgroups %}
+    {% if hg.name == item.item.hostgroup %}
+    --operatingsystem '{{ hg.operatingsystem }}'
+    --medium '{{ hg.medium }}'
+    --partition-table '{{ hg.ptable }}'
     {% endif %}
     {% endfor %}
     {% endif %}
