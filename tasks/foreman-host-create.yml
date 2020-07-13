@@ -45,6 +45,7 @@
     --partition-table '{{ os.ptables[0] }}'
     {% endif %}
     {% endfor %}
+    {% endif %}
     {% else %}
     {% for hg in foreman_hostgroups %}
     {% if hg.name == item.item.hostgroup %}
