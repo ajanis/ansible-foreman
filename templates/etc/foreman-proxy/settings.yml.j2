@@ -43,6 +43,29 @@
 # Log configuration
 # Uncomment and modify if you want to change the location of the log file or use STDOUT
 :log_file: /var/log/foreman-proxy/proxy.log
+
 # Uncomment and modify if you want to change the log level
 # WARN, DEBUG, ERROR, FATAL, INFO, UNKNOWN
-:log_level: ERROR
+:log_level: {{ foreman_proxy_log_level | default('ERROR') }}
+
+{% if foreman_proxy_log_buffer is defined and foreman_proxy_log_buffer != None %}
+:log_buffer: {{ foreman_proxy_log_buffer }}
+{% endif %}
+
+{% if foreman_proxy_log_buffer_errors is defined and foreman_proxy_log_buffer_errors != None %}
+:log_buffer_errors: {{ foreman_proxy_log_buffer_errors }}
+{% endif %}
+
+# The maximum size of a log file before it's rolled (in MiB)
+# The maximum age of a log file before it's rolled (in seconds). Also accepts 'daily', 'weekly', or 'monthly'.
+# Number of log files to keep
+
+# Logging pattern for file-based loging
+{% if foreman_proxy_file_logging_pattern is defined and foreman_proxy_file_logging_pattern != None %}
+:file_logging_pattern: {{ foreman_proxy_file_logging_pattern }} # ex: '%d %.8X{request} [%.1l] %m'
+{% endif %}
+
+# Logging pattern for syslog or journal loging
+{% if foreman_proxy_system_logging_pattern is defined and foreman_proxy_system_logging_pattern != None %}
+:system_logging_pattern: {{ foreman_proxy_system_logging_pattern }} # ex: '%.8X{request} [%.1l] %m'
+{% endif %}
