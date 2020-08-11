@@ -136,7 +136,7 @@ d-i apt-setup/local<%= repos %>/key string http://keyserver.ubuntu.com/pks/looku
 <% end -%>
 
 # Install minimal task set (see tasksel --task-packages minimal)
-tasksel tasksel/first multiselect minimal, ssh-server, openssh-server
+tasksel tasksel/first multiselect <%= host_param('custom-tasksel') || 'minimal' %>, ssh-server, openssh-server
 
 # Install some base packages
 d-i pkgsel/include string <%= additional_packages %>
