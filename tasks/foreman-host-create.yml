@@ -7,7 +7,7 @@
 #  run_once: true
 
 - name: Query foreman hosts
-  command: hammer -r host list
+  shell: hammer --no-headers -r host list --fields name | tr -d ' '
   register: hostlist
 
 - name: print hostlist
@@ -20,7 +20,7 @@
     hammer -r host info --name {{ item.name }}.{{ www_domain }} | egrep -i '(build status)' | sed -r 's/^.*:\s+(\w.*)$/\1/'
   register: buildstatus
   loop: "{{ foreman_hosts }}"
-  when: item.name in hostlist.stdout
+  when: item.name + '.' + www_domain in hostlist.stdout_lines
 
 - name: print buildstatus results
   debug:
@@ -29,9 +29,10 @@
   loop: "{{ buildstatus.results }}"
   when: item.changed
 
+
 - name: "Create hosts via hammer cli"
   command: >
-    {% if item.item.name not in hostlist.stdout %}
+    {% if item.item.name + '.' + www_domain not in hostlist.stdout_lines %}
     {% set interface_cmd = '{}' %}
     hammer -r host create --name '{{ item.item.name }}' --build '1'
     --location 'Default Location' --organization 'Default Organization'
