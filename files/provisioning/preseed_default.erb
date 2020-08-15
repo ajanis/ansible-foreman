@@ -18,7 +18,15 @@ oses:
   additional_packages << 'python' if ansible_enabled
   additional_packages << 'salt-minion' if salt_enabled
   additional_packages = additional_packages.join(" ").split().uniq().join(" ")
+
+  install_desktop = host_param_true?('install-desktop-environment')
+  custom_tasksel = ['ssh-server', 'openssh-server']
+  custom_tasksel << 'ubuntu-desktop' if install_desktop
+  custom_tasksel << 'minimal' if !install_desktop
+  custom_tasksel << host_param('custom-tasksel')
+  custom_tasksel = custom_tasksel.join(" ").split().uniq().join(", ")
 %>
+
 # Locale
 d-i debian-installer/locale string <%= host_param('lang') || 'en_US' %>
 # country and keyboard settings are automatic. Keep them ...
@@ -135,8 +143,8 @@ d-i apt-setup/local<%= repos %>/key string http://keyserver.ubuntu.com/pks/looku
 <% salt_package = '' -%>
 <% end -%>
 
-# Install minimal task set (see tasksel --task-packages minimal)
-tasksel tasksel/first multiselect <%= host_param('custom-tasksel') || 'minimal' %>, ssh-server, openssh-server
+# Install task set
+tasksel tasksel/first multiselect <%= custom_tasksel %>
 
 # Install some base packages
 d-i pkgsel/include string <%= additional_packages %>

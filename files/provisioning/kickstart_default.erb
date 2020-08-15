@@ -76,7 +76,12 @@ repo --name <%= medium[:name] %> --baseurl <%= medium[:url] %> <%= medium[:insta
 lang <%= host_param('lang') || 'en_US.UTF-8' %>
 selinux --<%= host_param('selinux-mode') || host_param('selinux') || 'enforcing' %>
 keyboard <%= host_param('keyboard') || 'us' %>
+
+<% if host_param_true?('install-desktop-environment') %>
+xconfig --startxonboot
+<% else -%>
 skipx
+<% end -%>
 
 <% subnet = @host.subnet -%>
 <% host_ip = @host.ip -%>
@@ -154,25 +159,33 @@ reboot
 <% end -%>
 
 %packages
+@Core
+wget
+yum
+dhclient
+
+<% if host_param_true?('install-desktop-environment') %>
+@^Server with GUI
+@Remote Management for Linux
+@Graphical Administration Tools
+<% end -%>
+
 <%= snippet_if_exists(template_name + " custom packages") %>
 <%= additional_packages %>
 
-yum
-dhclient
 <% if use_ntp -%>
 ntp
 <% else -%>
 chrony
 <% end -%>
-wget
-@Core
+
 <% if os_major >= 6 -%>
 redhat-lsb-core
 <% end -%>
+
 <% if host_param_true?('fips_enabled') -%>
 <%=   snippet 'fips_packages' %>
 <% end -%>
-
 
 <% if salt_enabled %>
 salt-minion
