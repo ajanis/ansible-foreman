@@ -30,6 +30,7 @@
     gateway: "{{ item.gateway }}"
     from_ip: "{{ item.from_ip }}"
     to_ip: "{{ item.to_ip }}"
+    ipam: "{{ item.ipam | default(omit) }}"
     dns_primary: "{{ item.dns_primary | default(omit) }}"
     dns_secondary: "{{ item.dns_secondary | default(omit) }}"
     boot_mode: "{{ item.boot_mode | default('Static') }}"
