@@ -36,7 +36,9 @@
     {% set interface_cmd = '{}' %}
     hammer -r host create --name '{{ item.item.name }}' --build '1'
     --location 'Default Location' --organization 'Default Organization'
+    {% if item.item.ansible_groups is defined %}
     --ansible-roles '{{ item.item.ansible_groups | join(',') }}'
+    {% endif %}
     {% if item.item.hostgroup is defined %}
     --hostgroup '{{ item.item.hostgroup }}'
     {% if item.item.operatingsystem is defined %}
