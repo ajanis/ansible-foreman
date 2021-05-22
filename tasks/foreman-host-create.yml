@@ -26,22 +26,22 @@
   debug:
     msg: "{{ item }}"
     verbosity: 1
-  loop: "{{ buildstatus.results }}"
-  when: item.changed
+  loop: "{{ foreman_hosts }}"
+  when: item.buildstatus.changed
 
 
 - name: "Create hosts via hammer cli"
   command: >
-    {% if item.item.name + '.' + www_domain not in hostlist.stdout_lines %}
+    {% if item.name + '.' + www_domain not in hostlist.stdout_lines %}
     {% set interface_cmd = '{}' %}
-    hammer -r host create --name '{{ item.item.name }}' --build '1'
+    hammer -r host create --name '{{ item.name }}' --build '1'
     --location 'Default Location' --organization 'Default Organization'
-    {% if item.item.hostgroup is defined %}
-    --hostgroup '{{ item.item.hostgroup }}'
-    {% if item.item.operatingsystem is defined %}
-    --operatingsystem '{{ item.item.operatingsystem }}'
+    {% if item.hostgroup is defined %}
+    --hostgroup '{{ item.hostgroup }}'
+    {% if item.operatingsystem is defined %}
+    --operatingsystem '{{ item.operatingsystem }}'
     {% for os in foreman_operatingsystems %}
-    {% if os.description == item.item.operatingsystem %}
+    {% if os.description == item.operatingsystem %}
     --medium '{{ os.media }}'
     --partition-table '{{ os.ptables[0] }}'
     {% endif %}
@@ -49,61 +49,74 @@
     {% endif %}
     {% else %}
     {% for hg in foreman_hostgroups %}
-    {% if hg.name == item.item.hostgroup %}
+    {% if hg.name == item.hostgroup %}
     --operatingsystem '{{ hg.operatingsystem }}'
     --medium '{{ hg.medium }}'
     --partition-table '{{ hg.ptable }}'
     {% endif %}
     {% endfor %}
     {% endif %}
-    {% if item.item.subnet is defined %}
-    --subnet '{{ item.item.subnet }}'
+    {% if item.subnet is defined %}
+    --subnet '{{ item.subnet }}'
     {% endif %}
-    {% if item.item.provider is defined and item.item.provider == "kvm" %}
-    --compute-resource '{{ item.item.compute_resource }}'
+    {% if item.provider is defined and item.provider == "kvm" %}
+    --compute-resource '{{ item.compute_resource }}'
     --compute-attributes '{
-    "cpus": {{ item.item.cpu_cores }},
-    "memory": {{ item.item.memory | regex_replace("^([0-9]+)\s+?.*$", "\1GB") | human_to_bytes }},
+    "cpus": {{ item.cpu_cores }},
+    "memory": {{ item.memory | regex_replace("^([0-9]+)\s+?.*$", "\1GB") | human_to_bytes }},
     "start": "0"
     }'
     --volume '{
-    "capacity": {{ (item.item.disk_size | regex_replace("^([0-9]+)\s+?.*$", "\1GB") | human_to_bytes // 1073741824) }},
+    "capacity": {{ (item.disk_size | regex_replace("^([0-9]+)\s+?.*$", "\1GB") | human_to_bytes // 1073741824) }},
     "format_type": "qcow2"
     }'
-    {% set interface_cmd = interface_cmd | from_json | combine({ 'compute_bridge': 'br' + ( item.item.vlan_id|default("0") ) },
+    {% set interface_cmd = interface_cmd | from_json | combine({ 'compute_bridge': 'br' + ( item.vlan_id|default("0") ) },
       { 'compute_model': 'virtio' },
       { 'compute_type': 'bridge' }) | to_json %}
     {% endif %}
-    {% if item.item.ip is defined %}
-    {% set interface_cmd = interface_cmd | from_json | combine({ 'ip': item.item.ip }) | to_json %}
+    {% if item.ip is defined %}
+    {% set interface_cmd = interface_cmd | from_json | combine({ 'ip': item.ip }) | to_json %}
     {% endif %}
-    {% if item.item.interface is defined %}
-    {% set interface_cmd = interface_cmd | from_json | combine({ 'identifier': item.item.interface }) | to_json %}
+    {% if item.interface is defined %}
+    {% set interface_cmd = interface_cmd | from_json | combine({ 'identifier': item.interface }) | to_json %}
     {% endif %}
-    {% if item.item.mac_address is defined %}
-    {% set interface_cmd = interface_cmd | from_json | combine({ 'mac': item.item.mac_address }) | to_json %}
+    {% if item.mac_address is defined %}
+    {% set interface_cmd = interface_cmd | from_json | combine({ 'mac': item.mac_address }) | to_json %}
     {% endif %}
     --interface {{ interface_cmd | to_json }}
-    {% if item.item.provider is defined and item.item.provider == "ipmi" %}
+    {% if item.provider is defined and item.provider == "ipmi" %}
     --interface '{
-    "ip": "{{ item.item.ipmi_ip }}",
-    "mac": "{{ item.item.ipmi_mac_address }}",
+    "ip": "{{ item.ipmi_ip }}",
+    "mac": "{{ item.ipmi_mac_address }}",
     "type": "bmc",
     "provider": "ipmi",
-    "username": "{{ item.item.ipmi_username }}",
-    "password": "{{ item.item.ipmi_password }}"
+    "username": "{{ item.ipmi_username }}",
+    "password": "{{ item.ipmi_password }}"
     }'
     {% endif %}
     {% else %}
     {% if "Pending" not in item.stdout %}
-    hammer -r host update --name {{ item.item.name }}.{{ www_domain }} --build '1'
+    hammer -r host update --name {{ item.name }}.{{ www_domain }} --build '1'
     {% else %}
-    hammer -qr host info --name {{ item.item.name }}.{{ www_domain }}
+    hammer -qr host info --name {{ item.name }}.{{ www_domain }}
     {% endif %}
     {% endif %}
-  loop: "{{ buildstatus.results }}"
+  loop: "{{ foreman_hosts }}"
+  when:
+    - item.buildstatus.changed
   register: foreman_hosts_created
   changed_when: foreman_hosts_created.stdout == "Host updated." or foreman_hosts_created.stdout == "Host created."
+
+- name: Add foreman_params for additional ansible roles
+  command: >
+    hammer -r host set-parameter
+    --host {{ item.name }}.{{ www_domain }}
+    --name "ansible_roles" --parameter-type yaml
+    --value {{ item.ansible_groups | to_nice_yaml }}
+  loop: "{{ foreman_hosts }}"
+  when:
+    - ( item.ansible_groups | length ) > 0
+    - item.foreman_hosts_created.changed
 
 - name: print host-create results
   debug:
@@ -113,22 +126,22 @@
 
 - name: Get host power status
   shell: |
-    hammer -r host status --name {{ item.item.item.name }}.{{ www_domain }} | grep -i power | awk '{print $2}'
+    hammer -r host status --name {{ item.name }}.{{ www_domain }} | grep -i power | awk '{print $2}'
   register: powerstatus
-  loop: "{{ foreman_hosts_created.results  }}"
+  loop: "{{ foreman_hosts  }}"
   when:
-    - item.changed
-    - ( item.item.item.provider == "ipmi" or
-      item.item.item.provider == "kvm" )
+    - item.foreman_hosts_created.changed
+    - ( item.provider == "ipmi" or
+      item.provider == "kvm" )
 
 - name: print power status results
   debug:
     msg: "{{ item }}"
     verbosity: 1
-  loop: "{{ powerstatus.results }}"
+  loop: "{{ foreman_hosts }}"
   when:
-    - ( item.item.item.item.provider == "ipmi" or
-      item.item.item.item.provider == "kvm" )
+    - ( item.provider == "ipmi" or
+      item.provider == "kvm" )
 
 #- name: Set host to boot from network device
 #  command: >
@@ -142,26 +155,26 @@
 - name: Set Boot Device to PXE (ipmi)
   command: >
     ipmitool -I lanplus
-     -U {{ item.item.item.item.ipmi_username }}
-     -P {{ item.item.item.item.ipmi_password }}
-     -H {{ item.item.item.item.ipmi_ip }}
+     -U {{ item.ipmi_username }}
+     -P {{ item.ipmi_password }}
+     -H {{ item.ipmi_ip }}
      chassis bootdev pxe options=persistent,verbose=yes,cons_redirect=enable
-  loop: "{{ powerstatus.results }}"
+  loop: "{{ foreman_hosts }}"
   when:
-    - item.changed
-    - item.item.item.item.provider == "ipmi"
+    - item.powerstatus.changed
+    - item.provider == "ipmi"
 
 - name: Host Power-Cycle
   command: >
     hammer -r host
-    {% if item.stdout == "off" %}
+    {% if item.powerstatus.stdout == "off" %}
     start
     {% else %}
     reset
     {% endif %}
-    --name {{ item.item.item.item.name }}.{{ www_domain }}
-  loop: "{{ powerstatus.results }}"
+    --name {{ item.name }}.{{ www_domain }}
+  loop: "{{ foreman_hosts }}"
   when:
-    - item.changed
-    - ( item.item.item.item.provider == "ipmi" or
-      item.item.item.item.provider == "kvm" )
+    - item.powerstatus.changed
+    - ( item.provider == "ipmi" or
+      item.provider == "kvm" )
