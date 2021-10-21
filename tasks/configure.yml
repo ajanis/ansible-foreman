@@ -34,8 +34,8 @@
   file:
     path: "/var/lib/foreman-proxy/ssh"
     state: directory
-    owner: foreman-proxy
-    group: foreman-proxy
+    owner: "{{ foreman_proxy_user }}"
+    group: "{{ foreman_proxy_user }}"
     mode: 0755
 
 - name: Ensure foreman-proxy .ssh symlink exists
@@ -43,13 +43,13 @@
     state: link
     src: /var/lib/foreman-proxy/ssh
     dest: "{{ foreman_proxy_user_homedir }}/.ssh"
-    owner: foreman-proxy
-    group: foreman-proxy
+    owner: "{{ foreman_proxy_user }}"
+    group: "{{ foreman_proxy_user }}"
 
 - name: Copy foreman-proxy user ssh config
   copy:
-    owner: foreman-proxy
-    group: foreman-proxy
+    owner: "{{ foreman_proxy_user }}"
+    group: "{{ foreman_proxy_user }}"
     mode: 0755
     dest: "{{ foreman_proxy_user_homedir }}/.ssh/config"
     content: |
@@ -59,17 +59,68 @@
 - name: Copy ssh private key to server
   copy:
     mode: 0600
-    owner: foreman-proxy
-    group: foreman-proxy
+    owner: "{{ foreman_proxy_user }}"
+    group: "{{ foreman_proxy_user }}"
     content: "{{ foreman_ssh_private_key }}"
     dest: "{{ foreman_proxy_user_homedir }}/.ssh/id_rsa"
 
 - name: Copy foreman-proxy user ssh pubkey to server
   copy:
     mode: 0644
-    owner: foreman-proxy
-    group: foreman-proxy
+    owner: "{{ foreman_proxy_user }}"
+    group: "{{ foreman_proxy_user }}"
     dest: "{{ foreman_proxy_user_homedir }}/.ssh/id_rsa.pub"
+    content: "{{ foreman_ssh_public_key }}"
+
+- name: get foreman user info
+  getent:
+    database: passwd
+    key: "{{ foreman_runas_user }}"
+
+- name: set foreman user home directory
+  set_fact:
+    foreman_runas_user_homedir: "{{ getent_passwd[foreman_runas_user][4] }}"
+
+- name: Create foreman-proxy user ssh directory
+  file:
+    path: "/var/lib/foreman/ssh"
+    state: directory
+    owner: "{{ foreman_runas_user }}"
+    group: "{{ foreman_runas_user }}"
+    mode: 0755
+
+- name: Ensure foreman-proxy .ssh symlink exists
+  file:
+    state: link
+    src: /var/lib/foreman/ssh
+    dest: "{{ foreman_runas_user_homedir }}/.ssh"
+    owner: "{{ foreman_runas_user }}"
+    group: "{{ foreman_runas_user }}"
+
+- name: Copy foreman-proxy user ssh config
+  copy:
+    owner: "{{ foreman_runas_user }}"
+    group: "{{ foreman_runas_user }}"
+    mode: 0755
+    dest: "{{ foreman_runas_user_homedir }}/.ssh/config"
+    content: |
+      StrictHostKeyChecking no
+      UserKnownHostsFile /dev/null
+
+- name: Copy ssh private key to server
+  copy:
+    mode: 0600
+    owner: "{{ foreman_runas_user }}"
+    group: "{{ foreman_runas_user }}"
+    content: "{{ foreman_ssh_private_key }}"
+    dest: "{{ foreman_runas_user_homedir }}/.ssh/id_rsa"
+
+- name: Copy foreman-proxy user ssh pubkey to server
+  copy:
+    mode: 0644
+    owner: "{{ foreman_runas_user }}"
+    group: "{{ foreman_runas_user }}"
+    dest: "{{ foreman_runas_user_homedir }}/.ssh/id_rsa.pub"
     content: "{{ foreman_ssh_public_key }}"
 
 - name: Generate foreman database config from template
